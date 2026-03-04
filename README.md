@@ -57,7 +57,7 @@ Abaixo estão os diagramas arquiteturais do projeto BarberManager, modelados seg
 Nível 1: Diagrama de Contexto
 
 A visão macro do sistema, mostrando os utilizadores e o valor de negócio.
-
+```mermaid
 flowchart TD
     %% Definição das cores oficiais do C4 Model
     classDef person fill:#08427b,stroke:#052e56,color:#fff,rx:20,ry:20
@@ -69,7 +69,7 @@ flowchart TD
 
     C -->|"Agenda horários (HTTPS)"| BM
     B -->|"Gere o sistema (HTTPS)"| BM
-
+```
 
 Nível 2: Diagrama de Contêineres
 
@@ -99,7 +99,7 @@ flowchart TD
 Nível 3: Diagrama de Componentes (Backend)
 
 Visão interna do servidor Delphi, detalhando a arquitetura MVC do código.
-
+```mermaid
 flowchart TD
     classDef comp fill:#85b3e1,stroke:#5d7d9e,color:#000,rx:5,ry:5
     classDef db fill:#438dd5,stroke:#2e6295,color:#fff
@@ -118,3 +118,4 @@ flowchart TD
     VIEW -->|"Solicita validações"| CTRL
     CTRL -->|"Solicita persistência"| MODEL
     MODEL -->|"Executa SQL"| DB
+```
