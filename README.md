@@ -40,62 +40,67 @@ Abaixo estão os diagramas arquiteturais do projeto BarberManager, modelados seg
 
 Nível 1: Diagrama de Contexto
 
-A visão macro do sistema, mostrando os utilizadores e o valor de negócio do BarberManager.
+A visão macro do sistema, mostrando os utilizadores e o valor de negócio.
 
-C4Context
-  title Diagrama de Contexto (Nível 1) - BarberManager
+flowchart TD
+    %% Definição das cores oficiais do C4 Model
+    classDef person fill:#08427b,stroke:#052e56,color:#fff,rx:20,ry:20
+    classDef system fill:#1168bd,stroke:#0b4884,color:#fff,rx:5,ry:5
 
-  Person(cliente, "Cliente", "Cliente da barbearia que deseja agendar horários de forma autónoma.")
-  Person(barbeiro, "Barbeiro / Admin", "Profissional que gere a agenda, serviços e finanças.")
-  
-  System(barberManager, "BarberManager", "Sistema Integrado de Gestão e Agendamento Web.")
+    C["👤 Cliente<br/><small>Deseja agendar horários</small>"]:::person
+    B["👤 Barbeiro / Admin<br/><small>Gere a agenda e finanças</small>"]:::person
+    BM["⚙️ BarberManager<br/><small>[Sistema de Software]</small><br/>Sistema Integrado Web"]:::system
 
-  Rel(cliente, barberManager, "Visualiza horários disponíveis e efetua agendamentos", "HTTPS")
-  Rel(barbeiro, barberManager, "Gere a agenda diária, clientes e faturação", "HTTPS")
+    C -->|"Agenda horários (HTTPS)"| BM
+    B -->|"Gere o sistema (HTTPS)"| BM
 
 
 Nível 2: Diagrama de Contêineres
 
-Visão técnica de alto nível, mostrando a distribuição das tecnologias e como a aplicação Delphi se comunica com a Web e com a Base de Dados.
+Visão técnica de alto nível, mostrando a distribuição das tecnologias.
 
-C4Container
-  title Diagrama de Contêineres (Nível 2) - BarberManager
+flowchart TD
+    classDef person fill:#08427b,stroke:#052e56,color:#fff,rx:20,ry:20
+    classDef container fill:#438dd5,stroke:#2e6295,color:#fff,rx:5,ry:5
+    classDef db fill:#438dd5,stroke:#2e6295,color:#fff
 
-  Person(cliente, "Cliente", "Utiliza o telemóvel ou computador.")
-  Person(barbeiro, "Barbeiro", "Utiliza o tablet ou computador do balcão.")
+    C["👤 Cliente"]:::person
+    B["👤 Barbeiro"]:::person
 
-  System_Boundary(c1, "Sistema BarberManager") {
-      Container(web_app, "Interface Web (Frontend)", "HTML, CSS, JS", "Interface do utilizador gerada dinamicamente pelo servidor.")
-      Container(backend, "Servidor de Aplicação (Backend)", "Delphi VCL + D2Bridge", "Processa as regras de negócio e renderiza a interface Web através do D2Bridge.")
-      ContainerDb(database, "Base de Dados", "Firebird / SQLite", "Armazena clientes, agendamentos, serviços e registos financeiros.")
-  }
+    subgraph BarberManager ["BarberManager (Sistema)"]
+        direction TB
+        WEB["🌐 Interface Web (Frontend)<br/><small>[Contêiner: HTML/JS]</small>"]:::container
+        API["🖥️ Servidor Delphi (Backend)<br/><small>[Contêiner: Delphi VCL + D2Bridge]</small>"]:::container
+        DB[("🗄️ Base de Dados<br/><small>[Contêiner: Firebird/SQLite]</small>")]:::db
+    end
 
-  Rel(cliente, web_app, "Acede a", "HTTPS")
-  Rel(barbeiro, web_app, "Acede a", "HTTPS")
-  Rel(web_app, backend, "Comunica com", "WebSockets / HTTP")
-  Rel(backend, database, "Lê e Escreve dados", "FireDAC / TCP")
+    C -->|"Acessa"| WEB
+    B -->|"Acessa"| WEB
+    WEB -->|"Comunica (HTTP/WS)"| API
+    API -->|"Lê/Escreve (FireDAC)"| DB
 
 
 Nível 3: Diagrama de Componentes (Backend)
 
-Visão interna do servidor Delphi, detalhando a estrutura de pastas e responsabilidades (MVC/Arquitetura do Código) que criámos.
+Visão interna do servidor Delphi, detalhando a arquitetura MVC do código.
 
-C4Component
-  title Diagrama de Componentes (Nível 3) - Servidor Delphi
+flowchart TD
+    classDef comp fill:#85b3e1,stroke:#5d7d9e,color:#000,rx:5,ry:5
+    classDef db fill:#438dd5,stroke:#2e6295,color:#fff
 
-  ContainerDb(database, "Base de Dados", "Firebird / SQLite", "Armazenamento relacional.")
+    DB[("🗄️ Base de Dados<br/><small>[Firebird/SQLite]</small>")]:::db
 
-  Container_Boundary(backend, "Servidor de Aplicação (Delphi)") {
-      Component(d2bridge, "Motor D2Bridge", "Framework Web", "Responsável por intercetar a VCL e transformá-la em Web.")
-      
-      Component(view, "View.Principal", "TForm (Interface)", "Gere o layout da página, botões e painéis laterais.")
-      Component(controller, "Regras de Negócio", "Units Pascal", "Valida choque de horários (RN01) e calcula valores.")
-      Component(model, "Model.Conexao", "TDataModule", "Centraliza a ligação FireDAC, Querys e Transações.")
-      
-      Rel(d2bridge, view, "Renderiza para Web")
-      Rel(view, controller, "Solicita validações e envia dados", "Pascal Method Call")
-      Rel(controller, model, "Solicita persistência", "Pascal Method Call")
-  }
+    subgraph Backend ["Servidor de Aplicação (Backend Delphi)"]
+        direction TB
+        D2["Motor D2Bridge<br/><small>[Framework Web]</small>"]:::comp
+        VIEW["View.Principal<br/><small>[TForm/Interface]</small>"]:::comp
+        CTRL["Regras de Negócio<br/><small>[Controller/Units]</small>"]:::comp
+        MODEL["Model.Conexao<br/><small>[TDataModule]</small>"]:::comp
+    end
 
-  Rel(model, database, "Executa scripts SQL (CRUD)", "FireDAC")
+    D2 -->|"Renderiza"| VIEW
+    VIEW -->|"Solicita validações"| CTRL
+    CTRL -->|"Solicita persistência"| MODEL
+    MODEL -->|"Executa SQL"| DB
+
 
