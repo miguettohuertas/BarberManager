@@ -74,7 +74,7 @@ flowchart TD
 Nível 2: Diagrama de Contêineres
 
 Visão técnica de alto nível, mostrando a distribuição das tecnologias.
-
+```mermaid
 flowchart TD
     classDef person fill:#08427b,stroke:#052e56,color:#fff,rx:20,ry:20
     classDef container fill:#438dd5,stroke:#2e6295,color:#fff,rx:5,ry:5
@@ -94,7 +94,7 @@ flowchart TD
     B -->|"Acessa"| WEB
     WEB -->|"Comunica (HTTP/WS)"| API
     API -->|"Lê/Escreve (FireDAC)"| DB
-
+```
 
 Nível 3: Diagrama de Componentes (Backend)
 
