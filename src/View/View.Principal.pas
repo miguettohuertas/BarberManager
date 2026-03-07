@@ -3,11 +3,11 @@ unit View.Principal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs;
 
 type
-  TfrmPrincipal = class(TForm)
+  TFrmPrincipal = class(TForm)
   private
     { Private declarations }
   public
@@ -15,12 +15,10 @@ type
   end;
 
 var
-  frmPrincipal: TfrmPrincipal;
+  FrmPrincipal: TFrmPrincipal;
 
 implementation
 
-{$R *.dfm}
-
-uses Model.Conexao;
+{$R *.fmx}
 
 end.

@@ -18,7 +18,7 @@ var
 
 implementation
 
-{%CLASSGROUP 'Vcl.Controls.TControl'}
+{%CLASSGROUP 'FMX.Controls.TControl'}
 
 {$R *.dfm}
 
