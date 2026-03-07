@@ -1,0 +1,21 @@
+@startuml
+' Importa a biblioteca oficial do C4 Model para Contexto
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+' Configurações de exibição (opcional, deixa o layout mais limpo)
+LAYOUT_WITH_LEGEND()
+
+title Diagrama de Contexto - BarberManager
+
+' Atores (O \n força a quebra de linha para não cortar o texto)
+Person(cliente, "Cliente", "Deseja agendar horários\ne consultar serviços.")
+Person(barbeiro, "Barbeiro / Adm", "Gere a agenda e\nfinaliza os atendimentos.")
+
+' Sistema
+System(barberManager, "BarberManager", "Sistema Integrado Web\n[Sistema de Software]")
+
+' Relacionamentos
+Rel(cliente, barberManager, "Agenda horários", "HTTPS")
+Rel(barbeiro, barberManager, "Gere o sistema", "HTTPS")
+
+@enduml

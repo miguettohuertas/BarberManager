@@ -1,0 +1,26 @@
+@startuml
+' Importa a biblioteca oficial do C4 Model para Containers/Componentes
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' Direção de cima para baixo
+left to right direction
+LAYOUT_TOP_DOWN()
+
+title Diagrama de Arquitetura - Servidor de Aplicação
+
+System_Boundary(app_server, "Servidor de Aplicação") {
+    
+    ' Componentes internos com suas respectivas tecnologias e descrições
+    Container(motor, "Motor D2Bridge", "Framework Web", "Responsável por gerenciar\nas requisições web.")
+    Container(view, "View.Principal", "TForm / Interface", "Interface principal\nrenderizada para o usuário.")
+    Container(regras, "Regras de Negócio", "Controller / Units", "Processa a lógica e\nvalidações do sistema.")
+    Container(model, "Model.Conexao", "TDataModule", "Gerencia a persistência\ne conexão com o banco.")
+    
+}
+
+' Relacionamentos internos
+Rel(motor, view, "Renderiza")
+Rel(view, regras, "Solicita validações")
+Rel(regras, model, "Solicita persistência")
+
+@enduml

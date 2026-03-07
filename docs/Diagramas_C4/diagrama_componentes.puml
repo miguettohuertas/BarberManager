@@ -1,0 +1,39 @@
+@startuml
+' Importa a biblioteca oficial do C4 Model para Componentes (Nível 3)
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+' Direção de cima para baixo
+LAYOUT_TOP_DOWN()
+
+title Diagrama de Componentes - Servidor de Aplicação
+
+' Representação do cliente/browser externo a interagir com os componentes
+Person_Ext(cliente_browser, "Browser do Cliente", "Navegador web do utilizador")
+
+Container_Boundary(app_server, "Servidor de Aplicação (Delphi + D2Bridge)") {
+    
+    ' Componentes de Infraestrutura Web
+    Component(motor, "Motor D2Bridge", "Framework Web", "Interceta as requisições HTTP(S), gere sessões e o ciclo de vida da aplicação web.")
+    
+    ' Componentes de Apresentação (Views)
+    Component(view_principal, "View Principal", "TForm", "Interface gráfica convertida para HTML/JS dinamicamente.")
+    
+    ' Componentes de Negócio (Controllers / Units)
+    Component(ctrl_agendamento, "Controller de Agendamentos", "Unit Delphi", "Valida disponibilidade de horários, regras de marcação e conflitos.")
+    Component(ctrl_servicos, "Controller de Serviços", "Unit Delphi", "Gere o catálogo de serviços, preços e barbeiros disponíveis.")
+    
+    ' Componente de Acesso a Dados (Model)
+    Component(data_module, "Model Conexão", "TDataModule", "Centraliza os componentes de ligação à base de dados (ex: FireDAC) e executa as queries SQL.")
+}
+
+' Relacionamentos
+Rel(cliente_browser, motor, "Faz requisições HTTP para", "HTTPS")
+Rel(motor, view_principal, "Renderiza e encaminha eventos para")
+
+Rel(view_principal, ctrl_agendamento, "Delega ações de marcação de horário para")
+Rel(view_principal, ctrl_servicos, "Solicita lista de serviços para")
+
+Rel(ctrl_agendamento, data_module, "Lê/Grava dados de agenda")
+Rel(ctrl_servicos, data_module, "Lê dados do catálogo")
+
+@enduml
