@@ -1,0 +1,213 @@
+object FrameServicos: TFrameServicos
+  Size.Width = 1040.000000000000000000
+  Size.Height = 720.000000000000000000
+  Size.PlatformDefault = False
+  object rectFundoServicos: TRectangle
+    Align = Client
+    Fill.Color = xFF0B1220
+    Size.Width = 1040.000000000000000000
+    Size.Height = 720.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    object lytHeaderWeb: TLayout
+      Align = Top
+      Margins.Left = 30.000000000000000000
+      Margins.Top = 20.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Position.X = 30.000000000000000000
+      Position.Y = 20.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 90.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object lytTituloServicos: TLayout
+        Align = Left
+        Size.Width = 400.000000000000000000
+        Size.Height = 90.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object lblTituloServicos: TLabel
+          Align = Top
+          StyledSettings = [Family]
+          Size.Width = 400.000000000000000000
+          Size.Height = 35.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 24.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claWhite
+          Text = 'Gst'#227'o de Servi'#231'os'
+          TabOrder = 0
+        end
+        object lblSubTituloServicos: TLabel
+          Align = Top
+          StyledSettings = [Family, Size, Style]
+          Position.Y = 35.000000000000000000
+          Size.Width = 400.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.FontColor = xFF94A3B8
+          Text = '6 Ativos . 2 Inativos . 8 No Total'
+          TabOrder = 1
+        end
+      end
+      object lytAcoesDireita: TLayout
+        Align = Right
+        Position.X = 530.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 90.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object rectBtnNovoServico: TRectangle
+          Align = Right
+          Fill.Color = xFFF58A00
+          Margins.Top = 22.000000000000000000
+          Margins.Bottom = 23.000000000000000000
+          Position.X = 310.000000000000000000
+          Position.Y = 22.000000000000000000
+          Size.Width = 140.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object lblBtnNovoServico: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 140.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF0B1220
+            TextSettings.HorzAlign = Center
+            Text = '+ Novo Servi'#231'o'
+            TabOrder = 0
+          end
+        end
+        object circleSinoServicos: TCircle
+          Align = Right
+          Fill.Color = xFF141C2B
+          Margins.Top = 22.000000000000000000
+          Margins.Right = 20.000000000000000000
+          Margins.Bottom = 23.000000000000000000
+          Position.X = 245.000000000000000000
+          Position.Y = 22.000000000000000000
+          Size.Width = 45.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF2E3B52
+          object Label1: TLabel
+            Align = Client
+            Size.Width = 45.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+            Text = '*'
+            TabOrder = 0
+          end
+        end
+        object rectBuscaServicos: TRectangle
+          Align = Right
+          Fill.Color = xFF141C2B
+          Margins.Top = 22.000000000000000000
+          Margins.Right = 20.000000000000000000
+          Margins.Bottom = 23.000000000000000000
+          Position.X = 5.000000000000000000
+          Position.Y = 22.000000000000000000
+          Size.Width = 220.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF2E3B52
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          object edtBuscaServicos: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            StyleLookup = 'transparentedit'
+            TabOrder = 0
+            TextSettings.FontColor = xFF94A3B8
+            Margins.Left = 10.000000000000000000
+            Margins.Top = 10.000000000000000000
+            Margins.Right = 10.000000000000000000
+            Margins.Bottom = 10.000000000000000000
+            Size.Width = 200.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TextPrompt = 'Buscar Servi'#231'o...'
+            StyledSettings = [Family, Size, Style]
+          end
+        end
+      end
+    end
+    object gridKpiServicos: TGridPanelLayout
+      Align = Top
+      Margins.Left = 30.000000000000000000
+      Margins.Top = 15.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Position.X = 30.000000000000000000
+      Position.Y = 125.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 110.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      ColumnCollection = <
+        item
+          Value = 24.544667758827150000
+        end
+        item
+          Value = 24.717216073549580000
+        end
+        item
+          Value = 25.000000000000000000
+        end
+        item
+          Value = 25.738111780234060000
+        end>
+      ControlCollection = <
+        item
+          Column = 0
+          Control = lytContainerKpi1
+          Row = 0
+        end>
+      RowCollection = <
+        item
+          Value = 100.000000000000000000
+        end>
+      object lytContainerKpi1: TLayout
+        Align = Client
+        Padding.Right = 20.000000000000000000
+        Size.Width = 240.537750244140600000
+        Size.Height = 110.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object rectKpi1: TRectangle
+          Align = Client
+          Fill.Color = xFF141C2B
+          Padding.Left = 20.000000000000000000
+          Padding.Top = 20.000000000000000000
+          Padding.Right = 20.000000000000000000
+          Padding.Bottom = 20.000000000000000000
+          Size.Width = 220.537750244140600000
+          Size.Height = 110.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          object lytTopKpi1: TLayout
+            Position.X = 88.000000000000000000
+            Position.Y = 32.000000000000000000
+            Size.Width = 50.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object Circle1: TCircle
+              Align = Left
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+            end
+          end
+        end
+      end
+    end
+  end
+end

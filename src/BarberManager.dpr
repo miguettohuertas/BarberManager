@@ -5,7 +5,8 @@ uses
   FMX.Forms,
   View.Principal in 'View\View.Principal.pas' {FrmPrincipal},
   Model.Conexao in 'Model\Model.Conexao.pas' {dmConexao: TDataModule},
-  View.DashboardAdmin in 'View\View.DashboardAdmin.pas' {FrmDashboardAdmin};
+  View.DashboardAdmin in 'View\View.DashboardAdmin.pas' {FrmDashboardAdmin},
+  View.Frame.Servicos in 'View\View.Frame.Servicos.pas' {FrameServicos: TFrame};
 
 {$R *.res}
 
