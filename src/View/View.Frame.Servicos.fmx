@@ -146,7 +146,7 @@ object FrameServicos: TFrameServicos
       Position.X = 30.000000000000000000
       Position.Y = 125.000000000000000000
       Size.Width = 980.000000000000000000
-      Size.Height = 110.000000000000000000
+      Size.Height = 150.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       ColumnCollection = <
@@ -167,6 +167,21 @@ object FrameServicos: TFrameServicos
           Column = 0
           Control = lytContainerKpi1
           Row = 0
+        end
+        item
+          Column = 1
+          Control = lytContainerKpi2
+          Row = 0
+        end
+        item
+          Column = 2
+          Control = lytContainerKpi3
+          Row = 0
+        end
+        item
+          Column = 3
+          Control = lytContainerKpi4
+          Row = 0
         end>
       RowCollection = <
         item
@@ -176,35 +191,1328 @@ object FrameServicos: TFrameServicos
         Align = Client
         Padding.Right = 20.000000000000000000
         Size.Width = 240.537750244140600000
-        Size.Height = 110.000000000000000000
+        Size.Height = 150.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 0
+        TabOrder = 3
         object rectKpi1: TRectangle
           Align = Client
           Fill.Color = xFF141C2B
-          Padding.Left = 20.000000000000000000
-          Padding.Top = 20.000000000000000000
-          Padding.Right = 20.000000000000000000
-          Padding.Bottom = 20.000000000000000000
+          Padding.Left = 15.000000000000000000
+          Padding.Top = 15.000000000000000000
+          Padding.Right = 15.000000000000000000
+          Padding.Bottom = 15.000000000000000000
           Size.Width = 220.537750244140600000
-          Size.Height = 110.000000000000000000
+          Size.Height = 150.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
           XRadius = 12.000000000000000000
           YRadius = 12.000000000000000000
           object lytTopKpi1: TLayout
-            Position.X = 88.000000000000000000
-            Position.Y = 32.000000000000000000
-            Size.Width = 50.000000000000000000
-            Size.Height = 30.000000000000000000
+            Align = Top
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 190.537750244140600000
+            Size.Height = 35.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            object Circle1: TCircle
+            object rectIconeKpi1: TRectangle
               Align = Left
-              Size.Width = 30.000000000000000000
+              Fill.Color = xFF422006
+              Size.Width = 35.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 8.000000000000000000
+              YRadius = 8.000000000000000000
+            end
+          end
+          object lblTitKpi1: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Margins.Top = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 65.000000000000000000
+            Size.Width = 190.537750244140600000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = 'Total de Servi'#231'os'
+            TabOrder = 1
+          end
+          object lblValKpi1: TLabel
+            Align = Top
+            StyledSettings = [Family]
+            Position.X = 15.000000000000000000
+            Position.Y = 85.000000000000000000
+            Size.Width = 190.537750244140600000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 28.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            Text = '8'
+            TabOrder = 2
+          end
+          object lblSubKpi1: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Position.X = 15.000000000000000000
+            Position.Y = 120.000000000000000000
+            Size.Width = 190.537750244140600000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF64748B
+            Text = '6 Ativos'
+            TabOrder = 3
+          end
+        end
+      end
+      object lytContainerKpi2: TLayout
+        Align = Client
+        Padding.Right = 20.000000000000000000
+        Size.Width = 242.228729248046900000
+        Size.Height = 150.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object rectKpi2: TRectangle
+          Align = Client
+          Fill.Color = xFF141C2B
+          Padding.Left = 15.000000000000000000
+          Padding.Top = 15.000000000000000000
+          Padding.Right = 15.000000000000000000
+          Padding.Bottom = 15.000000000000000000
+          Size.Width = 222.228729248046900000
+          Size.Height = 150.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          object lytTopKpi2: TLayout
+            Align = Top
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 192.228729248046900000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object rectIconeKpi2: TRectangle
+              Align = Left
+              Fill.Color = xFF422006
+              Size.Width = 35.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 8.000000000000000000
+              YRadius = 8.000000000000000000
+            end
+          end
+          object lblTitKpi2: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Margins.Top = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 65.000000000000000000
+            Size.Width = 192.228729248046900000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = 'Total de Servi'#231'os'
+            TabOrder = 1
+          end
+          object lblValKpi2: TLabel
+            Align = Top
+            StyledSettings = [Family]
+            Position.X = 15.000000000000000000
+            Position.Y = 85.000000000000000000
+            Size.Width = 192.228729248046900000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 28.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            Text = '8'
+            TabOrder = 2
+          end
+          object lblSubKpi2: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Position.X = 15.000000000000000000
+            Position.Y = 120.000000000000000000
+            Size.Width = 192.228729248046900000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF64748B
+            Text = '6 Ativos'
+            TabOrder = 3
+          end
+        end
+      end
+      object lytContainerKpi3: TLayout
+        Align = Client
+        Padding.Right = 20.000000000000000000
+        Size.Width = 245.000000000000000000
+        Size.Height = 150.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object rectKpi3: TRectangle
+          Align = Client
+          Fill.Color = xFF141C2B
+          Padding.Left = 15.000000000000000000
+          Padding.Top = 15.000000000000000000
+          Padding.Right = 15.000000000000000000
+          Padding.Bottom = 15.000000000000000000
+          Size.Width = 225.000000000000000000
+          Size.Height = 150.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          object lytTopKpi3: TLayout
+            Align = Top
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 195.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object rectIconeKpi3: TRectangle
+              Align = Left
+              Fill.Color = xFF422006
+              Size.Width = 35.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 8.000000000000000000
+              YRadius = 8.000000000000000000
+            end
+          end
+          object lblTitKpi3: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Margins.Top = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 65.000000000000000000
+            Size.Width = 195.000000000000000000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = 'Total de Servi'#231'os'
+            TabOrder = 1
+          end
+          object lblValKpi3: TLabel
+            Align = Top
+            StyledSettings = [Family]
+            Position.X = 15.000000000000000000
+            Position.Y = 85.000000000000000000
+            Size.Width = 195.000000000000000000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 28.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            Text = '8'
+            TabOrder = 2
+          end
+          object lblSubKpi3: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Position.X = 15.000000000000000000
+            Position.Y = 120.000000000000000000
+            Size.Width = 195.000000000000000000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF64748B
+            Text = '6 Ativos'
+            TabOrder = 3
+          end
+        end
+      end
+      object lytContainerKpi4: TLayout
+        Align = Client
+        Padding.Right = 20.000000000000000000
+        Size.Width = 252.233520507812500000
+        Size.Height = 150.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object rectKpi4: TRectangle
+          Align = Client
+          Fill.Color = xFF141C2B
+          Padding.Left = 15.000000000000000000
+          Padding.Top = 15.000000000000000000
+          Padding.Right = 15.000000000000000000
+          Padding.Bottom = 15.000000000000000000
+          Size.Width = 232.233520507812500000
+          Size.Height = 150.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 12.000000000000000000
+          YRadius = 12.000000000000000000
+          object lytTopKpi4: TLayout
+            Align = Top
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 202.233520507812500000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object rectIconeKpi4: TRectangle
+              Align = Left
+              Fill.Color = xFF422006
+              Size.Width = 35.000000000000000000
+              Size.Height = 35.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 8.000000000000000000
+              YRadius = 8.000000000000000000
+            end
+          end
+          object lblTitKpi4: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Margins.Top = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 65.000000000000000000
+            Size.Width = 202.233520507812500000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = 'Total de Servi'#231'os'
+            TabOrder = 1
+          end
+          object lblValKpi4: TLabel
+            Align = Top
+            StyledSettings = [Family]
+            Position.X = 15.000000000000000000
+            Position.Y = 85.000000000000000000
+            Size.Width = 202.233520507812500000
+            Size.Height = 35.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 28.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            Text = '8'
+            TabOrder = 2
+          end
+          object lblSubKpi4: TLabel
+            Align = Top
+            StyledSettings = [Family, Size, Style]
+            Position.X = 15.000000000000000000
+            Position.Y = 120.000000000000000000
+            Size.Width = 202.233520507812500000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF64748B
+            Text = '6 Ativos'
+            TabOrder = 3
+          end
+        end
+      end
+    end
+    object lytFiltrosContainer: TLayout
+      Align = Top
+      Margins.Left = 30.000000000000000000
+      Margins.Top = 20.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Position.X = 30.000000000000000000
+      Position.Y = 295.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object scrollFiltrosCategorias: THorzScrollBox
+        Align = Left
+        Size.Width = 400.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        ShowScrollBars = False
+        Viewport.Width = 400.000000000000000000
+        Viewport.Height = 50.000000000000000000
+        object rectFiltroTodos: TRectangle
+          Align = Left
+          Fill.Color = xFFF58A00
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          XRadius = 15.000000000000000000
+          YRadius = 15.000000000000000000
+          object lblFiltroTodos: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF0B1220
+            TextSettings.HorzAlign = Center
+            Text = 'Todos'
+            TabOrder = 0
+          end
+        end
+        object rectFiltroEstetica: TRectangle
+          Align = Left
+          Fill.Kind = None
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 270.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF2E3B52
+          XRadius = 15.000000000000000000
+          YRadius = 15.000000000000000000
+          object lblFiltroEstetica: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF94A3B8
+            TextSettings.HorzAlign = Center
+            Text = 'Estetica'
+            TabOrder = 0
+          end
+        end
+        object rectFiltroBarba: TRectangle
+          Align = Left
+          Fill.Kind = None
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 180.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF2E3B52
+          XRadius = 15.000000000000000000
+          YRadius = 15.000000000000000000
+          object lblFiltroBarba: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF94A3B8
+            TextSettings.HorzAlign = Center
+            Text = 'Barba'
+            TabOrder = 0
+          end
+        end
+        object rectFiltroCabelo: TRectangle
+          Align = Left
+          Fill.Kind = None
+          Margins.Top = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 90.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 80.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF2E3B52
+          XRadius = 15.000000000000000000
+          YRadius = 15.000000000000000000
+          object lblFiltroCabelo: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 80.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFF94A3B8
+            TextSettings.HorzAlign = Center
+            Text = 'Cabelo'
+            TabOrder = 0
+          end
+        end
+      end
+      object rectToggleStatus: TRectangle
+        Align = Left
+        Fill.Color = xFF1E293B
+        Margins.Left = 20.000000000000000000
+        Margins.Top = 8.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.X = 420.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 260.000000000000000000
+        Size.Height = 34.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        XRadius = 17.000000000000000000
+        YRadius = 17.000000000000000000
+        object gridToggle: TGridPanelLayout
+          Align = Client
+          Size.Width = 260.000000000000000000
+          Size.Height = 34.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          ColumnCollection = <
+            item
+              Value = 33.061125583133670000
+            end
+            item
+              Value = 33.608872370042160000
+            end
+            item
+              Value = 33.330000000000000000
+            end>
+          ControlCollection = <
+            item
+              Column = 0
+              Control = rectToggleTodos
+              Row = 0
+            end
+            item
+              Column = 1
+              Control = rectToggleAtivos
+              Row = 0
+            end
+            item
+              Column = 2
+              Control = rectToggleInativos
+              Row = 0
+            end>
+          RowCollection = <
+            item
+              Value = 100.000000000000000000
+            end>
+          object rectToggleTodos: TRectangle
+            Align = Client
+            Fill.Color = xFF2E3B52
+            Margins.Left = 2.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Right = 2.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Size.Width = 81.958923339843750000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 15.000000000000000000
+            YRadius = 15.000000000000000000
+            object lblToggleTodos: TLabel
+              Align = Client
+              StyledSettings = [Family, Size]
+              Size.Width = 81.958923339843750000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'Todos'
+              TabOrder = 0
             end
+          end
+          object rectToggleAtivos: TRectangle
+            Align = Client
+            Fill.Kind = None
+            Margins.Left = 2.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Right = 2.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Size.Width = 83.383071899414060000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            object lblToggleAtivos: TLabel
+              Align = Client
+              StyledSettings = [Family, Size, Style]
+              Size.Width = 83.383071899414060000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = 'Ativos'
+              TabOrder = 0
+            end
+          end
+          object rectToggleInativos: TRectangle
+            Align = Client
+            Fill.Kind = None
+            Margins.Left = 2.000000000000000000
+            Margins.Top = 2.000000000000000000
+            Margins.Right = 2.000000000000000000
+            Margins.Bottom = 2.000000000000000000
+            Size.Width = 82.658004760742190000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            object lblToggleInativos: TLabel
+              Align = Client
+              StyledSettings = [Family, Size, Style]
+              Size.Width = 82.658004760742190000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = 'Inativos'
+              TabOrder = 0
+            end
+          end
+        end
+      end
+      object lblResultadosTotal: TLabel
+        Align = Right
+        StyledSettings = [Family, Size, Style]
+        Position.X = 860.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.FontColor = xFF64748B
+        TextSettings.HorzAlign = Trailing
+        Text = '8 Resultados'
+        TabOrder = 2
+      end
+    end
+    object lytHeaderTabela: TLayout
+      Align = Top
+      Margins.Left = 30.000000000000000000
+      Margins.Top = 20.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Position.X = 30.000000000000000000
+      Position.Y = 365.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Rectangle1: TRectangle
+        Align = Bottom
+        Fill.Color = xFF2E3B52
+        Position.Y = 39.000000000000000000
+        Size.Width = 980.000000000000000000
+        Size.Height = 1.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object lblColServico: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Size.Width = 350.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        Text = 'SERVI'#199'O'
+        TabOrder = 1
+      end
+      object lblColCategoria: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Position.X = 350.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        Text = 'CATEGORIA'
+        TabOrder = 2
+      end
+      object lblColPreco: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Position.X = 470.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        Text = 'PRECO'
+        TabOrder = 3
+      end
+      object lblColDuracao: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Position.X = 590.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        Text = 'DURA'#199#195'O'
+        TabOrder = 4
+      end
+      object lblColAgendamentos: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Position.X = 710.000000000000000000
+        Size.Width = 150.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        Text = 'AGENDAMENTOS'
+        TabOrder = 5
+      end
+      object lblColAcoes: TLabel
+        Align = Client
+        StyledSettings = [Family]
+        Size.Width = 120.000000000000000000
+        Size.Height = 39.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 11.000000000000000000
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
+        TextSettings.FontColor = xFF64748B
+        TextSettings.HorzAlign = Trailing
+        Text = 'A'#199#213'ES'
+        TabOrder = 6
+      end
+    end
+    object scrollListaServicos: TVertScrollBox
+      Align = Client
+      Margins.Left = 30.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 295.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Viewport.Width = 980.000000000000000000
+      Viewport.Height = 295.000000000000000000
+      object rectRowServico1: TRectangle
+        Align = Top
+        Fill.Kind = None
+        Margins.Bottom = 5.000000000000000000
+        Sides = [Bottom]
+        Size.Width = 980.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF1E293B
+        object lytRowServicoCol1: TLayout
+          Align = Left
+          Size.Width = 350.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object rectIconServ1: TRectangle
+            Align = Left
+            Fill.Color = xFF1E293B
+            Margins.Left = 15.000000000000000000
+            Margins.Top = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Margins.Bottom = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 8.000000000000000000
+            YRadius = 8.000000000000000000
+          end
+          object lytTextosServico1: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object lblNomeServico1: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = 'Barba Completa'
+              TabOrder = 0
+            end
+            object lblDescServico1: TLabel
+              Align = Top
+              StyledSettings = [Family, Size, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF64748B
+              Text = 'Modelagem e acabamento perfeito para sua barba.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowCatCol2: TLayout
+          Align = Left
+          Position.X = 350.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object rectTagCat1: TRectangle
+            Align = Left
+            Fill.Kind = None
+            Margins.Top = 22.000000000000000000
+            Margins.Bottom = 23.000000000000000000
+            Position.Y = 22.000000000000000000
+            Size.Width = 60.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFF58A00
+            XRadius = 10.000000000000000000
+            YRadius = 10.000000000000000000
+            object lblTextCat1: TLabel
+              Align = Client
+              StyledSettings = [Family, Size, Style]
+              Size.Width = 60.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFFF58A00
+              TextSettings.HorzAlign = Center
+              Text = 'Barba'
+              TabOrder = 0
+            end
+          end
+        end
+        object lytRowPrecoCol3: TLayout
+          Align = Left
+          Position.X = 470.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object lblPrecoServico1: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFFF58A00
+            Text = 'R$35,00'
+            TabOrder = 0
+          end
+        end
+        object lytRowDuracaoCol4: TLayout
+          Align = Left
+          Position.X = 590.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object lblDuracaoServico1: TLabel
+            Align = Client
+            StyledSettings = [Family, Size, Style]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = '30 min'
+            TabOrder = 0
+          end
+        end
+        object lytRowAgendCol5: TLayout
+          Align = Left
+          Position.X = 710.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          object lytTextosAgend1: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 150.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object lblTotalAgend1: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = '95'
+              TabOrder = 0
+            end
+            object lblReceitaAgend1: TLabel
+              Align = Top
+              StyledSettings = [Family, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'R$3.325 Receita.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowAcoesCol6: TLayout
+          Align = Client
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          object imgActionDel1: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 86.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionEdit1: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 52.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionToggle1: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 7.000000000000000000
+            Size.Width = 35.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+      end
+      object rectRowServico3: TRectangle
+        Align = Top
+        Fill.Kind = None
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 150.000000000000000000
+        Sides = [Bottom]
+        Size.Width = 980.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF1E293B
+        object lytRowServicoCol3: TLayout
+          Align = Left
+          Size.Width = 350.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object rectIconServ3: TRectangle
+            Align = Left
+            Fill.Color = xFF1E293B
+            Margins.Left = 15.000000000000000000
+            Margins.Top = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Margins.Bottom = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 8.000000000000000000
+            YRadius = 8.000000000000000000
+          end
+          object lytTextosServico3: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object lblNomeServico3: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = 'Barba Completa'
+              TabOrder = 0
+            end
+            object lblDescServico3: TLabel
+              Align = Top
+              StyledSettings = [Family, Size, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF64748B
+              Text = 'Modelagem e acabamento perfeito para sua barba.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowCatCol2Serv3: TLayout
+          Align = Left
+          Position.X = 350.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object rectTagCat3: TRectangle
+            Align = Left
+            Fill.Kind = None
+            Margins.Top = 22.000000000000000000
+            Margins.Bottom = 23.000000000000000000
+            Position.Y = 22.000000000000000000
+            Size.Width = 60.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFF58A00
+            XRadius = 10.000000000000000000
+            YRadius = 10.000000000000000000
+            object lblTextCat3: TLabel
+              Align = Client
+              StyledSettings = [Family, Size, Style]
+              Size.Width = 60.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFFF58A00
+              TextSettings.HorzAlign = Center
+              Text = 'Barba'
+              TabOrder = 0
+            end
+          end
+        end
+        object lytPrecoCol3Serv3: TLayout
+          Align = Left
+          Position.X = 470.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object lblPrecoServico3: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFFF58A00
+            Text = 'R$35,00'
+            TabOrder = 0
+          end
+        end
+        object lytRowDuracaoCol4Serv3: TLayout
+          Align = Left
+          Position.X = 590.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object lblDuracaoServico3: TLabel
+            Align = Client
+            StyledSettings = [Family, Size, Style]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = '30 min'
+            TabOrder = 0
+          end
+        end
+        object lytRowAgendCol5Serv3: TLayout
+          Align = Left
+          Position.X = 710.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          object lytTextosAgend3: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 150.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object lblTotalAgend3: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = '95'
+              TabOrder = 0
+            end
+            object lblTotalReceitaAgend3: TLabel
+              Align = Top
+              StyledSettings = [Family, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'R$3.325 Receita.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowAcoesCol6Serv3: TLayout
+          Align = Client
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          object imgActionDel3: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 86.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionEdit3: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 52.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionToggle3: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 7.000000000000000000
+            Size.Width = 35.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+      end
+      object rectRowServico2: TRectangle
+        Align = Top
+        Fill.Kind = None
+        Margins.Bottom = 5.000000000000000000
+        Position.Y = 75.000000000000000000
+        Sides = [Bottom]
+        Size.Width = 980.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF1E293B
+        object lytRowServicoCol2: TLayout
+          Align = Left
+          Size.Width = 350.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object rectIconServ2: TRectangle
+            Align = Left
+            Fill.Color = xFF1E293B
+            Margins.Left = 15.000000000000000000
+            Margins.Top = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Margins.Bottom = 15.000000000000000000
+            Position.X = 15.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 40.000000000000000000
+            Size.Height = 40.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 8.000000000000000000
+            YRadius = 8.000000000000000000
+          end
+          object lytTextosServico2: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 280.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            object lblNomeServico2: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = 'Corte de Cabelo'
+              TabOrder = 0
+            end
+            object lblDescServico2: TLabel
+              Align = Top
+              StyledSettings = [Family, Size, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 280.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF64748B
+              Text = 'Corte moderno e personalizado.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowCatCol2Serv2: TLayout
+          Align = Left
+          Position.X = 350.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object rectTagCat2: TRectangle
+            Align = Left
+            Fill.Kind = None
+            Margins.Top = 22.000000000000000000
+            Margins.Bottom = 23.000000000000000000
+            Position.Y = 22.000000000000000000
+            Size.Width = 60.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Color = xFFF58A00
+            XRadius = 10.000000000000000000
+            YRadius = 10.000000000000000000
+            object lblTextCat2: TLabel
+              Align = Client
+              StyledSettings = [Family, Size, Style]
+              Size.Width = 60.000000000000000000
+              Size.Height = 25.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFFF58A00
+              TextSettings.HorzAlign = Center
+              Text = 'Cabelo'
+              TabOrder = 0
+            end
+          end
+        end
+        object lytPrecoCol3Serv2: TLayout
+          Align = Left
+          Position.X = 470.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object lblPrecoServico2: TLabel
+            Align = Client
+            StyledSettings = [Family, Size]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = xFFF58A00
+            Text = 'R$35,00'
+            TabOrder = 0
+          end
+        end
+        object lytRowDuracaoCol4Serv2: TLayout
+          Align = Left
+          Position.X = 590.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object lblDuracaoServico2: TLabel
+            Align = Client
+            StyledSettings = [Family, Size, Style]
+            Size.Width = 120.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = xFF94A3B8
+            Text = '30 min'
+            TabOrder = 0
+          end
+        end
+        object lytRowAgendCol5Serv2: TLayout
+          Align = Left
+          Position.X = 710.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          object lytTextosAgend2: TLayout
+            Align = Client
+            Margins.Top = 15.000000000000000000
+            Size.Width = 150.000000000000000000
+            Size.Height = 55.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            object lblTotalAgend2: TLabel
+              Align = Top
+              StyledSettings = [Family, Size]
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              Text = '95'
+              TabOrder = 0
+            end
+            object lblReceitaAgend2: TLabel
+              Align = Top
+              StyledSettings = [Family, Style]
+              Position.Y = 20.000000000000000000
+              Size.Width = 150.000000000000000000
+              Size.Height = 20.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 11.000000000000000000
+              TextSettings.FontColor = xFF64748B
+              Text = 'R$3.325 Receita.'
+              TabOrder = 1
+            end
+          end
+        end
+        object lytRowAcoesCol6Serv2: TLayout
+          Align = Client
+          Size.Width = 120.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          object imgActionDel2: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 86.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionEdit2: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 52.000000000000000000
+            Size.Width = 24.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object imgActionToggle2: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Align = Right
+            Margins.Right = 10.000000000000000000
+            Position.X = 7.000000000000000000
+            Size.Width = 35.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
           end
         end
       end
