@@ -876,11 +876,11 @@ object FrameServicos: TFrameServicos
       Margins.Right = 30.000000000000000000
       Margins.Bottom = 10.000000000000000000
       Size.Width = 980.000000000000000000
-      Size.Height = 295.000000000000000000
+      Size.Height = 225.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 4
       Viewport.Width = 980.000000000000000000
-      Viewport.Height = 295.000000000000000000
+      Viewport.Height = 225.000000000000000000
       object rectRowServico1: TRectangle
         Align = Top
         Fill.Kind = None
@@ -1514,6 +1514,71 @@ object FrameServicos: TFrameServicos
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
           end
+        end
+      end
+    end
+    object lytRodapeResumo: TLayout
+      Align = Bottom
+      Margins.Left = 30.000000000000000000
+      Margins.Right = 30.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Position.X = 30.000000000000000000
+      Position.Y = 650.000000000000000000
+      Size.Width = 980.000000000000000000
+      Size.Height = 60.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 5
+      object rectLinhaRodape: TRectangle
+        Align = Top
+        Fill.Color = xFF2E3B52
+        Size.Width = 980.000000000000000000
+        Size.Height = 1.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object lblContadorRodape: TLabel
+        Align = Left
+        StyledSettings = [Family, Size, Style]
+        Margins.Top = 10.000000000000000000
+        Position.Y = 11.000000000000000000
+        Size.Width = 129.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.FontColor = xFF64748B
+        Text = 'Exibindo 8 de 8 Servi'#231'os'
+        TabOrder = 1
+      end
+      object lytValoresRodape: TLayout
+        Align = Right
+        Margins.Top = 10.000000000000000000
+        Position.X = 780.000000000000000000
+        Position.Y = 11.000000000000000000
+        Size.Width = 200.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object lblTextoReceita: TLabel
+          Align = Left
+          AutoSize = True
+          StyledSettings = [Family, Size, Style]
+          Size.Width = 120.000000000000000000
+          Size.Height = 49.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.FontColor = xFF64748B
+          Text = 'Receita filtrada:'
+          TabOrder = 0
+        end
+        object lblValorReceitaTotal: TLabel
+          Align = Left
+          AutoSize = True
+          StyledSettings = [Family, Size]
+          Position.X = 120.000000000000000000
+          Size.Width = 120.000000000000000000
+          Size.Height = 49.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = xFFF58A00
+          Text = 'R$33.975'
+          TabOrder = 1
         end
       end
     end

@@ -141,6 +141,12 @@ type
     imgActionDel2: TImage;
     imgActionEdit2: TImage;
     imgActionToggle2: TImage;
+    lytRodapeResumo: TLayout;
+    rectLinhaRodape: TRectangle;
+    lblContadorRodape: TLabel;
+    lytValoresRodape: TLayout;
+    lblTextoReceita: TLabel;
+    lblValorReceitaTotal: TLabel;
   private
     { Private declarations }
   public
