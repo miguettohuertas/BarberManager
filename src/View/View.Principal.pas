@@ -147,7 +147,6 @@ type
     scrollAgendamento: TVertScrollBox;
     lytHeaderAgendar: TLayout;
     rectBtnVoltarAgendar: TRectangle;
-    lblIconeVoltarAgendar: TLabel;
     lytTextosHeader: TLayout;
     lblTituloAgendar: TLabel;
     lblSubTituloAgendar: TLabel;
@@ -165,9 +164,7 @@ type
     lblMesAtual: TLabel;
     lytSetasMes: TLayout;
     rectSetaAnterior: TRectangle;
-    lblIconeAnterior: TLabel;
     rectSetaProximo: TRectangle;
-    lblIconeProximo: TLabel;
     scrollDatas: THorzScrollBox;
     rectDiaSabado: TRectangle;
     lblDiaSemanaSabado: TLabel;
@@ -247,6 +244,24 @@ type
     Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
+    imgLogoApp: TImage;
+    imgLogoAppNovaConta: TImage;
+    imgIconeNome: TImage;
+    imgIconeEmail: TImage;
+    imgIconeSenha: TImage;
+    imgIconeConfirmSenha: TImage;
+    imgIconeNomeLogin: TImage;
+    imgIconeSenhaLogin: TImage;
+    imgIconePerfil: TImage;
+    imgIconeBusca: TImage;
+    imgIconeMais: TImage;
+    imgIconeMais2: TImage;
+    imgIconeMais3: TImage;
+    imgIconeVoltar: TImage;
+    imgIconeLogoAgend: TImage;
+    imgIconeVoltar2: TImage;
+    imgIconeIr: TImage;
+    imgIconeBotaoConfirmAgend: TImage;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
   private

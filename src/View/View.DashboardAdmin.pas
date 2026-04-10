@@ -42,12 +42,10 @@ type
     lblDataDash: TLabel;
     lytAcoesDash: TLayout;
     circleAdmin: TCircle;
-    lblIniciaisAdmin: TLabel;
     lytTextosAdmin: TLayout;
     lblAdminNome: TLabel;
     lblAdminCargo: TLabel;
     circleSino: TCircle;
-    Label1: TLabel;
     rectBuscaAdmin: TRectangle;
     edtBuscaAdmin: TEdit;
     scrollDashboard: TVertScrollBox;
@@ -220,6 +218,25 @@ type
     lytColunaTer: TLayout;
     lblDiaTer: TLabel;
     rectBarraTer: TRectangle;
+    imgIconeLogoDash: TImage;
+    imgIconeBuscaDash: TImage;
+    imgIconeNotificacaoDash: TImage;
+    imgIconePerfilDash: TImage;
+    imgIconeMenuInicioDash: TImage;
+    imgIconeMenuAgendaDash: TImage;
+    imgIconeMenuServicoDash: TImage;
+    imgIconeMenuUsuariosDash: TImage;
+    imgIconeMenuFinanDash: TImage;
+    imgIconeMenuConfigDash: TImage;
+    imgIconeMenuSairDash: TImage;
+    rectIconeFaturamento: TRectangle;
+    imgIconeFaturamento: TImage;
+    rectIconeAgendamentos: TRectangle;
+    imgIconeAgendamento: TImage;
+    rectIconePendentes: TRectangle;
+    imgIconePendentes: TImage;
+    rectIconeCancelamentos: TRectangle;
+    imgIconeCancelamentos: TImage;
   private
     { Private declarations }
   public

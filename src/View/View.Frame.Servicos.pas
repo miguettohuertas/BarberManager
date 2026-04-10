@@ -18,7 +18,6 @@ type
     rectBtnNovoServico: TRectangle;
     lblBtnNovoServico: TLabel;
     circleSinoServicos: TCircle;
-    Label1: TLabel;
     rectBuscaServicos: TRectangle;
     edtBuscaServicos: TEdit;
     gridKpiServicos: TGridPanelLayout;
@@ -147,6 +146,13 @@ type
     lytValoresRodape: TLayout;
     lblTextoReceita: TLabel;
     lblValorReceitaTotal: TLabel;
+    imgIconeBuscaServ: TImage;
+    imgIconeNotificacaoServ: TImage;
+    imgIconeNovoServ: TImage;
+    imgIconeKpi1: TImage;
+    imgIconeKpi2: TImage;
+    imgIconeKpi3: TImage;
+    imgIconeKpi4: TImage;
   private
     { Private declarations }
   public
