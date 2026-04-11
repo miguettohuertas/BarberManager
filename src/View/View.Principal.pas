@@ -264,6 +264,13 @@ type
     imgIconeBotaoConfirmAgend: TImage;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
+    procedure rectBtnNovaContaClick(Sender: TObject);
+    procedure rectBtnEntrarClick(Sender: TObject);
+    procedure rectBtnAddCorteClick(Sender: TObject);
+    procedure rectBtnVoltarAgendarClick(Sender: TObject);
+    procedure imgLogoAppClick(Sender: TObject);
+    procedure lytMenuAgendaClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -277,14 +284,53 @@ implementation
 
 {$R *.fmx}
 
+uses View.DashboardAdmin;
+
+procedure TFrmPrincipal.FormShow(Sender: TObject);
+begin
+  TabControlPrincipal.ActiveTab := TabLogin;
+end;
+
+procedure TFrmPrincipal.imgLogoAppClick(Sender: TObject);
+begin
+  Self.Hide;
+
+  FrmDashboardAdmin.Show;
+end;
+
 procedure TFrmPrincipal.lblJaTenhoContaClick(Sender: TObject);
 begin
-  TabControlPrincipal.GotoVisibleTab(0, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+  TabControlPrincipal.SetActiveTabWithTransition(TabLogin, TTabTransition.Slide, TTabTransitionDirection.Reversed);
 end;
 
 procedure TFrmPrincipal.lblVoltarClick(Sender: TObject);
 begin
-  TabControlPrincipal.GotoVisibleTab(0, TTabTransition.Slide);
+  TabControlPrincipal.SetActiveTabWithTransition(TabLogin, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+end;
+
+procedure TFrmPrincipal.lytMenuAgendaClick(Sender: TObject);
+begin
+  TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento, TTabTransition.Slide, TTabTransitionDirection.Normal);
+end;
+
+procedure TFrmPrincipal.rectBtnAddCorteClick(Sender: TObject);
+begin
+  TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento, TTabTransition.Slide, TTabTransitionDirection.Normal);
+end;
+
+procedure TFrmPrincipal.rectBtnEntrarClick(Sender: TObject);
+begin
+  TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Normal);
+end;
+
+procedure TFrmPrincipal.rectBtnNovaContaClick(Sender: TObject);
+begin
+  TabControlPrincipal.SetActiveTabWithTransition(TabNovaConta, TTabTransition.Slide, TTabTransitionDirection.Normal);
+end;
+
+procedure TFrmPrincipal.rectBtnVoltarAgendarClick(Sender: TObject);
+begin
+  TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Reversed);
 end;
 
 end.

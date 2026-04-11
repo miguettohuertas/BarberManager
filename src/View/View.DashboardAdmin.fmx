@@ -620,6 +620,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuInicioClick
           object lblMenuInicio: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]
@@ -1076,6 +1077,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuServicosClick
           object lblMenuServicos: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]
@@ -3233,6 +3235,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuSairClick
           object lblMenuSair: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]
@@ -3417,6 +3420,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   'al-symbols--logout.png'
               end>
             Align = Left
+            HitTest = False
             Margins.Left = 10.000000000000000000
             Margins.Top = 12.000000000000000000
             Margins.Bottom = 12.000000000000000000

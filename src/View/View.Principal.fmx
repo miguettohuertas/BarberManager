@@ -2,31 +2,32 @@ object FrmPrincipal: TFrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 810
+  ClientHeight = 892
   ClientWidth = 390
   Fill.Color = xFF0B1220
   Fill.Kind = Solid
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
+  OnShow = FormShow
   DesignerMasterStyle = 0
   object TabControlPrincipal: TTabControl
     Align = Client
     Size.Width = 390.000000000000000000
-    Size.Height = 810.000000000000000000
+    Size.Height = 892.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 3
+    TabIndex = 2
     TabOrder = 0
     TabPosition = None
     Sizes = (
       390s
-      810s
+      892s
       390s
-      810s
+      892s
       390s
-      810s
+      892s
       390s
-      810s)
+      892s)
     object TabLogin: TTabItem
       CustomIcon = <
         item
@@ -45,7 +46,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 810.000000000000000000
+        Size.Height = 892.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object lytPrincipalLogin: TLayout
@@ -53,7 +54,7 @@ object FrmPrincipal: TFrmPrincipal
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
           Size.Width = 350.000000000000000000
-          Size.Height = 810.000000000000000000
+          Size.Height = 892.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object lytLogoCentralizado: TLayout
@@ -579,6 +580,7 @@ object FrmPrincipal: TFrmPrincipal
                 Size.Width = 50.000000000000000000
                 Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
+                OnClick = imgLogoAppClick
               end
             end
           end
@@ -1526,6 +1528,7 @@ object FrmPrincipal: TFrmPrincipal
             Stroke.Kind = None
             XRadius = 10.000000000000000000
             YRadius = 10.000000000000000000
+            OnClick = rectBtnEntrarClick
             object lblBtnEntrar: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
@@ -1539,6 +1542,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object btnAcessarLogin: TSpeedButton
               Align = Client
+              HitTest = False
               Size.Width = 350.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
@@ -1557,6 +1561,7 @@ object FrmPrincipal: TFrmPrincipal
             Stroke.Color = xFF2E3B52
             XRadius = 10.000000000000000000
             YRadius = 10.000000000000000000
+            OnClick = rectBtnNovaContaClick
             object lblBtnNovaConta: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
@@ -1570,6 +1575,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object btnNovaConta: TSpeedButton
               Align = Client
+              HitTest = False
               Size.Width = 350.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
@@ -1598,7 +1604,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 810.000000000000000000
+        Size.Height = 892.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object scrollNovaConta: TVertScrollBox
@@ -1606,12 +1612,12 @@ object FrmPrincipal: TFrmPrincipal
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
           Size.Width = 350.000000000000000000
-          Size.Height = 810.000000000000000000
+          Size.Height = 892.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
           Viewport.Width = 350.000000000000000000
-          Viewport.Height = 810.000000000000000000
+          Viewport.Height = 892.000000000000000000
           object lytVoltar: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -3762,7 +3768,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -3775,13 +3781,13 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 810.000000000000000000
+        Size.Height = 892.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object rectMenuInferior: TRectangle
           Align = Bottom
           Fill.Color = xFF141C2B
-          Position.Y = 740.000000000000000000
+          Position.Y = 822.000000000000000000
           Size.Width = 390.000000000000000000
           Size.Height = 70.000000000000000000
           Size.PlatformDefault = False
@@ -4053,10 +4059,12 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytMenuAgenda: TLayout
               Align = Client
+              HitTest = True
               Size.Width = 97.521598815917970000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
+              OnClick = lytMenuAgendaClick
               object lblMenuAgenda: TLabel
                 Align = Bottom
                 StyledSettings = [Family, Size, Style]
@@ -4242,6 +4250,7 @@ object FrmPrincipal: TFrmPrincipal
                       'te--calendar-line.png'
                   end>
                 Align = Center
+                HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
@@ -5224,12 +5233,12 @@ object FrmPrincipal: TFrmPrincipal
         object scrollHome: TVertScrollBox
           Align = Client
           Size.Width = 390.000000000000000000
-          Size.Height = 740.000000000000000000
+          Size.Height = 822.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
           ShowScrollBars = False
           Viewport.Width = 390.000000000000000000
-          Viewport.Height = 740.000000000000000000
+          Viewport.Height = 822.000000000000000000
           object lytHeaderHome: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -6726,6 +6735,7 @@ object FrmPrincipal: TFrmPrincipal
                 Stroke.Kind = None
                 XRadius = 8.000000000000000000
                 YRadius = 8.000000000000000000
+                OnClick = rectBtnAddCorteClick
                 object lblBtnAddCorte: TLabel
                   Align = Client
                   StyledSettings = [Family, Size]
@@ -7232,7 +7242,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -7245,7 +7255,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 810.000000000000000000
+        Size.Height = 892.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object rectRodapeConfirma: TRectangle
@@ -7255,7 +7265,7 @@ object FrmPrincipal: TFrmPrincipal
           Padding.Top = 15.000000000000000000
           Padding.Right = 20.000000000000000000
           Padding.Bottom = 15.000000000000000000
-          Position.Y = 630.000000000000000000
+          Position.Y = 712.000000000000000000
           Size.Width = 390.000000000000000000
           Size.Height = 180.000000000000000000
           Size.PlatformDefault = False
@@ -7877,12 +7887,12 @@ object FrmPrincipal: TFrmPrincipal
         object scrollAgendamento: TVertScrollBox
           Align = Client
           Size.Width = 390.000000000000000000
-          Size.Height = 630.000000000000000000
+          Size.Height = 712.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
           Viewport.Width = 390.000000000000000000
-          Viewport.Height = 630.000000000000000000
+          Viewport.Height = 712.000000000000000000
           object lytHeaderAgendar: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -7903,6 +7913,7 @@ object FrmPrincipal: TFrmPrincipal
               Stroke.Kind = None
               XRadius = 10.000000000000000000
               YRadius = 10.000000000000000000
+              OnClick = rectBtnVoltarAgendarClick
               object imgIconeVoltar: TImage
                 MultiResBitmap.Height = 512
                 MultiResBitmap.Width = 512
@@ -8015,6 +8026,7 @@ object FrmPrincipal: TFrmPrincipal
                       'oon--arrow-left-2-light.png'
                   end>
                 Align = Client
+                HitTest = False
                 Margins.Left = 10.000000000000000000
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000

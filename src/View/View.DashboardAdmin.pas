@@ -237,6 +237,9 @@ type
     imgIconePendentes: TImage;
     rectIconeCancelamentos: TRectangle;
     imgIconeCancelamentos: TImage;
+    procedure rectMenuServicosClick(Sender: TObject);
+    procedure rectMenuInicioClick(Sender: TObject);
+    procedure rectMenuSairClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -249,5 +252,44 @@ var
 implementation
 
 {$R *.fmx}
+
+uses View.Frame.Servicos, View.Principal;
+
+procedure TFrmDashboardAdmin.rectMenuInicioClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  for I := lytAreaPrincipal.ControlsCount - 1 downto 0 do
+  begin
+    if lytAreaPrincipal.Controls[I] is TFrame then
+      lytAreaPrincipal.Controls[I].DisposeOf;
+  end;
+
+  scrollDashboard.Visible := True;
+
+end;
+
+procedure TFrmDashboardAdmin.rectMenuSairClick(Sender: TObject);
+begin
+  Self.Hide;
+
+  FrmPrincipal.TabControlPrincipal.ActiveTab := FrmPrincipal.TabLogin;
+
+  FrmPrincipal.Show;
+end;
+
+procedure TFrmDashboardAdmin.rectMenuServicosClick(Sender: TObject);
+var
+  FrameServicos: TFrameServicos;
+begin
+  scrollDashboard.Visible := False;
+
+  FrameServicos := TFrameServicos.Create(Self);
+
+  FrameServicos.Parent := lytAreaPrincipal;
+
+  FrameServicos.Align := TAlignLayout.Client;
+
+end;
 
 end.
