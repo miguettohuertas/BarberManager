@@ -48,7 +48,7 @@ Universo Cliente (App Mobile)
 
 ![Login](docs/Telas/01_login.png)
 
-Nova Conta
+![Nova Conta](docs/Telas/02_novaConta.png)
 
 
 
@@ -58,9 +58,9 @@ Acesso seguro com design limpo e logo em destaque.
 
 Formulário amigável com ícones e identificação visual.
 
-Home Principal
+![Home Principal](docs/Telas/03_clienteHome.png)
 
-Agendamento
+![Agendamento](docs/Telas/04_clienteAgendar.png)
 
 
 
@@ -72,9 +72,9 @@ Calendário, grelha de horários via FlowLayout e confirmação.
 
 Universo Administrador (Desktop / Web)
 
-Dashboard Administrativo
+![Dashboard Administrativo](docs/Telas/05_adminDashboard.png)
 
-Gestão de Serviços
+![Gestão de Serviços](docs/Telas/06_servicos.png)
 
 
 
