@@ -1,10 +1,10 @@
-✂️ BarberManager
+BarberManager
 
 BarberManager é um sistema completo e moderno para a gestão de barbearias, projetado para revolucionar a conexão entre barbeiros e clientes. O projeto visa eliminar o atrito dos agendamentos manuais e oferecer um controle financeiro e administrativo robusto para os proprietários.
 
 Este projeto é desenvolvido como requisito da disciplina de Programação Web, aplicando boas práticas de Engenharia de Software, UI/UX Design moderno e Arquitetura Limpa.
 
-📋 Sumário
+Sumário
 
 Visão Geral do Sistema
 
@@ -20,7 +20,7 @@ Próximos Passos (Roadmap)
 
 Como Executar
 
-🎯 Visão Geral do Sistema
+Visão Geral do Sistema
 
 O sistema é dividido em dois universos distintos, compartilhando a mesma base de código (Single Codebase) graças ao poder do Delphi FMX:
 
@@ -28,7 +28,7 @@ App Mobile (Para Clientes): Focado na experiência do utilizador (UX), permitind
 
 Dashboard Web/Desktop (Para Administradores): Um painel de controle de alta produtividade (resolução 1280x720) para os barbeiros gerirem a fila de espera, serviços oferecidos e a faturação diária.
 
-🛠️ Arquitetura e Tecnologias
+Arquitetura e Tecnologias
 
 Linguagem: Delphi (Object Pascal)
 
@@ -40,13 +40,13 @@ Modelagem: C4 Model (Diagramas de Contexto, Componentes e Servidor disponíveis 
 
 Base de Dados (Planeado): SQLite (Mobile) / Firebird ou MySQL (Servidor) com framework de persistência a ser definido.
 
-📱 Telas e Navegação (Protótipo Interativo)
+Telas e Navegação (Protótipo Interativo)
 
 Atualmente, o projeto encontra-se na fase de Protótipo de Alta Fidelidade, onde todas as telas foram desenhadas e a navegação (roteamento) está 100% funcional, simulando a experiência final do utilizador.
 
 Universo Cliente (App Mobile)
 
-Login
+Login (Telas/01_login.png)
 
 Nova Conta
 
@@ -86,9 +86,9 @@ Catálogo dinâmico com filtros, contadores e ações rápidas.
 
 Nota: Para visualizar as imagens em alta resolução e no tamanho original, acesse o diretório docs/Telas/ neste repositório.
 
-⚙️ Módulos e Funcionalidades
+Módulos e Funcionalidades
 
-👤 Módulo Cliente (Concluído no Front-End)
+Módulo Cliente (Concluído no Front-End)
 
 [x] Autenticação (Login e Cadastro com ícones nos inputs).
 
@@ -98,7 +98,7 @@ Nota: Para visualizar as imagens em alta resolução e no tamanho original, aces
 
 [x] Motor de Agendamento (Seleção intuitiva de Dia, Horário e Barbeiro).
 
-💼 Módulo Barbeiro/Admin (Concluído no Front-End)
+Módulo Barbeiro/Admin (Concluído no Front-End)
 
 [x] Sidebar de Navegação responsiva.
 
@@ -108,20 +108,20 @@ Nota: Para visualizar as imagens em alta resolução e no tamanho original, aces
 
 [x] Tela de Gestão de Serviços (Tabela de dados customizada sem uso de componentes de terceiros).
 
-📂 Estrutura do Repositório
+Estrutura do Repositório
 
-📦 BarberManager
- ┣ 📂 docs
- ┃ ┣ 📂 diagramas_c4      # Arquivos .puml e renders da arquitetura
- ┃ ┗ 📂 Telas             # Prints das telas de UI/UX aprovadas
- ┣ 📂 src                 # Códigos fonte Delphi (.pas, .fmx)
- ┃ ┣ 📄 View.Principal.pas       # Casca do App Mobile e Navegação
- ┃ ┣ 📄 View.DashboardAdmin.pas  # Painel principal do Admin
- ┃ ┗ 📄 View.Frame.Servicos.pas  # Frame injetável de Serviços
- ┗ 📄 README.md           # Esta documentação
+ BarberManager
+ ┣  docs
+ ┃ ┣  diagramas_c4      # Arquivos .puml e renders da arquitetura
+ ┃ ┗  Telas             # Prints das telas de UI/UX aprovadas
+ ┣  src                 # Códigos fonte Delphi (.pas, .fmx)
+ ┃ ┣  View.Principal.pas       # Casca do App Mobile e Navegação
+ ┃ ┣  View.DashboardAdmin.pas  # Painel principal do Admin
+ ┃ ┗  View.Frame.Servicos.pas  # Frame injetável de Serviços
+ ┗  README.md           # Esta documentação
 
 
-🗺️ Próximos Passos (Roadmap)
+ Próximos Passos (Roadmap)
 
 A metodologia de desenvolvimento adotada separa estritamente o Front-end do Back-end. Os próximos passos são:
 
@@ -139,7 +139,7 @@ A metodologia de desenvolvimento adotada separa estritamente o Front-end do Back
 
 [ ] Fase 7: Integração Front x Back (Data Binding e Persistência).
 
-▶️ Como Executar o Protótipo
+ Como Executar o Protótipo
 
 Para testar a interface e a navegação atual do sistema:
 
