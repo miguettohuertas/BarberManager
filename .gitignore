@@ -79,3 +79,8 @@ __recovery/
 
 # Boss dependency manager vendor folder https://github.com/HashLoad/boss
 modules/
+
+# Base de dados Firebird — excepção intencional para portabilidade do projecto
+# Este ficheiro está incluído no repositório para facilitar execução local sem setup adicional
+# Não adicionar regras *.fdb ou database/ sem remover esta excepção primeiro
+!database/BARBERMANAGER.FDB
