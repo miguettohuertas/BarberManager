@@ -13,9 +13,10 @@
 - [Diagramas de Arquitetura (C4 Model)](#diagramas-de-arquitetura-c4-model)
 - [Telas e Navegação (Protótipo Interativo)](#telas-e-navegação-protótipo-interativo)
 - [Módulos e Funcionalidades](#módulos-e-funcionalidades)
+- [Funcionalidades Implementadas (Back-End)](#funcionalidades-implementadas-back-end)
 - [Estrutura do Repositório](#estrutura-do-repositório)
 - [Próximos Passos (Roadmap)](#próximos-passos-roadmap)
-- [Como Executar](#como-executar-o-protótipo)
+- [Como Executar Localmente](#como-executar-localmente)
 
 ---
 
@@ -36,7 +37,9 @@ O sistema é dividido em dois universos distintos, compartilhando a mesma base d
 | **Framework de Interface** | FMX (FireMonkey) — compilação nativa para Windows, Android, iOS e Web |
 | **Paradigma UI** | Single Page Application (SPA) com `TTabControl` (Mobile) e injeção de `TFrames` (Desktop) |
 | **Modelagem** | C4 Model (Contexto, Componentes e Servidor) |
-| **Base de Dados (Planeado)** | SQLite (Mobile) / Firebird ou MySQL (Servidor) |
+| **Base de Dados** | Firebird 3.0 (servidor local via protocolo Local) |
+| **Acesso a Dados** | FireDAC — componentes criados inteiramente por código (sem designer) |
+| **Segurança** | Hash SHA-256 (via `System.Hash.THashSHA2`) para armazenamento de passwords |
 
 ---
 
@@ -72,7 +75,7 @@ A arquitetura do sistema foi modelada seguindo o **C4 Model**, que descreve o so
 
 ## Telas e Navegação (Protótipo Interativo)
 
-Atualmente, o projeto encontra-se na fase de **Protótipo de Alta Fidelidade**, onde todas as telas foram desenhadas e a navegação (roteamento) está **100% funcional**, simulando a experiência final do utilizador.
+Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, onde todas as telas estão conectadas à base de dados Firebird e os dados são carregados e persistidos em tempo real.
 
 ---
 
@@ -138,19 +141,80 @@ Atualmente, o projeto encontra-se na fase de **Protótipo de Alta Fidelidade**, 
 
 ## Módulos e Funcionalidades
 
-### Módulo Cliente *(Front-End Concluído)*
+### Módulo Cliente *(Front-End + Back-End Concluídos)*
 
 - [x] Autenticação (Login e Cadastro com ícones nos inputs)
+- [x] Login real com validação na base de dados e hash SHA-256
 - [x] Navegação por "Bottom Navigation" (Início, Agenda, Carrinho, Perfil)
-- [x] Catálogo de Serviços com rolagem inteligente horizontal
-- [x] Motor de Agendamento (Seleção intuitiva de Dia, Horário e Barbeiro)
+- [x] Catálogo de Serviços carregado dinamicamente de `TB_SERVICOS`
+- [x] Filtros de categoria funcionais (Todos / Cabelo / Barba / Estética)
+- [x] Motor de Agendamento completo (Serviço + Barbeiro + Horário)
+- [x] Persistência do agendamento em `TB_AGENDAMENTOS` com cálculo automático de `HR_FIM`
 
-### Módulo Barbeiro/Admin *(Front-End Concluído)*
+### Módulo Barbeiro/Admin *(Front-End + Back-End Concluídos)*
 
 - [x] Sidebar de Navegação responsiva
-- [x] Cards de Resumo Financeiro (KPIs: Faturação, Ticket Médio, Pendentes)
-- [x] Linha do Tempo (Agenda do Dia) com avatares e status de serviço
-- [x] Tela de Gestão de Serviços (Tabela de dados customizada sem componentes de terceiros)
+- [x] Cards de Resumo Financeiro com dados reais do dia (KPIs via query agregada)
+- [x] Linha do Tempo com agendamentos reais, coloridos por status
+- [x] Tela de Gestão de Serviços (visual concluído — lógica CRUD em desenvolvimento)
+
+---
+
+## Funcionalidades Implementadas (Back-End)
+
+> Esta secção detalha o que foi efectivamente desenvolvido e integrado com a base de dados Firebird nas Fases 5, 6 e 7.
+
+---
+
+### Conexão à Base de Dados — `Model.Conexao.pas`
+
+> `TdmConexao` é um DataModule singleton criado inteiramente por código (sem componentes no designer), garantindo portabilidade e controlo total da ligação FireDAC.
+
+- Ligação ao Firebird 3.0 via protocolo Local (`fbclient.dll`)
+- CharacterSet UTF-8, credenciais configuradas em código
+- `FDConnection1` exposto como `public` para acesso por todos os Forms e Frames
+
+---
+
+### Autenticação Real — `View.Principal.pas`
+
+> O login deixou de ser simulado e passou a validar as credenciais directamente na tabela `TB_USUARIOS`.
+
+- Query à `TB_USUARIOS` com filtro por e-mail e hash SHA-256 da password
+- Redireccionamento automático: perfil `CLIENTE` → Home Mobile; perfil `ADMIN` → Dashboard Desktop
+- Password armazenada como SHA-256 em maiúsculas (`UpperCase(THashSHA2.GetHashString(...))`)
+
+---
+
+### Catálogo de Serviços Dinâmico
+
+> Os cards de serviços na Home do cliente são criados programaticamente a partir dos registos activos em `TB_SERVICOS`.
+
+- Cards (`TLayout`) criados em runtime com `Align=None` e `Position.Y` explícito
+- Filtros de categoria aplicam cláusula `WHERE CATEGORIA = :CAT` dinamicamente
+- Cor e estado visual actualizados via `StyledSettings := []` + `TextSettings.FontColor`
+
+---
+
+### Motor de Agendamento
+
+> Fluxo completo: o cliente selecciona serviço → barbeiro → horário → confirma. O registo é inserido na base de dados.
+
+- Barbeiros carregados de `TB_BARBEIROS` com JOIN a `TB_USUARIOS`
+- 20 slots de horário gerados programaticamente no `TFlowLayout`, com estados disponível/ocupado
+- `HR_FIM` calculado automaticamente com `IncMinute(HR_INICIO, DURACAO_MIN)`
+- INSERT em `TB_AGENDAMENTOS` com todos os campos (cliente, barbeiro, serviço, datas, valor)
+
+---
+
+### Dashboard Administrativo com KPIs Reais
+
+> Os dados exibidos no painel deixaram de ser estáticos — são calculados em tempo real a partir dos agendamentos do dia.
+
+- Query agregada a `TB_AGENDAMENTOS` com filtro `DT_AGENDAMENTO = CURRENT_DATE`
+- KPIs actualizados: Faturação (`SUM`), Total, Pendentes e Cancelados (`SUM CASE WHEN`)
+- Linha do Tempo: JOIN entre `TB_AGENDAMENTOS`, `TB_USUARIOS`, `TB_BARBEIROS` e `TB_SERVICOS`
+- Cards dinâmicos na linha do tempo com cores por status: Concluído / Em Andamento / Pendente / Cancelado
 
 ---
 
@@ -158,46 +222,96 @@ Atualmente, o projeto encontra-se na fase de **Protótipo de Alta Fidelidade**, 
 
 ```
 BarberManager
+ ┣ database
+ ┃ ┗ BARBERMANAGER.FDB          # Base de dados Firebird 3.0
  ┣ docs
- ┃ ┣ Diagramas_C4       # Diagramas C4 Model da arquitetura (.png)
- ┃ ┗ Telas              # Prints das telas de UI/UX aprovadas (.png)
- ┣ src                  # Código-fonte Delphi (.pas, .fmx)
- ┃ ┣ View.Principal.pas          # Casca do App Mobile e Navegação
- ┃ ┣ View.DashboardAdmin.pas     # Painel principal do Admin
- ┃ ┗ View.Frame.Servicos.pas     # Frame injetável de Serviços
- ┗ README.md            # Esta documentação
+ ┃ ┣ Diagramas_C4               # Diagramas C4 Model da arquitetura (.png)
+ ┃ ┗ Telas                      # Prints das telas de UI/UX aprovadas (.png)
+ ┣ src
+ ┃ ┣ Model
+ ┃ ┃ ┗ Model.Conexao.pas        # DataModule de ligação FireDAC/Firebird
+ ┃ ┗ View
+ ┃   ┣ View.Principal.pas       # App Mobile — Login, Home, Agendamento
+ ┃   ┣ View.DashboardAdmin.pas  # Dashboard Admin — KPIs e Linha do Tempo
+ ┃   ┗ View.Frame.Servicos.pas  # Frame injetável de Gestão de Serviços
+ ┣ CLAUDE.md                    # Contexto técnico do projecto para o assistente IA
+ ┗ README.md                    # Esta documentação
 ```
 
 ---
 
 ## Próximos Passos (Roadmap)
 
-A metodologia de desenvolvimento adotada separa estritamente o **Front-end** do **Back-end**. Os próximos passos são:
+A metodologia de desenvolvimento adotada separa estritamente o **Front-end** do **Back-end**. Estado actual das fases:
 
 - [x] **Fase 1:** Definição de Escopo e Requisitos
 - [x] **Fase 2:** Design System e Protótipos no Figma
 - [x] **Fase 3:** Construção do Front-End (UI) no Delphi FMX
 - [x] **Fase 4:** Navegação, Transições e UX interativa (Mockups)
-- [ ] **Fase 5:** Modelagem da Base de Dados Relacional (DER)
-- [ ] **Fase 6:** Criação do Back-End (Regras de Negócio e APIs)
-- [ ] **Fase 7:** Integração Front × Back (Data Binding e Persistência)
+- [x] **Fase 5:** Modelagem da Base de Dados Relacional (DER) e criação do schema Firebird ✅
+- [x] **Fase 6:** Criação do Back-End (Regras de Negócio — Conexão, Login, Agendamento, KPIs) ✅
+- [x] **Fase 7:** Integração Front × Back (Data Binding e Persistência) — parcial ✅
+- [ ] **Fase 8:** CRUD completo de Serviços no Frame Admin + Deploy via D2Bridge ⏳
 
 ---
 
-## Como Executar o Protótipo
+## Como Executar Localmente
 
-Para testar a interface e a navegação atual do sistema:
+### Pré-requisitos
 
-**1. Clone o repositório:**
+| Requisito | Versão / Detalhe |
+|---|---|
+| **Delphi** | 12 Athens (Community Edition ou superior) |
+| **Firebird** | 3.0 — [download](https://firebirdsql.org/en/firebird-3-0/) |
+| **fbclient.dll** | Incluída na instalação do Firebird (`Firebird_3_0\fbclient.dll`) |
+
+---
+
+### 1. Clone o repositório
+
 ```bash
-git clone https://github.com/seu-usuario/BarberManager.git
+git clone https://github.com/miguettohuertas/BarberManager.git
 ```
 
-**2.** Abra o arquivo `.dproj` no **Embarcadero Delphi** (Community Edition ou superior).
+---
 
-**3.** Defina a plataforma alvo como **Windows 32-bit** ou **Android** para visualizar a responsividade.
+### 2. Configure a base de dados
 
-**4.** Pressione `F9` para executar.
+**a)** Certifique-se de que o servidor Firebird 3.0 está instalado em:
+```
+C:\Program Files (x86)\Firebird\Firebird_3_0\
+```
+
+**b)** O ficheiro da base de dados já está incluído no repositório em:
+```
+database\BARBERMANAGER.FDB
+```
+
+**c)** Verifique que o caminho em `src\Model\Model.Conexao.pas` aponta para a localização correcta:
+```pascal
+FDConnection1.Params.Database :=
+  'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
+```
+> Ajuste o caminho se tiver clonado o repositório para outra directoria.
+
+---
+
+### 3. Compile e execute
+
+**a)** Abra o arquivo `.dproj` no **Embarcadero Delphi 12**.
+
+**b)** Defina a plataforma alvo como **Windows 32-bit**.
+
+**c)** Pressione `F9` para compilar e executar.
+
+---
+
+### Credenciais de Teste
+
+| Perfil | E-mail | Password | Acesso |
+|---|---|---|---|
+| **Administrador** | `admin@barber.com` | `123456` | Dashboard Admin (Desktop) |
+| **Cliente** | `carlos@email.com` | `123456` | App Mobile (Home + Agendamento) |
 
 ---
 
@@ -205,10 +319,12 @@ git clone https://github.com/seu-usuario/BarberManager.git
 
 | Ação | Resultado |
 |---|---|
-| Clicar em **"Criar Nova Conta"** | Transição em Slide para tela de cadastro |
-| Clicar em **"Entrar"** | Acesso à Home do Cliente |
-| Clicar na **Logo** na tela de Login | Acesso direto à área Administrativa (Desktop) |
-| Menu lateral no Admin | Alterna entre **"Agenda"** e **"Serviços"** |
+| Login com credenciais de **Cliente** | Acesso à Home do Cliente com serviços reais |
+| Filtros **Todos / Cabelo / Barba / Estética** | Lista de serviços filtrada dinamicamente da BD |
+| Clicar num serviço → **Agendar** | Seleção de barbeiro, horário e confirmação persistida na BD |
+| Login com credenciais de **Administrador** | Dashboard com KPIs e linha do tempo do dia actual |
+| Menu lateral → **Serviços** | Frame de gestão de serviços (visual) |
+| Menu lateral → **Sair** | Retorno ao ecrã de Login |
 
 ---
 
