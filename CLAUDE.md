@@ -60,9 +60,10 @@ BarberManager/
 
 | Tabela            | Descrição                                          |
 |-------------------|----------------------------------------------------|
-| `TB_USUARIOS`     | Clientes e utilizadores do sistema. Colunas: ID, NOME_COMPLETO, EMAIL, SENHA (SHA-256 uppercase), PERFIL ('ADMIN'/'CLIENTE') |
-| `TB_SERVICOS`     | Catálogo de serviços. Colunas: ID, NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA, ATIVO |
-| `TB_BARBEIROS`    | Barbeiros. Colunas: ID, USUARIO_ID (FK → TB_USUARIOS), ATIVO |
+| `TB_USUARIOS`     | Clientes e utilizadores do sistema. Colunas: ID, NOME_COMPLETO, EMAIL, SENHA_HASH (SHA-256 uppercase), PERFIL ('ADMIN'/'CLIENTE'), ATIVO |
+| `TB_SERVICOS`     | Catálogo de serviços. Colunas: ID, NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA_ID (FK → TB_CATEGORIAS), BADGE, ATIVO |
+| `TB_CATEGORIAS`   | Categorias de serviços. Colunas: ID, NOME (ex: 'Cabelo', 'Barba', 'Estética') |
+| `TB_BARBEIROS`    | Barbeiros. Colunas: ID, USUARIO_ID (FK → TB_USUARIOS), CARGO, AVALIACAO_MEDIA, ATIVO |
 | `TB_AGENDAMENTOS` | Agendamentos. Colunas: ID, CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, HR_INICIO, HR_FIM, STATUS ('PENDENTE'/'EM_ANDAMENTO'/'CONCLUIDO'/'CANCELADO'), VALOR_COBRADO |
 
 ---
@@ -75,17 +76,29 @@ BarberManager/
 - Função `Conectar` configura VendorLib, DriverID='FB', Protocol=Local, UTF8
 - Variável global `dmConexao` instanciada no arranque da aplicação
 
-### View.Principal.pas — Form principal com 3 tabs:
+### View.Principal.pas — Form principal com 4 tabs:
 1. **TabLogin** — Login real: query a TB_USUARIOS com SHA-256 (`THashSHA2.GetHashString` + `UpperCase`). Redireciona para Home (CLIENTE) ou DashboardAdmin (ADMIN).
-2. **TabHome** — Home do cliente:
-   - Cards de serviços carregados dinamicamente de TB_SERVICOS (`CarregarServicos`)
-   - Filtros de categoria funcionais: Todos / Cabelo / Barba / Estética (`AplicarFiltroCategoria`)
+2. **TabNovaConta** — Cadastro real de utilizador:
+   - Campos: nome completo, email, senha, confirmar senha, checkbox de termos
+   - Validações: nome obrigatório, `ValidarEmail` (verifica `@` e `.`), senha ≥ 6 chars, confirmação, termos aceites
+   - Verifica email duplicado via `COUNT(*)` antes do INSERT
+   - INSERT em TB_USUARIOS com `SENHA_HASH = HashSenha(senha)` e `PERFIL = 'CLIENTE'`
+   - Evento: `rectBtnCadastrarClick` (ligado via `OnClick` no `.fmx`; `SpeedButton1` sobreposto tem `HitTest = False`)
+3. **TabHome** — Home do cliente:
+   - Banner de oferta dinâmico (`CarregarBannerOferta`): primeiro serviço com `BADGE <> ''` de TB_SERVICOS; mostra nome + "com 20% de desconto"
+   - Cards de serviços carregados dinamicamente via JOIN TB_SERVICOS + TB_CATEGORIAS (`CarregarServicos(Filtro, Busca)`)
+   - Filtros de categoria: Todos / Cabelo / Barba / Estética (`AplicarFiltroCategoria`) — fix de encoding: comparação com `Pos('EST', UpperCase(...))` em vez de `= 'ESTÉTICA'`
+   - Campo de busca em tempo real (`edtBuscaChange` via `OnChangeTracking`): usa `CONTAINING` do Firebird; quando activo reseta visual dos filtros para "Todos"
+   - "Ver Todos >" (`lblVerTodosClick`): limpa busca + aplica filtro Todos + scroll para lista
    - Clique num card abre o ecrã de agendamento (`AbrirAgendamento`)
-3. **TabAgendamento** — Agendamento completo:
-   - Cards de barbeiros carregados de TB_BARBEIROS + TB_USUARIOS (`CarregarBarbeiros`)
-   - 20 slots de horário em `flowHorarios` com estados disponível/ocupado (`CarregarHorarios`)
-   - Variáveis de sessão: `FServicoIDSelecionado`, `FBarbeiroIDSelecionado`, `FHoraSelecionada`, etc.
-   - Botão Confirmar: valida sessão, calcula HR_FIM com `IncMinute`, insere em TB_AGENDAMENTOS
+4. **TabAgendamento** — Agendamento completo:
+   - Acessível pelo menu inferior mesmo sem serviço seleccionado (`lytMenuAgendaClick`): mostra estado neutro com placeholders, carrega barbeiros e horários
+   - Cards de barbeiros carregados de TB_BARBEIROS + TB_USUARIOS com CARGO e AVALIACAO_MEDIA (`CarregarBarbeiros`)
+   - 20 slots de horário em `flowHorarios` com estados disponível/ocupado (`CarregarHorarios`) — horários ocupados hardcoded (pendente: verificar TB_AGENDAMENTOS)
+   - Variáveis de sessão: `FServicoIDSelecionado`, `FBarbeiroIDSelecionado`, `FHoraSelecionada`, `FDataSelecionada`, etc.
+   - `AbrirAgendamento`: preenche todos os labels do card `rectServicoAgendar` incluindo `lblBadgeSelecionado` e `lblResumoData` com data formatada
+   - Botão Confirmar: valida sessão com mensagens específicas por campo, calcula `HR_FIM` com `IncMinute`, insere em TB_AGENDAMENTOS
+   - Após confirmação: reset completo do estado + `CarregarHorarios` + `CarregarBarbeiros` + `CarregarServicos('')`; labels `lblPrecoServico` e `lblTempoServico` (AutoSize=True) resetados para `'R$ 0,00'` e `'-- min'` para evitar colapso de layout
 
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
@@ -103,25 +116,30 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Frame Serviços dinâmico** (`View.Frame.Servicos.pas`):
+1. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
    - Carregar lista de serviços de TB_SERVICOS dinamicamente (substituir as 3 linhas estáticas)
    - Filtros Todos/Ativos/Inativos funcionais (query com WHERE ATIVO=...)
    - Filtros de categoria (Estética/Barba/Cabelo) funcionais
-   - Busca por nome (edtBuscaServicos)
+   - Busca por nome (`edtBuscaServicos`) com `CONTAINING`
    - KPIs reais: total de serviços, ticket médio, serviço mais popular
    - Botão "Novo Serviço": formulário de cadastro (INSERT em TB_SERVICOS)
    - Acções por linha: editar (UPDATE), eliminar (DELETE), toggle ativo/inativo
 
-2. **IDE linkage** — eventos ainda não ligados no Object Inspector:
-   - `View.DashboardAdmin.fmx` → Form OnShow → `FormShow`
-   - `View.Principal.fmx` → filtros de categoria OnClick (rectFiltroTodos, rectFiltroCabelo, rectFiltroBarba, rectFiltroEstetica)
-   - `View.Principal.fmx` → rectBtnConfirmar OnClick → `rectBtnConfirmarClick`
+2. **Dashboard Admin — dados reais**:
+   - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
+   - Barra de meta: receita do dia vs meta configurável
+   - Gestão de barbeiros (CRUD em TB_BARBEIROS)
 
-3. **Ecrã de cadastro de utilizador** — `rectBtnNovaConta` abre formulário, INSERT em TB_USUARIOS com SHA-256
+3. **Sessão de utilizador**:
+   - Guardar ID e PERFIL do utilizador logado em variável global ou singleton
+   - Substituir `CLIENTE_ID = 1` hardcoded em `rectBtnConfirmarClick` pelo ID real da sessão
+   - Mostrar agendamentos do utilizador logado no histórico
 
-4. **Gestão de barbeiros** no dashboard admin
+4. **Horários ocupados reais** (`CarregarHorarios`):
+   - Substituir o array `Ocupados` hardcoded por query a TB_AGENDAMENTOS
+   - Filtrar por BARBEIRO_ID + DT_AGENDAMENTO = FDataSelecionada + STATUS ≠ 'CANCELADO'
 
-5. **Relatórios financeiros** — gráfico de barras semanal com dados reais de TB_AGENDAMENTOS
+5. **Deploy com D2Bridge** — empacotamento para Android/iOS
 
 ---
 
@@ -133,10 +151,30 @@ BarberManager/
 - Não instanciar `TFDGUIxWaitCursor` — incluir a unit é suficiente
 - `FDConnection1` deve ser `public` em `TdmConexao` para acesso externo
 
-### Ficheiros .fmx — NUNCA EDITAR MANUALMENTE
+### Ficheiros .fmx — NUNCA EDITAR MANUALMENTE (regra geral)
 - Os ficheiros `.fmx` são o designer do Delphi; editar à mão corrompe o formulário
 - Toda a lógica dinâmica é criada por código em `.pas`
 - Componentes do designer são referenciados pelo nome na secção `published` do `.pas`
+- Excepção aceite: remoção de blocos completos `object...end` e adição de propriedades simples (OnClick, HitTest, OnChangeTracking) podem ser feitas via PowerShell/Edit com validação prévia de limites de linha
+- Quando se remove um componente do `.fmx`, remover também a declaração de campo na secção `published` do `.pas` (e vice-versa)
+
+### TLabel — HitTest e cliques
+- `TLabel` tem `HitTest = False` por defeito em FMX — para receber cliques, adicionar `HitTest = True` no `.fmx` E ligar `OnClick`
+- Se um `TSpeedButton` com `Align = Client` estiver dentro de um `TRectangle`, intercepta todos os cliques; definir `HitTest = False` no SpeedButton para deixar passar os cliques para o rectângulo
+
+### AutoSize em labels com Align = Left
+- `AutoSize = True` + `Align = Left`: quando `Text` é definido como `''`, a largura colapsa para 0
+- Após colapso, o FMX não recalcula o layout automaticamente quando o texto é restaurado
+- **Nunca** definir estes labels como `''` no reset; usar placeholders não-vazios (ex: `'-- min'`, `'R$ 0,00'`)
+
+### Comparações com strings acentuadas
+- `UpperCase()` em Delphi é byte-level e não converte correctamente caracteres acentuados (ex: `'é'` → `'É'` falha)
+- Para comparar strings com acentos: usar `Pos('SUBSTR_SEM_ACENTO', UpperCase(str)) > 0` em vez de `= 'STRING_COM_ACENTO'`
+- Exemplo: `Pos('EST', UpperCase(Categoria)) > 0` em vez de `UpperCase(Categoria) = 'ESTÉTICA'`
+
+### Busca com CONTAINING no Firebird
+- `UPPER(campo) CONTAINING UPPER(:PARAM)` — busca substring case-insensitive nativa do Firebird
+- Preferir a este padrão em vez de `LIKE '%' || :PARAM || '%'`
 
 ### Cores em labels dinâmicos
 - O StyleBook do projecto sobrepõe-se a `FontColor` quando `StyledSettings` não está vazio

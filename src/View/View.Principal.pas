@@ -109,30 +109,6 @@ type
     lytTituloServicos: TLayout;
     lblTituloServicos: TLabel;
     lblVerTodos: TLabel;
-    rectCardCorte: TRectangle;
-    imgFotoCorte: TImage;
-    lytInfoCorte: TLayout;
-    lblNomeCorte: TLabel;
-    lblDescCorte: TLabel;
-    lblPrecoCorte: TLabel;
-    rectBtnAddCorte: TRectangle;
-    lblBtnAddCorte: TLabel;
-    rectCardBarba: TRectangle;
-    imgFotoBarba: TImage;
-    lytInfoBarba: TLayout;
-    lblNomeBarba: TLabel;
-    lblDescBarba: TLabel;
-    lblPrecoBarba: TLabel;
-    rectBtnAddBarba: TRectangle;
-    lblBtnAddBarba: TLabel;
-    rectCardSobrancelha: TRectangle;
-    imgFotoSobrancelha: TImage;
-    lytInfoSobrancelha: TLayout;
-    lblNomeSobrancelha: TLabel;
-    lblDescSobrancelha: TLabel;
-    lblPrecoSobrancelha: TLabel;
-    rectBtnAddSobrancelha: TRectangle;
-    lblBtnAddSobrancelha: TLabel;
     tabAgendamento: TTabItem;
     rectFundoAgendamento: TRectangle;
     rectRodapeConfirma: TRectangle;
@@ -239,12 +215,6 @@ type
     rectHora1830: TRectangle;
     lblHora1830: TLabel;
     lblTituloBarbeiros: TLabel;
-    rectBarbeiroPedro: TRectangle;
-    Circle1: TCircle;
-    Layout1: TLayout;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
     imgLogoApp: TImage;
     imgLogoAppNovaConta: TImage;
     imgIconeNome: TImage;
@@ -255,9 +225,6 @@ type
     imgIconeSenhaLogin: TImage;
     imgIconePerfil: TImage;
     imgIconeBusca: TImage;
-    imgIconeMais: TImage;
-    imgIconeMais2: TImage;
-    imgIconeMais3: TImage;
     imgIconeVoltar: TImage;
     imgIconeLogoAgend: TImage;
     imgIconeVoltar2: TImage;
@@ -280,6 +247,9 @@ type
     procedure BarbeiroSelecionadoClick(Sender: TObject);
     procedure rectBtnConfirmarClick(Sender: TObject);
     procedure HorarioSelecionadoClick(Sender: TObject);
+    procedure rectBtnCadastrarClick(Sender: TObject);
+    procedure edtBuscaChange(Sender: TObject);
+    procedure lblVerTodosClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -291,7 +261,9 @@ type
     FBarbeiroIDSelecionado: Integer;
     FBarbeiroNomeSelecionado: string;
     function HashSenha(const Senha: string): string;
-    procedure CarregarServicos(const Filtro: string = '');
+    function ValidarEmail(const Email: string): Boolean;
+    procedure CarregarServicos(const Filtro: string = ''; const Busca: string = '');
+    procedure CarregarBannerOferta;
     procedure AplicarFiltroCategoria(const Categoria: string);
     procedure AbrirAgendamento(ServicoID: Integer; const Nome: string;
                                Preco: Currency; DuracaoMin: Integer);
@@ -335,7 +307,32 @@ end;
 
 procedure TFrmPrincipal.lytMenuAgendaClick(Sender: TObject);
 begin
-  TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento, TTabTransition.Slide, TTabTransitionDirection.Normal);
+  if FServicoIDSelecionado = 0 then
+  begin
+    FServicoIDSelecionado    := 0;
+    FServicoNomeSelecionado  := 'Nenhum serviço seleccionado';
+    FServicoPrecSelecionado  := 0;
+    FServicoTempoSelecionado := 0;
+    FDataSelecionada         := Date;
+    FHoraSelecionada         := '';
+    FBarbeiroIDSelecionado   := 0;
+    FBarbeiroNomeSelecionado := '';
+
+    lblNomeServicoAgendar.Text := 'Escolha um serviço primeiro';
+    lblPrecoServico.Text       := 'R$ 0,00';
+    lblTempoServico.Text       := '-- min';
+    lblResumoBarbeiro.Text     := '-';
+    lblResumoServico.Text      := 'Nenhum serviço';
+    lblValorTotal.Text         := 'R$ 0,00';
+
+    TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento,
+      TTabTransition.Slide, TTabTransitionDirection.Normal);
+    CarregarHorarios;
+    CarregarBarbeiros;
+  end
+  else
+    TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento,
+      TTabTransition.Slide, TTabTransitionDirection.Normal);
 end;
 
 procedure TFrmPrincipal.rectBtnAddCorteClick(Sender: TObject);
@@ -348,7 +345,7 @@ begin
   Result := UpperCase(THashSHA2.GetHashString(Senha));
 end;
 
-procedure TFrmPrincipal.CarregarServicos(const Filtro: string = '');
+procedure TFrmPrincipal.CarregarServicos(const Filtro: string = ''; const Busca: string = '');
 var
   Query: TFDQuery;
   I: Integer;
@@ -356,13 +353,12 @@ var
   Card, RectIcone, RectBtn: TRectangle;
   LblNome, LblDesc, LblPreco, LblBtnAdd: TLabel;
   CorIcone: TAlphaColor;
-  Categoria: string;
+  Categoria, SQL: string;
   TotalHeight, StartY: Single;
+  FiltroActivo: Boolean;
 begin
-  // Y explícito: imediatamente abaixo de lytTituloServicos
   StartY := lytTituloServicos.Position.Y + lytTituloServicos.Height + 8;
 
-  // Procura container existente (Tag=98) ou cria um novo
   LytContainer := nil;
   for I := 0 to scrollHome.Content.ControlsCount - 1 do
     if (scrollHome.Content.Controls[I] is TLayout) and
@@ -377,17 +373,15 @@ begin
     LytContainer := TLayout.Create(scrollHome);
     LytContainer.Parent := scrollHome;
     LytContainer.Tag := 98;
-    LytContainer.Align := TAlignLayout.None;  // posição explícita, sem Align=Top
+    LytContainer.Align := TAlignLayout.None;
     LytContainer.Width := scrollHome.Width;
   end
   else
   begin
-    // Limpa cards anteriores do container
     for I := LytContainer.ControlsCount - 1 downto 0 do
       LytContainer.Controls[I].Free;
   end;
 
-  // Posiciona o container logo abaixo de "Nossos Serviços"
   LytContainer.Position.X := 0;
   LytContainer.Position.Y := StartY;
   LytContainer.Width := scrollHome.Width;
@@ -396,27 +390,27 @@ begin
   TotalHeight := 0;
   try
     Query.Connection := dmConexao.FDConnection1;
-    if (Filtro = '') or (UpperCase(Filtro) = 'TODOS') then
-    begin
-      Query.SQL.Text :=
-        'SELECT S.ID, S.NOME, S.DESCRICAO, S.PRECO, S.DURACAO_MIN, ' +
-        '       S.BADGE, C.NOME AS CATEGORIA ' +
-        'FROM TB_SERVICOS S ' +
-        'INNER JOIN TB_CATEGORIAS C ON C.ID = S.CATEGORIA_ID ' +
-        'WHERE S.ATIVO = 1 ' +
-        'ORDER BY S.ID';
-    end
-    else
-    begin
-      Query.SQL.Text :=
-        'SELECT S.ID, S.NOME, S.DESCRICAO, S.PRECO, S.DURACAO_MIN, ' +
-        '       S.BADGE, C.NOME AS CATEGORIA ' +
-        'FROM TB_SERVICOS S ' +
-        'INNER JOIN TB_CATEGORIAS C ON C.ID = S.CATEGORIA_ID ' +
-        'WHERE S.ATIVO = 1 AND UPPER(C.NOME) = UPPER(:CATEGORIA) ' +
-        'ORDER BY S.ID';
+
+    FiltroActivo := (Filtro <> '') and (UpperCase(Filtro) <> 'TODOS');
+    SQL :=
+      'SELECT S.ID, S.NOME, S.DESCRICAO, S.PRECO, S.DURACAO_MIN, ' +
+      '       S.BADGE, C.NOME AS CATEGORIA ' +
+      'FROM TB_SERVICOS S ' +
+      'INNER JOIN TB_CATEGORIAS C ON C.ID = S.CATEGORIA_ID ' +
+      'WHERE S.ATIVO = 1';
+    if FiltroActivo then
+      SQL := SQL + ' AND UPPER(C.NOME) = UPPER(:CATEGORIA)';
+    if Busca <> '' then
+      SQL := SQL +
+        ' AND (UPPER(S.NOME) CONTAINING UPPER(:BUSCA)' +
+        ' OR UPPER(S.DESCRICAO) CONTAINING UPPER(:BUSCA))';
+    SQL := SQL + ' ORDER BY S.ID';
+
+    Query.SQL.Text := SQL;
+    if FiltroActivo then
       Query.ParamByName('CATEGORIA').AsString := Filtro;
-    end;
+    if Busca <> '' then
+      Query.ParamByName('BUSCA').AsString := Busca;
     Query.Open;
 
     while not Query.EOF do
@@ -566,13 +560,9 @@ begin
         PrimeiroNome := Copy(PrimeiroNome, 1, Pos(' ', PrimeiroNome) - 1);
       lblNomeCliente.Text := PrimeiroNome;
 
-      // Oculta cards estáticos
-      rectCardCorte.Visible := False;
-      rectCardBarba.Visible := False;
-      rectCardSobrancelha.Visible := False;
-
       TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Normal);
       CarregarServicos('');
+      CarregarBannerOferta;
     end
     else
       ShowMessage('E-mail ou senha incorrectos');
@@ -610,7 +600,7 @@ begin
     AtivarBotao(rectFiltroCabelo, lblFiltroCabelo)
   else if UpperCase(Categoria) = 'BARBA' then
     AtivarBotao(rectFiltroBarba, lblFiltroBarba)
-  else if UpperCase(Categoria) = 'ESTÉTICA' then
+  else if Pos('EST', UpperCase(Categoria)) > 0 then
     AtivarBotao(rectFiltroEstetica, lblFiltroEstetica);
 
   CarregarServicos(Categoria);
@@ -649,11 +639,13 @@ begin
   FBarbeiroNomeSelecionado := '';
 
   lblNomeServicoAgendar.Text := Nome;
-  lblPrecoServico.Text := 'R$ ' + FormatFloat('0.00', Preco);
-  lblTempoServico.Text := IntToStr(DuracaoMin) + ' min';
-  lblResumoBarbeiro.Text := '-';
-  lblResumoServico.Text := Nome;
-  lblValorTotal.Text := 'R$ ' + FormatFloat('0.00', Preco);
+  lblPrecoServico.Text       := 'R$ ' + FormatFloat('0.00', Preco);
+  lblTempoServico.Text       := IntToStr(DuracaoMin) + ' min';
+  lblBadgeSelecionado.Text   := 'Selecionado';
+  lblResumoBarbeiro.Text     := '-';
+  lblResumoServico.Text      := Nome;
+  lblResumoData.Text         := FormatDateTime('d "de" MMMM', FDataSelecionada);
+  lblValorTotal.Text         := 'R$ ' + FormatFloat('0.00', Preco);
 
   TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento,
     TTabTransition.Slide, TTabTransitionDirection.Normal);
@@ -672,9 +664,6 @@ var
   NomeCompleto, Iniciais: string;
   StartY, YPos, CardWidth: Single;
 begin
-  // Oculta o card estático de barbeiro
-  rectBarbeiroPedro.Visible := False;
-
   // Remove cards de barbeiro anteriores (Tag=97)
   for I := scrollAgendamento.Content.ControlsCount - 1 downto 0 do
     if (scrollAgendamento.Content.Controls[I] is TRectangle) and
@@ -985,15 +974,15 @@ var
   HrInicio: TTime;
   Faltando: string;
 begin
-  // Validação
-  Faltando := '';
   if FServicoIDSelecionado = 0 then
-    Faltando := 'serviço';
-  if FBarbeiroIDSelecionado = 0 then
   begin
-    if Faltando <> '' then Faltando := Faltando + ', ';
-    Faltando := Faltando + 'barbeiro';
+    ShowMessage('Primeiro escolha um serviço na tela inicial antes de confirmar');
+    Exit;
   end;
+
+  Faltando := '';
+  if FBarbeiroIDSelecionado = 0 then
+    Faltando := 'barbeiro';
   if FHoraSelecionada = '' then
   begin
     if Faltando <> '' then Faltando := Faltando + ', ';
@@ -1028,6 +1017,28 @@ begin
     Query.ExecSQL;
 
     ShowMessage('Agendamento confirmado!');
+
+    FServicoIDSelecionado    := 0;
+    FServicoNomeSelecionado  := '';
+    FServicoPrecSelecionado  := 0;
+    FServicoTempoSelecionado := 0;
+    FDataSelecionada         := 0;
+    FHoraSelecionada         := '';
+    FBarbeiroIDSelecionado   := 0;
+    FBarbeiroNomeSelecionado := '';
+
+    lblNomeServicoAgendar.Text := '';
+    lblPrecoServico.Text       := 'R$ 0,00';
+    lblTempoServico.Text       := '-- min';
+    lblResumoBarbeiro.Text     := '-';
+    lblResumoServico.Text      := '';
+    lblResumoData.Text         := '';
+    lblValorTotal.Text         := '';
+
+    CarregarHorarios;
+    CarregarBarbeiros;
+    CarregarServicos('');
+
     TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome,
       TTabTransition.Slide, TTabTransitionDirection.Reversed);
   finally
@@ -1040,9 +1051,138 @@ begin
   TabControlPrincipal.SetActiveTabWithTransition(TabNovaConta, TTabTransition.Slide, TTabTransitionDirection.Normal);
 end;
 
+function TFrmPrincipal.ValidarEmail(const Email: string): Boolean;
+var
+  AtPos: Integer;
+begin
+  AtPos := Pos('@', Email);
+  Result := (AtPos > 1) and
+            (Pos('.', Copy(Email, AtPos, Length(Email))) > 0);
+end;
+
+procedure TFrmPrincipal.rectBtnCadastrarClick(Sender: TObject);
+var
+  Query: TFDQuery;
+  Nome, Email, Senha, Confirma: string;
+begin
+  Nome    := Trim(edtNomeCadastro.Text);
+  Email   := Trim(edtEmailCadastro.Text);
+  Senha   := edtSenhaCadastro.Text;
+  Confirma := edtConfirmarSenha.Text;
+
+  if Nome = '' then
+  begin ShowMessage('Preencha o nome completo'); Exit; end;
+
+  if not ValidarEmail(Email) then
+  begin ShowMessage('E-mail inválido'); Exit; end;
+
+  if Length(Senha) < 6 then
+  begin ShowMessage('A senha deve ter pelo menos 6 caracteres'); Exit; end;
+
+  if Senha <> Confirma then
+  begin ShowMessage('As senhas não coincidem'); Exit; end;
+
+  if not chkTermos.IsChecked then
+  begin ShowMessage('Aceite os termos para continuar'); Exit; end;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT COUNT(*) FROM TB_USUARIOS WHERE EMAIL = :EMAIL';
+    Query.ParamByName('EMAIL').AsString := Email;
+    Query.Open;
+    if Query.Fields[0].AsInteger > 0 then
+    begin
+      ShowMessage('Este e-mail já está registado');
+      Exit;
+    end;
+    Query.Close;
+
+    Query.SQL.Text :=
+      'INSERT INTO TB_USUARIOS ' +
+      '(NOME_COMPLETO, EMAIL, SENHA_HASH, PERFIL, ATIVO) ' +
+      'VALUES (:NOME, :EMAIL, :SENHA, ''CLIENTE'', 1)';
+    Query.ParamByName('NOME').AsString  := Nome;
+    Query.ParamByName('EMAIL').AsString := Email;
+    Query.ParamByName('SENHA').AsString := HashSenha(Senha);
+    Query.ExecSQL;
+
+    edtNomeCadastro.Text   := '';
+    edtEmailCadastro.Text  := '';
+    edtSenhaCadastro.Text  := '';
+    edtConfirmarSenha.Text := '';
+    chkTermos.IsChecked    := False;
+
+    ShowMessage('Conta criada com sucesso! Faça login.');
+    TabControlPrincipal.SetActiveTabWithTransition(
+      TabLogin, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+  finally
+    Query.Free;
+  end;
+end;
+
 procedure TFrmPrincipal.rectBtnVoltarAgendarClick(Sender: TObject);
 begin
   TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+end;
+
+procedure TFrmPrincipal.lblVerTodosClick(Sender: TObject);
+begin
+  edtBusca.Text := '';
+  AplicarFiltroCategoria('');
+  scrollHome.ScrollTo(0, lytTituloServicos.Position.Y);
+end;
+
+procedure TFrmPrincipal.CarregarBannerOferta;
+var
+  Query: TFDQuery;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT NOME, DESCRICAO, BADGE FROM TB_SERVICOS ' +
+      'WHERE ATIVO = 1 AND BADGE <> '''' ' +
+      'ORDER BY ID ROWS 1';
+    Query.Open;
+    if not Query.IsEmpty then
+    begin
+      lblTituloOferta.StyledSettings := [];
+      lblTituloOferta.Text := Query.FieldByName('NOME').AsString + ' com 20% de desconto';
+      lblSubtituloOferta.StyledSettings := [];
+      lblSubtituloOferta.Text := 'Oferta da Semana';
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.edtBuscaChange(Sender: TObject);
+  procedure ResetarBotao(Rect: TRectangle; Lbl: TLabel);
+  begin
+    Rect.Fill.Color := $FF1E293B;
+    Lbl.StyledSettings := [];
+    Lbl.TextSettings.FontColor := $FFFFFFFF;
+  end;
+  procedure AtivarBotao(Rect: TRectangle; Lbl: TLabel);
+  begin
+    Rect.Fill.Color := $FFF58A00;
+    Lbl.StyledSettings := [];
+    Lbl.TextSettings.FontColor := $FF0B1220;
+  end;
+begin
+  if edtBusca.Text = '' then
+    CarregarServicos(FFiltroCategoria)
+  else
+  begin
+    ResetarBotao(rectFiltroTodos,    lblFiltroTodos);
+    ResetarBotao(rectFiltroCabelo,   lblFiltroCabelo);
+    ResetarBotao(rectFiltroBarba,    lblFiltroBarba);
+    ResetarBotao(rectFiltroEstetica, lblFiltroEstetica);
+    AtivarBotao(rectFiltroTodos, lblFiltroTodos);
+    CarregarServicos('', edtBusca.Text);
+  end;
 end;
 
 end.

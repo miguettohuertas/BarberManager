@@ -2,7 +2,7 @@ object FrmPrincipal: TFrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 892
+  ClientHeight = 844
   ClientWidth = 390
   Fill.Color = xFF0B1220
   Fill.Kind = Solid
@@ -14,20 +14,20 @@ object FrmPrincipal: TFrmPrincipal
   object TabControlPrincipal: TTabControl
     Align = Client
     Size.Width = 390.000000000000000000
-    Size.Height = 892.000000000000000000
+    Size.Height = 844.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 0
     TabPosition = None
     Sizes = (
       390s
-      892s
+      844s
       390s
-      892s
+      844s
       390s
-      892s
+      844s
       390s
-      892s)
+      844s)
     object TabLogin: TTabItem
       CustomIcon = <
         item
@@ -46,7 +46,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 892.000000000000000000
+        Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object lytPrincipalLogin: TLayout
@@ -54,7 +54,7 @@ object FrmPrincipal: TFrmPrincipal
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
           Size.Width = 350.000000000000000000
-          Size.Height = 892.000000000000000000
+          Size.Height = 844.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object lytLogoCentralizado: TLayout
@@ -1591,7 +1591,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -1604,7 +1604,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 892.000000000000000000
+        Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object scrollNovaConta: TVertScrollBox
@@ -1612,12 +1612,12 @@ object FrmPrincipal: TFrmPrincipal
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
           Size.Width = 350.000000000000000000
-          Size.Height = 892.000000000000000000
+          Size.Height = 844.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
           Viewport.Width = 350.000000000000000000
-          Viewport.Height = 892.000000000000000000
+          Viewport.Height = 844.000000000000000000
           object lytVoltar: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -3718,6 +3718,7 @@ object FrmPrincipal: TFrmPrincipal
             Stroke.Kind = None
             XRadius = 10.000000000000000000
             YRadius = 10.000000000000000000
+            OnClick = rectBtnCadastrarClick
             object Label4: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
@@ -3731,6 +3732,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object SpeedButton1: TSpeedButton
               Align = Client
+              HitTest = False
               Size.Width = 350.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
@@ -3781,13 +3783,13 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 892.000000000000000000
+        Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object rectMenuInferior: TRectangle
           Align = Bottom
           Fill.Color = xFF141C2B
-          Position.Y = 822.000000000000000000
+          Position.Y = 774.000000000000000000
           Size.Width = 390.000000000000000000
           Size.Height = 70.000000000000000000
           Size.PlatformDefault = False
@@ -5233,12 +5235,12 @@ object FrmPrincipal: TFrmPrincipal
         object scrollHome: TVertScrollBox
           Align = Client
           Size.Width = 390.000000000000000000
-          Size.Height = 822.000000000000000000
+          Size.Height = 774.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
           ShowScrollBars = False
           Viewport.Width = 390.000000000000000000
-          Viewport.Height = 822.000000000000000000
+          Viewport.Height = 774.000000000000000000
           object lytHeaderHome: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -5944,6 +5946,7 @@ object FrmPrincipal: TFrmPrincipal
                 Size.PlatformDefault = False
                 TextPrompt = 'Buscar Servi'#231'o...'
                 StyledSettings = [Family, Size, Style]
+                OnChangeTracking = edtBuscaChange
               end
               object imgIconeBusca: TImage
                 MultiResBitmap.Height = 512
@@ -6534,7 +6537,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Left
               Fill.Color = xFFF58A00
               Margins.Right = 10.000000000000000000
-              Size.Width = 90.000000000000000000
+              Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               XRadius = 20.000000000000000000
@@ -6543,7 +6546,7 @@ object FrmPrincipal: TFrmPrincipal
               object lblFiltroTodos: TLabel
                 Align = Client
                 StyledSettings = [Family, Size]
-                Size.Width = 90.000000000000000000
+                Size.Width = 80.000000000000000000
                 Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -6558,7 +6561,7 @@ object FrmPrincipal: TFrmPrincipal
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
               Position.X = 300.000000000000000000
-              Size.Width = 90.000000000000000000
+              Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               XRadius = 20.000000000000000000
@@ -6567,7 +6570,7 @@ object FrmPrincipal: TFrmPrincipal
               object lblFiltroEstetica: TLabel
                 Align = Client
                 StyledSettings = [Family, Size]
-                Size.Width = 90.000000000000000000
+                Size.Width = 80.000000000000000000
                 Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -6581,7 +6584,7 @@ object FrmPrincipal: TFrmPrincipal
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
               Position.X = 100.000000000000000000
-              Size.Width = 90.000000000000000000
+              Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               XRadius = 20.000000000000000000
@@ -6590,7 +6593,7 @@ object FrmPrincipal: TFrmPrincipal
               object lblFiltroCabelo: TLabel
                 Align = Client
                 StyledSettings = [Family, Size]
-                Size.Width = 90.000000000000000000
+                Size.Width = 80.000000000000000000
                 Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -6604,7 +6607,7 @@ object FrmPrincipal: TFrmPrincipal
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
               Position.X = 200.000000000000000000
-              Size.Width = 90.000000000000000000
+              Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               XRadius = 20.000000000000000000
@@ -6613,7 +6616,7 @@ object FrmPrincipal: TFrmPrincipal
               object lblFiltroBarba: TLabel
                 Align = Client
                 StyledSettings = [Family, Size]
-                Size.Width = 90.000000000000000000
+                Size.Width = 80.000000000000000000
                 Size.Height = 40.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -6645,6 +6648,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lblVerTodos: TLabel
               Align = Right
+              HitTest = True
               StyledSettings = [Family, Size, Style]
               Position.X = 270.000000000000000000
               Size.Width = 120.000000000000000000
@@ -6653,589 +6657,7 @@ object FrmPrincipal: TFrmPrincipal
               TextSettings.FontColor = xFFF58A00
               Text = 'Ver Todos > '
               TabOrder = 1
-            end
-          end
-          object rectCardCorte: TRectangle
-            Align = Top
-            Fill.Color = xFF141C2B
-            Margins.Left = 20.000000000000000000
-            Margins.Top = 15.000000000000000000
-            Margins.Right = 20.000000000000000000
-            Position.X = 20.000000000000000000
-            Position.Y = 470.000000000000000000
-            Size.Width = 350.000000000000000000
-            Size.Height = 140.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Kind = None
-            XRadius = 15.000000000000000000
-            YRadius = 15.000000000000000000
-            object imgFotoCorte: TImage
-              MultiResBitmap = <
-                item
-                end>
-              Align = Left
-              Margins.Left = 10.000000000000000000
-              Margins.Top = 10.000000000000000000
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 10.000000000000000000
-              Position.Y = 10.000000000000000000
-              Size.Width = 110.000000000000000000
-              Size.Height = 120.000000000000000000
-              Size.PlatformDefault = False
-            end
-            object lytInfoCorte: TLayout
-              Align = Client
-              Margins.Left = 15.000000000000000000
-              Margins.Top = 15.000000000000000000
-              Margins.Right = 15.000000000000000000
-              Margins.Bottom = 15.000000000000000000
-              Size.Width = 190.000000000000000000
-              Size.Height = 110.000000000000000000
-              Size.PlatformDefault = False
-              TabOrder = 1
-              object lblNomeCorte: TLabel
-                Align = Top
-                StyledSettings = [Family, Size]
-                Size.Width = 190.000000000000000000
-                Size.Height = 25.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'Corte de Cabelo'
-                TabOrder = 0
-              end
-              object lblDescCorte: TLabel
-                Align = Top
-                StyledSettings = [Family, Size, Style]
-                Position.Y = 25.000000000000000000
-                Size.Width = 190.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.FontColor = xFF94A3B8
-                Text = 'Corte moderno e personalizado...'
-                TabOrder = 1
-              end
-              object lblPrecoCorte: TLabel
-                Align = Left
-                StyledSettings = [Family, Size]
-                Position.Y = 65.000000000000000000
-                Size.Width = 120.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'R$ 45,00'
-                TabOrder = 2
-              end
-              object rectBtnAddCorte: TRectangle
-                Align = Right
-                Fill.Color = xFFF58A00
-                Position.X = 90.000000000000000000
-                Position.Y = 65.000000000000000000
-                Size.Width = 100.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                Stroke.Kind = None
-                XRadius = 8.000000000000000000
-                YRadius = 8.000000000000000000
-                OnClick = rectBtnAddCorteClick
-                object lblBtnAddCorte: TLabel
-                  Align = Client
-                  StyledSettings = [Family, Size]
-                  Size.Width = 70.000000000000000000
-                  Size.Height = 45.000000000000000000
-                  Size.PlatformDefault = False
-                  TextSettings.Font.StyleExt = {00070000000000000004000000}
-                  TextSettings.FontColor = xFF0B1220
-                  TextSettings.HorzAlign = Center
-                  Text = 'Adicionar'
-                  TabOrder = 0
-                end
-                object imgIconeMais: TImage
-                  MultiResBitmap.Height = 512
-                  MultiResBitmap.Width = 512
-                  MultiResBitmap = <
-                    item
-                      Width = 512
-                      Height = 512
-                      PNG = {
-                        89504E470D0A1A0A0000000D4948445200000200000002000806000000F478D4
-                        FA0000000473424954080808087C086488000008B849444154789CEDDA3DCB25
-                        070186E167F3A57131488888C55626DA04ECB452ACAC6C45ECF363FC03F636FE
-                        042B41622348C0C20F4411059588228A264A88D95D8B57108B7547C83A3B7B5F
-                        174CFF70E6CC9C9B99B301000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000000000000000000000000000000000000000000F064BA75
-                        F600E090A7B67D6EDB27B7DDDEF6F76DF74E5DF49F6E6F7B61DBB7B7BDB1EDEE
-                        B97300E0C9F0F96D3FDF76FF313F7EB3EDB38FE83300DE474F9D3D0038E4D56D
-                        AF9C3DE2808F6DBB73F608E0E104005CC38B670F38E8EDB30700C70800B886A7
-                        CF1E709077FF7011020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        0010240000204800004090000080200100004102000082040000040900000812
-                        0000102400002048000040900000802001000041020000820400000409000008
-                        1200001024000020480000409000008020010000410200008204000004090000
-                        0812000010240000204800004090000080200100004102000082040000040900
-                        00081200001024000020480000409000008020010000410200AEE1EED9030E72
-                        4F818B70B1C235BC79F680839E9FFB0A5C820B15AEE1A5B3071CF4C16D2F6F7B
-                        F6EC21C07F77EBEC01FC4FBEB0ED33DB5EDCF6F4B953F83FB8B7ED8FBBF9F17F
-                        6D37E7FD0ADEDCF6BD6DDFDFF6C26E9E0AF0E4BABF9B5754BFDEF6D36DAF9FBA
-                        86C304C0757C62DBB7B67DEAEC21000FF08B6D5FDCF6ABB387F0705E015CC79D
-                        F9F1071E6F2F6FFBF4D9233846005C87C7A8C0157CFCEC011C2300AEE3DDB307
-                        001CF0CCD9033846005CC7BDB307001CE0BF6517210000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000B88E0F9D3D00E08077CF1EC03102E03A3E7CF6008003DE397B00C70880EB
-                        7863DBEFCE1E01F0007FDDF6E36DDF3D7B08C7DC3A7B0087DDDAF6A56DAFCE79
-                        2BB9BFEDCEB62F6F7BE9E42D47FD6CDB0FB6FD7037DF55DFD786B7B6FD69DB37
-                        CF1EC2312ECCEBB9B5EDD9397705F777F33EF5B96DDFD8F6D553D71CF7F56D5F
-                        DBF6DBDD7C4F9F3B770E8FD8FD7F1DFF387B08C093E8B5FDFB46FB381F6F6DFB
-                        CA23FA0C80F791FF00C0357CE4EC0107BDB7EDDED92380871300700DB7CF1E70
-                        D07BBB7912003CE6040000040900000812000010240000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        001024000020480000409000008020010000410200AEE1FED9030EFAC0D90380
-                        6304005CC3DDB3071CF4FCD903806304005CC32F778DA7007FD8F6E7B347000F
-                        2700E01A7EB2EDF56DEF9CBCE341EE6DFBDBB6EF6CFBFDC95B80036E9D3D0038
-                        ECA56DAF6CFBE8B667F6785DBF6F6FFBCBB61FED260400000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000038C53F0140F2998F21EB36110000000049454E44AE4260
-                        82}
-                      FileName = 
-                        'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\ic--ba' +
-                        'seline-plus.png'
-                    end>
-                  Align = Left
-                  Margins.Left = 5.000000000000000000
-                  Margins.Top = 12.000000000000000000
-                  Margins.Bottom = 12.000000000000000000
-                  Position.X = 5.000000000000000000
-                  Position.Y = 12.000000000000000000
-                  Size.Width = 25.000000000000000000
-                  Size.Height = 21.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
-            end
-          end
-          object rectCardBarba: TRectangle
-            Align = Top
-            Fill.Color = xFF141C2B
-            Margins.Left = 20.000000000000000000
-            Margins.Top = 15.000000000000000000
-            Margins.Right = 20.000000000000000000
-            Position.X = 20.000000000000000000
-            Position.Y = 625.000000000000000000
-            Size.Width = 350.000000000000000000
-            Size.Height = 140.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Kind = None
-            XRadius = 15.000000000000000000
-            YRadius = 15.000000000000000000
-            object imgFotoBarba: TImage
-              MultiResBitmap = <
-                item
-                end>
-              Align = Left
-              Margins.Left = 10.000000000000000000
-              Margins.Top = 10.000000000000000000
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 10.000000000000000000
-              Position.Y = 10.000000000000000000
-              Size.Width = 110.000000000000000000
-              Size.Height = 120.000000000000000000
-              Size.PlatformDefault = False
-            end
-            object lytInfoBarba: TLayout
-              Align = Client
-              Margins.Left = 15.000000000000000000
-              Margins.Top = 15.000000000000000000
-              Margins.Right = 15.000000000000000000
-              Margins.Bottom = 15.000000000000000000
-              Size.Width = 190.000000000000000000
-              Size.Height = 110.000000000000000000
-              Size.PlatformDefault = False
-              TabOrder = 1
-              object lblNomeBarba: TLabel
-                Align = Top
-                StyledSettings = [Family, Size]
-                Size.Width = 190.000000000000000000
-                Size.Height = 25.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'Barba na Navalha'
-                TabOrder = 0
-              end
-              object lblDescBarba: TLabel
-                Align = Top
-                StyledSettings = [Family, Size, Style]
-                Position.Y = 25.000000000000000000
-                Size.Width = 190.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.FontColor = xFF94A3B8
-                Text = 'Corte moderno e personalizado...'
-                TabOrder = 1
-              end
-              object lblPrecoBarba: TLabel
-                Align = Left
-                StyledSettings = [Family, Size]
-                Position.Y = 65.000000000000000000
-                Size.Width = 120.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'R$ 35,00'
-                TabOrder = 2
-              end
-              object rectBtnAddBarba: TRectangle
-                Align = Right
-                Fill.Color = xFFF58A00
-                Position.X = 90.000000000000000000
-                Position.Y = 65.000000000000000000
-                Size.Width = 100.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                Stroke.Kind = None
-                XRadius = 8.000000000000000000
-                YRadius = 8.000000000000000000
-                object lblBtnAddBarba: TLabel
-                  Align = Client
-                  StyledSettings = [Family, Size]
-                  Size.Width = 70.000000000000000000
-                  Size.Height = 45.000000000000000000
-                  Size.PlatformDefault = False
-                  TextSettings.Font.StyleExt = {00070000000000000004000000}
-                  TextSettings.FontColor = xFF0B1220
-                  TextSettings.HorzAlign = Center
-                  Text = 'Adicionar'
-                  TabOrder = 0
-                end
-                object imgIconeMais2: TImage
-                  MultiResBitmap.Height = 512
-                  MultiResBitmap.Width = 512
-                  MultiResBitmap = <
-                    item
-                      Width = 512
-                      Height = 512
-                      PNG = {
-                        89504E470D0A1A0A0000000D4948445200000200000002000806000000F478D4
-                        FA0000000473424954080808087C086488000008B849444154789CEDDA3DCB25
-                        070186E167F3A57131488888C55626DA04ECB452ACAC6C45ECF363FC03F636FE
-                        042B41622348C0C20F4411059588228A264A88D95D8B57108B7547C83A3B7B5F
-                        174CFF70E6CC9C9B99B301000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000000000000000000000000000000000000000000F064BA75
-                        F600E090A7B67D6EDB27B7DDDEF6F76DF74E5DF49F6E6F7B61DBB7B7BDB1EDEE
-                        B97300E0C9F0F96D3FDF76FF313F7EB3EDB38FE83300DE474F9D3D0038E4D56D
-                        AF9C3DE2808F6DBB73F608E0E104005CC38B670F38E8EDB30700C70800B886A7
-                        CF1E709077FF7011020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        0010240000204800004090000080200100004102000082040000040900000812
-                        0000102400002048000040900000802001000041020000820400000409000008
-                        1200001024000020480000409000008020010000410200008204000004090000
-                        0812000010240000204800004090000080200100004102000082040000040900
-                        00081200001024000020480000409000008020010000410200AEE1EED9030E72
-                        4F818B70B1C235BC79F680839E9FFB0A5C820B15AEE1A5B3071CF4C16D2F6F7B
-                        F6EC21C07F77EBEC01FC4FBEB0ED33DB5EDCF6F4B953F83FB8B7ED8FBBF9F17F
-                        6D37E7FD0ADEDCF6BD6DDFDFF6C26E9E0AF0E4BABF9B5754BFDEF6D36DAF9FBA
-                        86C304C0757C62DBB7B67DEAEC21000FF08B6D5FDCF6ABB387F0705E015CC79D
-                        F9F1071E6F2F6FFBF4D9233846005C87C7A8C0157CFCEC011C2300AEE3DDB307
-                        001CF0CCD9033846005CC7BDB307001CE0BF6517210000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000B88E0F9D3D00E08077CF1EC03102E03A3E7CF6008003DE397B00C70880EB
-                        7863DBEFCE1E01F0007FDDF6E36DDF3D7B08C7DC3A7B0087DDDAF6A56DAFCE79
-                        2BB9BFEDCEB62F6F7BE9E42D47FD6CDB0FB6FD7037DF55DFD786B7B6FD69DB37
-                        CF1EC2312ECCEBB9B5EDD9397705F777F33EF5B96DDFD8F6D553D71CF7F56D5F
-                        DBF6DBDD7C4F9F3B770E8FD8FD7F1DFF387B08C093E8B5FDFB46FB381F6F6DFB
-                        CA23FA0C80F791FF00C0357CE4EC0107BDB7EDDED92380871300700DB7CF1E70
-                        D07BBB7912003CE6040000040900000812000010240000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        001024000020480000409000008020010000410200AEE1FED9030EFAC0D90380
-                        6304005CC3DDB3071CF4FCD903806304005CC32F778DA7007FD8F6E7B347000F
-                        2700E01A7EB2EDF56DEF9CBCE341EE6DFBDBB6EF6CFBFDC95B80036E9D3D0038
-                        ECA56DAF6CFBE8B667F6785DBF6F6FFBCBB61FED260400000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000038C53F0140F2998F21EB36110000000049454E44AE4260
-                        82}
-                      FileName = 
-                        'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\ic--ba' +
-                        'seline-plus.png'
-                    end>
-                  Align = Left
-                  Margins.Left = 5.000000000000000000
-                  Margins.Top = 12.000000000000000000
-                  Margins.Bottom = 12.000000000000000000
-                  Position.X = 5.000000000000000000
-                  Position.Y = 12.000000000000000000
-                  Size.Width = 25.000000000000000000
-                  Size.Height = 21.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
-            end
-          end
-          object rectCardSobrancelha: TRectangle
-            Align = Top
-            Fill.Color = xFF141C2B
-            Margins.Left = 20.000000000000000000
-            Margins.Top = 15.000000000000000000
-            Margins.Right = 20.000000000000000000
-            Position.X = 20.000000000000000000
-            Position.Y = 780.000000000000000000
-            Size.Width = 350.000000000000000000
-            Size.Height = 140.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Kind = None
-            XRadius = 15.000000000000000000
-            YRadius = 15.000000000000000000
-            object imgFotoSobrancelha: TImage
-              MultiResBitmap = <
-                item
-                end>
-              Align = Left
-              Margins.Left = 10.000000000000000000
-              Margins.Top = 10.000000000000000000
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 10.000000000000000000
-              Position.Y = 10.000000000000000000
-              Size.Width = 110.000000000000000000
-              Size.Height = 120.000000000000000000
-              Size.PlatformDefault = False
-            end
-            object lytInfoSobrancelha: TLayout
-              Align = Client
-              Margins.Left = 15.000000000000000000
-              Margins.Top = 15.000000000000000000
-              Margins.Right = 15.000000000000000000
-              Margins.Bottom = 15.000000000000000000
-              Size.Width = 190.000000000000000000
-              Size.Height = 110.000000000000000000
-              Size.PlatformDefault = False
-              TabOrder = 1
-              object lblNomeSobrancelha: TLabel
-                Align = Top
-                StyledSettings = [Family, Size]
-                Size.Width = 190.000000000000000000
-                Size.Height = 25.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'Design de Sobrancelha'
-                TabOrder = 0
-              end
-              object lblDescSobrancelha: TLabel
-                Align = Top
-                StyledSettings = [Family, Size, Style]
-                Position.Y = 25.000000000000000000
-                Size.Width = 190.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.FontColor = xFF94A3B8
-                Text = 'Corte moderno e personalizado...'
-                TabOrder = 1
-              end
-              object lblPrecoSobrancelha: TLabel
-                Align = Left
-                StyledSettings = [Family, Size]
-                Position.Y = 65.000000000000000000
-                Size.Width = 120.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'R$ 20,00'
-                TabOrder = 2
-              end
-              object rectBtnAddSobrancelha: TRectangle
-                Align = Right
-                Fill.Color = xFFF58A00
-                Position.X = 90.000000000000000000
-                Position.Y = 65.000000000000000000
-                Size.Width = 100.000000000000000000
-                Size.Height = 45.000000000000000000
-                Size.PlatformDefault = False
-                Stroke.Kind = None
-                XRadius = 8.000000000000000000
-                YRadius = 8.000000000000000000
-                object lblBtnAddSobrancelha: TLabel
-                  Align = Client
-                  StyledSettings = [Family, Size]
-                  Size.Width = 70.000000000000000000
-                  Size.Height = 45.000000000000000000
-                  Size.PlatformDefault = False
-                  TextSettings.Font.StyleExt = {00070000000000000004000000}
-                  TextSettings.FontColor = xFF0B1220
-                  TextSettings.HorzAlign = Center
-                  Text = 'Adicionar'
-                  TabOrder = 0
-                end
-                object imgIconeMais3: TImage
-                  MultiResBitmap.Height = 512
-                  MultiResBitmap.Width = 512
-                  MultiResBitmap = <
-                    item
-                      Width = 512
-                      Height = 512
-                      PNG = {
-                        89504E470D0A1A0A0000000D4948445200000200000002000806000000F478D4
-                        FA0000000473424954080808087C086488000008B849444154789CEDDA3DCB25
-                        070186E167F3A57131488888C55626DA04ECB452ACAC6C45ECF363FC03F636FE
-                        042B41622348C0C20F4411059588228A264A88D95D8B57108B7547C83A3B7B5F
-                        174CFF70E6CC9C9B99B301000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000000000000000000000000000000000000000000F064BA75
-                        F600E090A7B67D6EDB27B7DDDEF6F76DF74E5DF49F6E6F7B61DBB7B7BDB1EDEE
-                        B97300E0C9F0F96D3FDF76FF313F7EB3EDB38FE83300DE474F9D3D0038E4D56D
-                        AF9C3DE2808F6DBB73F608E0E104005CC38B670F38E8EDB30700C70800B886A7
-                        CF1E709077FF7011020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        0010240000204800004090000080200100004102000082040000040900000812
-                        0000102400002048000040900000802001000041020000820400000409000008
-                        1200001024000020480000409000008020010000410200008204000004090000
-                        0812000010240000204800004090000080200100004102000082040000040900
-                        00081200001024000020480000409000008020010000410200AEE1EED9030E72
-                        4F818B70B1C235BC79F680839E9FFB0A5C820B15AEE1A5B3071CF4C16D2F6F7B
-                        F6EC21C07F77EBEC01FC4FBEB0ED33DB5EDCF6F4B953F83FB8B7ED8FBBF9F17F
-                        6D37E7FD0ADEDCF6BD6DDFDFF6C26E9E0AF0E4BABF9B5754BFDEF6D36DAF9FBA
-                        86C304C0757C62DBB7B67DEAEC21000FF08B6D5FDCF6ABB387F0705E015CC79D
-                        F9F1071E6F2F6FFBF4D9233846005C87C7A8C0157CFCEC011C2300AEE3DDB307
-                        001CF0CCD9033846005CC7BDB307001CE0BF6517210000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000B88E0F9D3D00E08077CF1EC03102E03A3E7CF6008003DE397B00C70880EB
-                        7863DBEFCE1E01F0007FDDF6E36DDF3D7B08C7DC3A7B0087DDDAF6A56DAFCE79
-                        2BB9BFEDCEB62F6F7BE9E42D47FD6CDB0FB6FD7037DF55DFD786B7B6FD69DB37
-                        CF1EC2312ECCEBB9B5EDD9397705F777F33EF5B96DDFD8F6D553D71CF7F56D5F
-                        DBF6DBDD7C4F9F3B770E8FD8FD7F1DFF387B08C093E8B5FDFB46FB381F6F6DFB
-                        CA23FA0C80F791FF00C0357CE4EC0107BDB7EDDED92380871300700DB7CF1E70
-                        D07BBB7912003CE6040000040900000812000010240000204800004090000080
-                        2001000041020000820400000409000008120000102400002048000040900000
-                        8020010000410200008204000004090000081200001024000020480000409000
-                        0080200100004102000082040000040900000812000010240000204800004090
-                        0000802001000041020000820400000409000008120000102400002048000040
-                        9000008020010000410200008204000004090000081200001024000020480000
-                        4090000080200100004102000082040000040900000812000010240000204800
-                        0040900000802001000041020000820400000409000008120000102400002048
-                        0000409000008020010000410200008204000004090000081200001024000020
-                        4800004090000080200100004102000082040000040900000812000010240000
-                        2048000040900000802001000041020000820400000409000008120000102400
-                        0020480000409000008020010000410200008204000004090000081200001024
-                        0000204800004090000080200100004102000082040000040900000812000010
-                        2400002048000040900000802001000041020000820400000409000008120000
-                        1024000020480000409000008020010000410200008204000004090000081200
-                        001024000020480000409000008020010000410200AEE1FED9030EFAC0D90380
-                        6304005CC3DDB3071CF4FCD903806304005CC32F778DA7007FD8F6E7B347000F
-                        2700E01A7EB2EDF56DEF9CBCE341EE6DFBDBB6EF6CFBFDC95B80036E9D3D0038
-                        ECA56DAF6CFBE8B667F6785DBF6F6FFBCBB61FED260400000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        0000000000000000000000000000000000000000000000000000000000000000
-                        00000000000000000038C53F0140F2998F21EB36110000000049454E44AE4260
-                        82}
-                      FileName = 
-                        'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\ic--ba' +
-                        'seline-plus.png'
-                    end>
-                  Align = Left
-                  Margins.Left = 5.000000000000000000
-                  Margins.Top = 12.000000000000000000
-                  Margins.Bottom = 12.000000000000000000
-                  Position.X = 5.000000000000000000
-                  Position.Y = 12.000000000000000000
-                  Size.Width = 25.000000000000000000
-                  Size.Height = 21.000000000000000000
-                  Size.PlatformDefault = False
-                end
-              end
+              OnClick = lblVerTodosClick
             end
           end
         end
@@ -7246,7 +6668,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -7259,7 +6681,7 @@ object FrmPrincipal: TFrmPrincipal
         Align = Client
         Fill.Color = xFF0B1220
         Size.Width = 390.000000000000000000
-        Size.Height = 892.000000000000000000
+        Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
         object rectRodapeConfirma: TRectangle
@@ -7269,7 +6691,7 @@ object FrmPrincipal: TFrmPrincipal
           Padding.Top = 15.000000000000000000
           Padding.Right = 20.000000000000000000
           Padding.Bottom = 15.000000000000000000
-          Position.Y = 712.000000000000000000
+          Position.Y = 664.000000000000000000
           Size.Width = 390.000000000000000000
           Size.Height = 180.000000000000000000
           Size.PlatformDefault = False
@@ -7892,12 +7314,12 @@ object FrmPrincipal: TFrmPrincipal
         object scrollAgendamento: TVertScrollBox
           Align = Client
           Size.Width = 390.000000000000000000
-          Size.Height = 712.000000000000000000
+          Size.Height = 664.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
           Viewport.Width = 390.000000000000000000
-          Viewport.Height = 712.000000000000000000
+          Viewport.Height = 664.000000000000000000
           object lytHeaderAgendar: TLayout
             Align = Top
             Margins.Left = 20.000000000000000000
@@ -9854,76 +9276,6 @@ object FrmPrincipal: TFrmPrincipal
             TextSettings.FontColor = claWhite
             Text = 'Escolha o Barbeiro'
             TabOrder = 6
-          end
-          object rectBarbeiroPedro: TRectangle
-            Align = Top
-            Fill.Color = xFF141C2B
-            Margins.Left = 20.000000000000000000
-            Margins.Right = 20.000000000000000000
-            Margins.Bottom = 10.000000000000000000
-            Position.X = 20.000000000000000000
-            Position.Y = 712.000000000000000000
-            Size.Width = 350.000000000000000000
-            Size.Height = 70.000000000000000000
-            Size.PlatformDefault = False
-            Stroke.Color = xFFF58A00
-            XRadius = 15.000000000000000000
-            YRadius = 15.000000000000000000
-            object Circle1: TCircle
-              Align = Left
-              Fill.Color = xFFF58A00
-              Margins.Left = 10.000000000000000000
-              Margins.Top = 10.000000000000000000
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 10.000000000000000000
-              Position.Y = 10.000000000000000000
-              Size.Width = 45.000000000000000000
-              Size.Height = 50.000000000000000000
-              Size.PlatformDefault = False
-            end
-            object Layout1: TLayout
-              Align = Client
-              Margins.Top = 15.000000000000000000
-              Size.Width = 285.000000000000000000
-              Size.Height = 55.000000000000000000
-              Size.PlatformDefault = False
-              TabOrder = 1
-              object Label5: TLabel
-                Align = Top
-                StyledSettings = [Family, Size]
-                Size.Width = 285.000000000000000000
-                Size.Height = 17.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = claWhite
-                Text = 'Pedro Alves'
-                TabOrder = 0
-              end
-              object Label6: TLabel
-                Align = Top
-                StyledSettings = [Family, Size, Style]
-                Position.Y = 17.000000000000000000
-                Size.Width = 285.000000000000000000
-                Size.Height = 17.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.FontColor = xFF94A3B8
-                Text = 'Master Barber'
-                TabOrder = 1
-              end
-              object Label7: TLabel
-                Align = Right
-                StyledSettings = [Family, Size, Style]
-                Position.X = 165.000000000000000000
-                Position.Y = 34.000000000000000000
-                Size.Width = 120.000000000000000000
-                Size.Height = 21.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.FontColor = xFFF58A00
-                Text = '4.9'
-                TabOrder = 2
-              end
-            end
           end
         end
       end

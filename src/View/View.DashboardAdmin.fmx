@@ -2,7 +2,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 730
+  ClientHeight = 720
   ClientWidth = 1280
   FormFactor.Width = 320
   FormFactor.Height = 480
@@ -13,7 +13,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
     Align = Client
     Fill.Color = xFF0B1220
     Size.Width = 1280.000000000000000000
-    Size.Height = 730.000000000000000000
+    Size.Height = 720.000000000000000000
     Size.PlatformDefault = False
     Stroke.Kind = None
     object rectMenuLateral: TRectangle
@@ -21,7 +21,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
       Fill.Color = xFF0F172A
       Sides = [Right]
       Size.Width = 240.000000000000000000
-      Size.Height = 730.000000000000000000
+      Size.Height = 720.000000000000000000
       Size.PlatformDefault = False
       Stroke.Color = xFF1E293B
       object lytLogoAdmin: TLayout
@@ -2823,7 +2823,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
         Margins.Right = 15.000000000000000000
         Margins.Bottom = 20.000000000000000000
         Position.X = 15.000000000000000000
-        Position.Y = 610.000000000000000000
+        Position.Y = 600.000000000000000000
         Size.Width = 210.000000000000000000
         Size.Height = 100.000000000000000000
         Size.PlatformDefault = False
@@ -3437,7 +3437,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
     object lytAreaPrincipal: TLayout
       Align = Client
       Size.Width = 1040.000000000000000000
-      Size.Height = 730.000000000000000000
+      Size.Height = 720.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       object lytHeaderDashboard: TLayout
@@ -4699,12 +4699,12 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
         Margins.Right = 30.000000000000000000
         Margins.Bottom = 20.000000000000000000
         Size.Width = 980.000000000000000000
-        Size.Height = 600.000000000000000000
+        Size.Height = 590.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
         ShowScrollBars = False
         Viewport.Width = 980.000000000000000000
-        Viewport.Height = 600.000000000000000000
+        Viewport.Height = 590.000000000000000000
         object gridCardsKPI: TGridPanelLayout
           Align = Top
           Size.Width = 980.000000000000000000
