@@ -3,7 +3,7 @@ object FrmPrincipal: TFrmPrincipal
   Top = 0
   Caption = 'Form1'
   ClientHeight = 844
-  ClientWidth = 390
+  ClientWidth = 392
   Fill.Color = xFF0B1220
   Fill.Kind = Solid
   FormFactor.Width = 320
@@ -13,20 +13,20 @@ object FrmPrincipal: TFrmPrincipal
   DesignerMasterStyle = 0
   object TabControlPrincipal: TTabControl
     Align = Client
-    Size.Width = 390.000000000000000000
+    Size.Width = 392.000000000000000000
     Size.Height = 844.000000000000000000
     Size.PlatformDefault = False
     TabIndex = 1
     TabOrder = 0
     TabPosition = None
     Sizes = (
-      390s
+      392s
       844s
-      390s
+      392s
       844s
-      390s
+      392s
       844s
-      390s
+      392s
       844s)
     object TabLogin: TTabItem
       CustomIcon = <
@@ -45,7 +45,7 @@ object FrmPrincipal: TFrmPrincipal
       object rectFundoTabLogin: TRectangle
         Align = Client
         Fill.Color = xFF0B1220
-        Size.Width = 390.000000000000000000
+        Size.Width = 392.000000000000000000
         Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
@@ -53,13 +53,13 @@ object FrmPrincipal: TFrmPrincipal
           Align = Client
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
-          Size.Width = 350.000000000000000000
+          Size.Width = 352.000000000000000000
           Size.Height = 844.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           object lytLogoCentralizado: TLayout
             Align = Top
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 100.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -589,7 +589,7 @@ object FrmPrincipal: TFrmPrincipal
             StyledSettings = [Family, Size, Style]
             Margins.Top = 15.000000000000000000
             Position.Y = 164.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
             TextSettings.FontColor = claWhite
@@ -602,7 +602,7 @@ object FrmPrincipal: TFrmPrincipal
             StyledSettings = [Family]
             Margins.Top = 15.000000000000000000
             Position.Y = 115.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 24.000000000000000000
@@ -616,14 +616,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 211.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
             object lblEmail: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -635,7 +635,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -651,7 +651,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '"Seu @email.com"'
@@ -1233,14 +1233,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 311.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
             object lblSenha: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -1252,7 +1252,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -1269,7 +1269,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 300.000000000000000000
+                Size.Width = 302.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '"Sua senha"'
@@ -1522,7 +1522,7 @@ object FrmPrincipal: TFrmPrincipal
             Fill.Color = xFFF58A00
             Margins.Top = 30.000000000000000000
             Position.Y = 411.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -1532,7 +1532,7 @@ object FrmPrincipal: TFrmPrincipal
             object lblBtnEntrar: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = claWhite
@@ -1543,7 +1543,7 @@ object FrmPrincipal: TFrmPrincipal
             object btnAcessarLogin: TSpeedButton
               Align = Client
               HitTest = False
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'transparentcirclebuttonstyle'
@@ -1555,7 +1555,7 @@ object FrmPrincipal: TFrmPrincipal
             Fill.Kind = None
             Margins.Top = 30.000000000000000000
             Position.Y = 491.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFF2E3B52
@@ -1565,7 +1565,7 @@ object FrmPrincipal: TFrmPrincipal
             object lblBtnNovaConta: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = claWhite
@@ -1576,7 +1576,7 @@ object FrmPrincipal: TFrmPrincipal
             object btnNovaConta: TSpeedButton
               Align = Client
               HitTest = False
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'transparentcirclebuttonstyle'
@@ -1603,7 +1603,7 @@ object FrmPrincipal: TFrmPrincipal
       object rectFundoTabNovaConta: TRectangle
         Align = Client
         Fill.Color = xFF0B1220
-        Size.Width = 390.000000000000000000
+        Size.Width = 392.000000000000000000
         Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
@@ -1611,12 +1611,12 @@ object FrmPrincipal: TFrmPrincipal
           Align = Client
           Margins.Left = 20.000000000000000000
           Margins.Right = 20.000000000000000000
-          Size.Width = 350.000000000000000000
+          Size.Width = 352.000000000000000000
           Size.Height = 844.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
-          Viewport.Width = 350.000000000000000000
+          Viewport.Width = 352.000000000000000000
           Viewport.Height = 844.000000000000000000
           object lytVoltar: TLayout
             Align = Top
@@ -1624,7 +1624,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Top = 15.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 15.000000000000000000
-            Size.Width = 330.000000000000000000
+            Size.Width = 332.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
@@ -1646,7 +1646,7 @@ object FrmPrincipal: TFrmPrincipal
             StyledSettings = [Family, Size, Style]
             Margins.Top = 15.000000000000000000
             Position.Y = 219.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
             TextSettings.FontColor = claWhite
@@ -1659,7 +1659,7 @@ object FrmPrincipal: TFrmPrincipal
             StyledSettings = [Family]
             Margins.Top = 15.000000000000000000
             Position.Y = 170.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 34.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 24.000000000000000000
@@ -1672,7 +1672,7 @@ object FrmPrincipal: TFrmPrincipal
           object lytLogoCentralizadoNovaConta: TLayout
             Align = Top
             Position.Y = 55.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 100.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -2198,14 +2198,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 566.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 7
             object lblConfirma: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -2217,7 +2217,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -2234,7 +2234,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '*******'
@@ -2491,14 +2491,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 466.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 6
             object lblSenhaCad: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -2510,7 +2510,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -2527,7 +2527,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '*******'
@@ -2784,14 +2784,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 366.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
             object lblEmailCad: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -2803,7 +2803,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -2819,7 +2819,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '"Seu @email.com"'
@@ -3062,14 +3062,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 30.000000000000000000
             Position.Y = 266.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
             object lblNome: TLabel
               Align = Top
               StyledSettings = [Family, Size]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -3081,7 +3081,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Fill.Color = xFF141C2B
               Margins.Top = 5.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -3097,7 +3097,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '"Jo'#227'o da Silva"'
@@ -3682,7 +3682,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 656.000000000000000000
-            Size.Width = 310.000000000000000000
+            Size.Width = 312.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 8
@@ -3697,7 +3697,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               StyledSettings = [Family, Size, Style]
               Margins.Left = 10.000000000000000000
-              Size.Width = 270.000000000000000000
+              Size.Width = 272.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -3712,7 +3712,7 @@ object FrmPrincipal: TFrmPrincipal
             Fill.Color = xFFF58A00
             Margins.Top = 30.000000000000000000
             Position.Y = 736.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -3722,7 +3722,7 @@ object FrmPrincipal: TFrmPrincipal
             object Label4: TLabel
               Align = Client
               StyledSettings = [Family, Size, Style]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = claWhite
@@ -3733,7 +3733,7 @@ object FrmPrincipal: TFrmPrincipal
             object SpeedButton1: TSpeedButton
               Align = Client
               HitTest = False
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               StyleLookup = 'transparentcirclebuttonstyle'
@@ -3744,7 +3744,7 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 20.000000000000000000
             Position.Y = 806.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 10
@@ -3752,7 +3752,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               StyledSettings = [Family, Size, Style]
               HitTest = True
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -3782,7 +3782,7 @@ object FrmPrincipal: TFrmPrincipal
       object rectFundoHome: TRectangle
         Align = Client
         Fill.Color = xFF0B1220
-        Size.Width = 390.000000000000000000
+        Size.Width = 392.000000000000000000
         Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
@@ -3790,13 +3790,13 @@ object FrmPrincipal: TFrmPrincipal
           Align = Bottom
           Fill.Color = xFF141C2B
           Position.Y = 774.000000000000000000
-          Size.Width = 390.000000000000000000
+          Size.Width = 392.000000000000000000
           Size.Height = 70.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
           object GridPanelLayout1: TGridPanelLayout
             Align = Client
-            Size.Width = 390.000000000000000000
+            Size.Width = 392.000000000000000000
             Size.Height = 70.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -3840,7 +3840,7 @@ object FrmPrincipal: TFrmPrincipal
               end>
             object lytMenuInicio: TLayout
               Align = Client
-              Size.Width = 97.563926696777340000
+              Size.Width = 98.064254760742190000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -3849,7 +3849,7 @@ object FrmPrincipal: TFrmPrincipal
                 StyledSettings = [Family, Size, Style]
                 Margins.Bottom = 5.000000000000000000
                 Position.Y = 45.000000000000000000
-                Size.Width = 97.563926696777340000
+                Size.Width = 98.064254760742190000
                 Size.Height = 20.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFFF58A00
@@ -4062,7 +4062,7 @@ object FrmPrincipal: TFrmPrincipal
             object lytMenuAgenda: TLayout
               Align = Client
               HitTest = True
-              Size.Width = 97.521598815917970000
+              Size.Width = 98.021713256835940000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -4072,7 +4072,7 @@ object FrmPrincipal: TFrmPrincipal
                 StyledSettings = [Family, Size, Style]
                 Margins.Bottom = 5.000000000000000000
                 Position.Y = 48.000000000000000000
-                Size.Width = 97.521598815917970000
+                Size.Width = 98.021713256835940000
                 Size.Height = 17.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -4260,7 +4260,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytMenuCarrinho: TLayout
               Align = Client
-              Size.Width = 97.414474487304690000
+              Size.Width = 97.914031982421880000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -4269,7 +4269,7 @@ object FrmPrincipal: TFrmPrincipal
                 StyledSettings = [Family, Size, Style]
                 Margins.Bottom = 5.000000000000000000
                 Position.Y = 48.000000000000000000
-                Size.Width = 97.414474487304690000
+                Size.Width = 97.914031982421880000
                 Size.Height = 17.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -4647,7 +4647,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytMenuPerfil: TLayout
               Align = Client
-              Size.Width = 97.500000000000000000
+              Size.Width = 98.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
@@ -4656,7 +4656,7 @@ object FrmPrincipal: TFrmPrincipal
                 StyledSettings = [Family, Size, Style]
                 Margins.Bottom = 5.000000000000000000
                 Position.Y = 48.000000000000000000
-                Size.Width = 97.500000000000000000
+                Size.Width = 98.000000000000000000
                 Size.Height = 17.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -5234,7 +5234,7 @@ object FrmPrincipal: TFrmPrincipal
         end
         object scrollHome: TVertScrollBox
           Align = Client
-          Size.Width = 390.000000000000000000
+          Size.Width = 392.000000000000000000
           Size.Height = 774.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
@@ -5624,6 +5624,8 @@ object FrmPrincipal: TFrmPrincipal
                       'oon--notification.png'
                   end>
                 Align = Left
+                HitTest = True
+                OnClick = imgNotificacaoClick
                 Size.Width = 40.000000000000000000
                 Size.Height = 31.000000000000000000
                 Size.PlatformDefault = False
@@ -6505,6 +6507,7 @@ object FrmPrincipal: TFrmPrincipal
                 Stroke.Kind = None
                 XRadius = 8.000000000000000000
                 YRadius = 8.000000000000000000
+                OnClick = rectBtnAproveitarClick
                 object lblAproveitar: TLabel
                   Align = Client
                   StyledSettings = [Family, Size]
@@ -6648,8 +6651,8 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lblVerTodos: TLabel
               Align = Right
-              HitTest = True
               StyledSettings = [Family, Size, Style]
+              HitTest = True
               Position.X = 270.000000000000000000
               Size.Width = 120.000000000000000000
               Size.Height = 30.000000000000000000
@@ -6658,6 +6661,61 @@ object FrmPrincipal: TFrmPrincipal
               Text = 'Ver Todos > '
               TabOrder = 1
               OnClick = lblVerTodosClick
+            end
+          end
+        end
+        object rectOverlayNotif: TRectangle
+          Align = Contents
+          Fill.Color = xCC000000
+          HitTest = True
+          Visible = False
+          object rectPainelNotif: TRectangle
+            Align = None
+            Position.X = 10.000000000000000000
+            Position.Y = 60.000000000000000000
+            Size.Width = 380.000000000000000000
+            Size.Height = 400.000000000000000000
+            Size.PlatformDefault = False
+            Fill.Color = xFF141C2B
+            Stroke.Kind = None
+            XRadius = 16.000000000000000000
+            YRadius = 16.000000000000000000
+            object lblTituloNotif: TLabel
+              Position.X = 20.000000000000000000
+              Position.Y = 20.000000000000000000
+              Size.Width = 200.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = 'Notifica'#231#245'es'
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TabOrder = 0
+            end
+            object lblFecharNotif: TLabel
+              HitTest = True
+              Position.X = 340.000000000000000000
+              Position.Y = 20.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = 'X'
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              TabOrder = 1
+              OnClick = lblFecharNotifClick
+            end
+            object scrollNotificacoes: TVertScrollBox
+              Align = None
+              Position.X = 0.000000000000000000
+              Position.Y = 60.000000000000000000
+              Size.Width = 360.000000000000000000
+              Size.Height = 320.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
             end
           end
         end
@@ -6680,7 +6738,7 @@ object FrmPrincipal: TFrmPrincipal
       object rectFundoAgendamento: TRectangle
         Align = Client
         Fill.Color = xFF0B1220
-        Size.Width = 390.000000000000000000
+        Size.Width = 392.000000000000000000
         Size.Height = 844.000000000000000000
         Size.PlatformDefault = False
         Stroke.Kind = None
@@ -6692,7 +6750,7 @@ object FrmPrincipal: TFrmPrincipal
           Padding.Right = 20.000000000000000000
           Padding.Bottom = 15.000000000000000000
           Position.Y = 664.000000000000000000
-          Size.Width = 390.000000000000000000
+          Size.Width = 392.000000000000000000
           Size.Height = 180.000000000000000000
           Size.PlatformDefault = False
           Stroke.Color = xFF2E3B52
@@ -6700,14 +6758,14 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Position.X = 20.000000000000000000
             Position.Y = 15.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 106.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             object lblResumoServico: TLabel
               Align = Top
               StyledSettings = [Family, Size, Style]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -6719,7 +6777,7 @@ object FrmPrincipal: TFrmPrincipal
               StyledSettings = [Family, Size, Style]
               Margins.Top = 5.000000000000000000
               Position.Y = 22.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -6731,7 +6789,7 @@ object FrmPrincipal: TFrmPrincipal
               StyledSettings = [Family, Size, Style]
               Margins.Top = 5.000000000000000000
               Position.Y = 44.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -6740,7 +6798,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytResumoPreco: TLayout
               Align = Right
-              Position.X = 230.000000000000000000
+              Position.X = 232.000000000000000000
               Position.Y = 61.000000000000000000
               Size.Width = 120.000000000000000000
               Size.Height = 45.000000000000000000
@@ -6777,7 +6835,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 60.000000000000000000
             Position.X = 80.000000000000000000
             Position.Y = 125.000000000000000000
-            Size.Width = 230.000000000000000000
+            Size.Width = 232.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -6787,7 +6845,7 @@ object FrmPrincipal: TFrmPrincipal
             object lblBtnConfirmar: TLabel
               Align = Client
               StyledSettings = [Family, Size]
-              Size.Width = 185.000000000000000000
+              Size.Width = 187.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -7313,7 +7371,7 @@ object FrmPrincipal: TFrmPrincipal
         end
         object scrollAgendamento: TVertScrollBox
           Align = Client
-          Size.Width = 390.000000000000000000
+          Size.Width = 392.000000000000000000
           Size.Height = 664.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0

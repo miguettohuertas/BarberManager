@@ -100,6 +100,33 @@ BarberManager/
    - Botão Confirmar: valida sessão com mensagens específicas por campo, calcula `HR_FIM` com `IncMinute`, insere em TB_AGENDAMENTOS
    - Após confirmação: reset completo do estado + `CarregarHorarios` + `CarregarBarbeiros` + `CarregarServicos('')`; labels `lblPrecoServico` e `lblTempoServico` (AutoSize=True) resetados para `'R$ 0,00'` e `'-- min'` para evitar colapso de layout
 
+### Novas funcionalidades implementadas (View.Principal.pas):
+
+**Banner de Oferta — botão "Aproveitar >"**
+- `rectBtnAproveitarClick`: query a `TB_SERVICOS WHERE BADGE <> '' AND ATIVO = 1`, aplica 20% de desconto e chama `AbrirAgendamento`
+- `HitTest = True` no `rectBtnAproveitar`, `HitTest = False` no `lblAproveitar` (regra crítica respeitada)
+
+**Reset ao voltar do Agendamento**
+- `rectBtnVoltarAgendarClick`: após `SetActiveTabWithTransition`, reset completo de todas as variáveis de sessão e labels
+- `lblPrecoServico='R$ 0,00'`, `lblTempoServico='-- min'` (nunca `''` — regra AutoSize respeitada)
+- `rectBadgeSelecionado.Visible := False`
+
+**Imagens reais nos cards de serviços**
+- `GetImagemPorCategoria(Categoria): string` — função private que resolve caminho absoluto via `ExtractFilePath(ParamStr(0)) + '..\..\..'` + `src\assets\img\servico_[categoria].jpg`
+- Imagens: `servico_cabelo.jpg`, `servico_barba.jpg`, `servico_estetica.jpg`, `servico_combo.jpg`
+- `TImage` criado em runtime dentro de `RectIcone` com `WrapMode=Stretch`, `Align=Client`, `HitTest=False`
+- `FileExists()` protege o `LoadFromFile`
+- `System.IOUtils` adicionado às uses da implementation
+
+**Popup de Notificações**
+- `rectOverlayNotif`: overlay `Align=Contents`, `Fill=$CC000000`, `Visible=False` — inserido como último filho de `rectFundoHome`
+- `rectPainelNotif`: painel 380×400 com `XRadius=16`
+- `scrollNotificacoes`: `TVertScrollBox` `Width=360` (margem 10px)
+- `CarregarNotificacoes`: query `TB_AGENDAMENTOS JOIN TB_SERVICOS ORDER BY DT_AGENDAMENTO DESC ROWS 10`; cards dinâmicos com `Tag=88`, `TImage` com ícone de sino (`docs\images\iconamoon--notification.png`), cor por status
+- `imgNotificacaoClick`: `CarregarNotificacoes` + overlay visible + `BringToFront`
+- `lblFecharNotifClick`: overlay invisible
+- `CLIENTE_ID = 1` hardcoded (pendente sessão)
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -116,30 +143,33 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
-   - Carregar lista de serviços de TB_SERVICOS dinamicamente (substituir as 3 linhas estáticas)
-   - Filtros Todos/Ativos/Inativos funcionais (query com WHERE ATIVO=...)
-   - Filtros de categoria (Estética/Barba/Cabelo) funcionais
-   - Busca por nome (`edtBuscaServicos`) com `CONTAINING`
-   - KPIs reais: total de serviços, ticket médio, serviço mais popular
-   - Botão "Novo Serviço": formulário de cadastro (INSERT em TB_SERVICOS)
-   - Acções por linha: editar (UPDATE), eliminar (DELETE), toggle ativo/inativo
+1. **Popup de Perfil do utilizador** (próximo passo):
+   - Overlay igual ao de Notificações
+   - Mostrar: nome, email, perfil do utilizador logado
+   - Botão Logout → volta a TabLogin + limpa sessão
 
-2. **Dashboard Admin — dados reais**:
-   - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
-   - Barra de meta: receita do dia vs meta configurável
-   - Gestão de barbeiros (CRUD em TB_BARBEIROS)
+2. **Sessão de utilizador**:
+   - Guardar `FUsuarioID` real após login
+   - Substituir `CLIENTE_ID = 1` hardcoded em: `CarregarNotificacoes` e `rectBtnConfirmarClick`
+   - Mostrar nome real em `lblNomeCliente` na Home
 
-3. **Sessão de utilizador**:
-   - Guardar ID e PERFIL do utilizador logado em variável global ou singleton
-   - Substituir `CLIENTE_ID = 1` hardcoded em `rectBtnConfirmarClick` pelo ID real da sessão
-   - Mostrar agendamentos do utilizador logado no histórico
+3. **Horários ocupados reais** (`CarregarHorarios`):
+   - Substituir array hardcoded por query a `TB_AGENDAMENTOS`
+   - Filtrar por `BARBEIRO_ID + DT_AGENDAMENTO + STATUS <> 'CANCELADO'`
 
-4. **Horários ocupados reais** (`CarregarHorarios`):
-   - Substituir o array `Ocupados` hardcoded por query a TB_AGENDAMENTOS
-   - Filtrar por BARBEIRO_ID + DT_AGENDAMENTO = FDataSelecionada + STATUS ≠ 'CANCELADO'
+4. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
+   - Carregar lista de `TB_SERVICOS` dinamicamente
+   - Filtros e toggle Ativos/Inativos funcionais
+   - Busca com `CONTAINING`
+   - KPIs reais
+   - Botão "Novo Serviço" (INSERT)
+   - Acções: editar (UPDATE), eliminar (DELETE), toggle ativo
 
-5. **Deploy com D2Bridge** — empacotamento para Android/iOS
+5. **Dashboard Admin — dados complementares**:
+   - Gráfico de barras semanal com receita real
+   - Barra de meta configurável
+
+6. **Deploy com D2Bridge** — empacotamento para Android/iOS
 
 ---
 
@@ -207,6 +237,7 @@ BarberManager/
 | 97  | Cards de barbeiros (TLayout, Agendamento) |
 | 96  | Slots de horário (TRectangle, Agendamento)|
 | 95  | Cards da linha de tempo (TLayout, Dashboard) |
+| 88  | Cards de notificações (TRectangle + TImage dentro de scrollNotificacoes) |
 
 ---
 
@@ -223,11 +254,10 @@ FireDAC.FMXUI.Wait, Data.DB, FireDAC.Comp.DataSet, FireDAC.DApt,
 FireDAC.Stan.ExprFuncs
 ```
 
-### View.Principal.pas (implementation uses a adicionar)
+### View.Principal.pas (implementation uses)
 ```
-Model.Conexao, FireDAC.Comp.Client, Data.DB,
-System.DateUtils, FireDAC.Stan.Param, System.Hash,
-View.DashboardAdmin
+View.DashboardAdmin, Model.Conexao, FireDAC.Comp.Client, Data.DB,
+System.DateUtils, FireDAC.Stan.Param, System.IOUtils
 ```
 
 ### View.DashboardAdmin.pas (implementation uses)

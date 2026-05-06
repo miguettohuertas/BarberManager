@@ -6,10 +6,10 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <ProjectName Condition="'$(ProjectName)'==''">BarberManager</ProjectName>
         <TargetedPlatforms>558099</TargetedPlatforms>
         <AppType>Application</AppType>
         <MainSource>BarberManager.dpr</MainSource>
+        <ProjectName Condition="'$(ProjectName)'==''">BarberManager</ProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>

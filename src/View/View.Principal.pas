@@ -230,6 +230,11 @@ type
     imgIconeVoltar2: TImage;
     imgIconeIr: TImage;
     imgIconeBotaoConfirmAgend: TImage;
+    rectOverlayNotif: TRectangle;
+    rectPainelNotif: TRectangle;
+    lblTituloNotif: TLabel;
+    lblFecharNotif: TLabel;
+    scrollNotificacoes: TVertScrollBox;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
     procedure rectBtnNovaContaClick(Sender: TObject);
@@ -250,6 +255,9 @@ type
     procedure rectBtnCadastrarClick(Sender: TObject);
     procedure edtBuscaChange(Sender: TObject);
     procedure lblVerTodosClick(Sender: TObject);
+    procedure rectBtnAproveitarClick(Sender: TObject);
+    procedure imgNotificacaoClick(Sender: TObject);
+    procedure lblFecharNotifClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -269,6 +277,8 @@ type
                                Preco: Currency; DuracaoMin: Integer);
     procedure CarregarBarbeiros;
     procedure CarregarHorarios;
+    function GetImagemPorCategoria(const Categoria: string): string;
+    procedure CarregarNotificacoes;
   public
     { Public declarations }
   end;
@@ -281,7 +291,7 @@ implementation
 {$R *.fmx}
 
 uses View.DashboardAdmin, Model.Conexao, FireDAC.Comp.Client, Data.DB,
-  System.DateUtils, FireDAC.Stan.Param;
+  System.DateUtils, FireDAC.Stan.Param, System.IOUtils;
 
 procedure TFrmPrincipal.FormShow(Sender: TObject);
 begin
@@ -345,6 +355,27 @@ begin
   Result := UpperCase(THashSHA2.GetHashString(Senha));
 end;
 
+function TFrmPrincipal.GetImagemPorCategoria(const Categoria: string): string;
+var
+  Cat, BaseDir: string;
+begin
+  Cat := UpperCase(Categoria);
+  // .exe fica em src\Win32\Debug\ — sobe 3 níveis para a raiz do projecto
+  BaseDir := ExtractFilePath(ParamStr(0));
+  BaseDir := TPath.Combine(BaseDir, '..\..\..');
+  BaseDir := TPath.Combine(BaseDir, 'src\assets\img');
+  if Pos('CAB', Cat) > 0 then
+    Result := TPath.Combine(BaseDir, 'servico_cabelo.jpg')
+  else if Pos('BAR', Cat) > 0 then
+    Result := TPath.Combine(BaseDir, 'servico_barba.jpg')
+  else if Pos('EST', Cat) > 0 then
+    Result := TPath.Combine(BaseDir, 'servico_estetica.jpg')
+  else if Pos('COM', Cat) > 0 then
+    Result := TPath.Combine(BaseDir, 'servico_combo.jpg')
+  else
+    Result := TPath.Combine(BaseDir, 'servico_cabelo.jpg');
+end;
+
 procedure TFrmPrincipal.CarregarServicos(const Filtro: string = ''; const Busca: string = '');
 var
   Query: TFDQuery;
@@ -352,6 +383,7 @@ var
   LytContainer: TLayout;
   Card, RectIcone, RectBtn: TRectangle;
   LblNome, LblDesc, LblPreco, LblBtnAdd: TLabel;
+  ImgServico: TImage;
   CorIcone: TAlphaColor;
   Categoria, SQL: string;
   TotalHeight, StartY: Single;
@@ -456,6 +488,15 @@ begin
       RectIcone.XRadius := 10;
       RectIcone.YRadius := 10;
       RectIcone.HitTest := False;
+
+      // Imagem real do serviço (sobreposta ao fundo colorido do ícone)
+      ImgServico := TImage.Create(RectIcone);
+      ImgServico.Parent := RectIcone;
+      ImgServico.Align := TAlignLayout.Client;
+      ImgServico.WrapMode := TImageWrapMode.Stretch;
+      ImgServico.HitTest := False;
+      if FileExists(GetImagemPorCategoria(Categoria)) then
+        ImgServico.Bitmap.LoadFromFile(GetImagemPorCategoria(Categoria));
 
       // Nome do serviço
       LblNome := TLabel.Create(Card);
@@ -1125,13 +1166,178 @@ end;
 procedure TFrmPrincipal.rectBtnVoltarAgendarClick(Sender: TObject);
 begin
   TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+  FServicoIDSelecionado    := 0;
+  FBarbeiroIDSelecionado   := 0;
+  FHoraSelecionada         := '';
+  FDataSelecionada         := 0;
+  lblNomeServicoAgendar.Text := 'Selecione um serviço';
+  lblPrecoServico.Text       := 'R$ 0,00';
+  lblTempoServico.Text       := '-- min';
+  lblResumoServico.Text      := 'Nenhum serviço';
+  lblResumoData.Text         := 'Data não selecionada';
+  lblResumoBarbeiro.Text     := 'Barbeiro não selecionado';
+  lblValorTotal.Text         := 'R$ 0,00';
+  lblBadgeSelecionado.Text   := '';
+  rectBadgeSelecionado.Visible := False;
 end;
 
 procedure TFrmPrincipal.lblVerTodosClick(Sender: TObject);
 begin
   edtBusca.Text := '';
   AplicarFiltroCategoria('');
-  scrollHome.ScrollTo(0, lytTituloServicos.Position.Y);
+  scrollHome.ScrollBy(0, lytTituloServicos.Position.Y);
+end;
+
+procedure TFrmPrincipal.rectBtnAproveitarClick(Sender: TObject);
+var
+  Query: TFDQuery;
+  PrecoComDesconto: Currency;
+begin
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT ID, NOME, PRECO, DURACAO_MIN FROM TB_SERVICOS ' +
+      'WHERE ATIVO = 1 AND BADGE <> '''' ' +
+      'ORDER BY ID ROWS 1';
+    Query.Open;
+    if not Query.IsEmpty then
+    begin
+      PrecoComDesconto := Query.FieldByName('PRECO').AsCurrency * 0.80;
+      AbrirAgendamento(
+        Query.FieldByName('ID').AsInteger,
+        Query.FieldByName('NOME').AsString,
+        PrecoComDesconto,
+        Query.FieldByName('DURACAO_MIN').AsInteger
+      );
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.CarregarNotificacoes;
+var
+  Query: TFDQuery;
+  I, CardCount: Integer;
+  CardNotif: TRectangle;
+  ImgIconeNotif: TImage;
+  LblTexto, LblStatus: TLabel;
+  StatusText: string;
+  StatusColor: TAlphaColor;
+  StartY: Single;
+  IconePath: string;
+begin
+  for I := scrollNotificacoes.Content.ControlsCount - 1 downto 0 do
+    if scrollNotificacoes.Content.Controls[I].Tag = 88 then
+      scrollNotificacoes.Content.Controls[I].Free;
+
+  Query := TFDQuery.Create(nil);
+  CardCount := 0;
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT A.ID, S.NOME AS SERVICO, A.DT_AGENDAMENTO, ' +
+      '       A.HR_INICIO, A.STATUS ' +
+      'FROM TB_AGENDAMENTOS A ' +
+      'JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID ' +
+      'WHERE A.CLIENTE_ID = :ID ' +
+      'ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO DESC ' +
+      'ROWS 10';
+    Query.ParamByName('ID').AsInteger := 1; // hardcoded até sessão implementada
+    Query.Open;
+
+    IconePath := TPath.Combine(
+      TPath.Combine(ExtractFilePath(ParamStr(0)), '..\..\..'),
+      'docs\images\iconamoon--notification.png');
+
+    StartY := 8;
+    while not Query.EOF do
+    begin
+      StatusText := Query.FieldByName('STATUS').AsString;
+
+      if StatusText = 'CONCLUIDO' then
+        StatusColor := $FF22C55E
+      else if StatusText = 'CANCELADO' then
+        StatusColor := $FFEF4444
+      else if StatusText = 'EM_ANDAMENTO' then
+        StatusColor := $FF3B82F6
+      else // PENDENTE
+        StatusColor := $FFF58A00;
+
+      CardNotif := TRectangle.Create(scrollNotificacoes);
+      CardNotif.Parent := scrollNotificacoes;
+      CardNotif.Tag := 88;
+      CardNotif.Align := TAlignLayout.None;
+      CardNotif.Position.X := 10;
+      CardNotif.Position.Y := StartY + CardCount * 90;
+      CardNotif.Width := scrollNotificacoes.Width - 20;
+      CardNotif.Height := 80;
+      CardNotif.Fill.Color := $FF1E293B;
+      CardNotif.Stroke.Color := $FF2D3F55;
+      CardNotif.XRadius := 12;
+      CardNotif.YRadius := 12;
+      CardNotif.HitTest := False;
+
+      ImgIconeNotif := TImage.Create(CardNotif);
+      ImgIconeNotif.Parent := CardNotif;
+      ImgIconeNotif.Position.X := 14;
+      ImgIconeNotif.Position.Y := 18;
+      ImgIconeNotif.Width := 28;
+      ImgIconeNotif.Height := 28;
+      ImgIconeNotif.WrapMode := TImageWrapMode.Fit;
+      ImgIconeNotif.HitTest := False;
+      ImgIconeNotif.Tag := 88;
+      if FileExists(IconePath) then
+        ImgIconeNotif.Bitmap.LoadFromFile(IconePath);
+
+      LblTexto := TLabel.Create(CardNotif);
+      LblTexto.Parent := CardNotif;
+      LblTexto.Position.X := 50;
+      LblTexto.Position.Y := 12;
+      LblTexto.Width := CardNotif.Width - 60;
+      LblTexto.Height := 32;
+      LblTexto.StyledSettings := [];
+      LblTexto.TextSettings.Font.Size := 12;
+      LblTexto.TextSettings.FontColor := $FFFFFFFF;
+      LblTexto.WordWrap := False;
+      LblTexto.Text := Query.FieldByName('SERVICO').AsString + ' · ' +
+        FormatDateTime('dd/mm', Query.FieldByName('DT_AGENDAMENTO').AsDateTime) +
+        ' às ' + Query.FieldByName('HR_INICIO').AsString;
+      LblTexto.HitTest := False;
+
+      LblStatus := TLabel.Create(CardNotif);
+      LblStatus.Parent := CardNotif;
+      LblStatus.Position.X := 50;
+      LblStatus.Position.Y := 50;
+      LblStatus.Width := 120;
+      LblStatus.Height := 20;
+      LblStatus.StyledSettings := [];
+      LblStatus.TextSettings.Font.Size := 10;
+      LblStatus.TextSettings.FontColor := StatusColor;
+      LblStatus.Text := StatusText;
+      LblStatus.HitTest := False;
+
+      Inc(CardCount);
+      Query.Next;
+    end;
+
+    scrollNotificacoes.Content.Height := StartY + CardCount * 90 + 8;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.imgNotificacaoClick(Sender: TObject);
+begin
+  CarregarNotificacoes;
+  rectOverlayNotif.Visible := True;
+  rectOverlayNotif.BringToFront;
+end;
+
+procedure TFrmPrincipal.lblFecharNotifClick(Sender: TObject);
+begin
+  rectOverlayNotif.Visible := False;
 end;
 
 procedure TFrmPrincipal.CarregarBannerOferta;
