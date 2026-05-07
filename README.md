@@ -150,6 +150,13 @@ Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, ond
 - [x] Filtros de categoria funcionais (Todos / Cabelo / Barba / Estética)
 - [x] Motor de Agendamento completo (Serviço + Barbeiro + Horário)
 - [x] Persistência do agendamento em `TB_AGENDAMENTOS` com cálculo automático de `HR_FIM`
+- [x] Calendário dinâmico com navegação por meses
+- [x] Selecção de dia com feedback visual (laranja)
+- [x] Popup de Notificações com agendamentos reais
+- [x] Popup de Perfil com avatar, badge e logout
+- [x] Segurança: limpeza de dados no logout
+- [ ] Tela de Avaliação de Serviço (estrelas + comentário)
+- [ ] Pontuação dinâmica dos barbeiros
 
 ### Módulo Barbeiro/Admin *(Front-End + Back-End Concluídos)*
 

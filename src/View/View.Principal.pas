@@ -174,46 +174,6 @@ type
     circleLegendaOcup: TCircle;
     lblLegendaOcup: TLabel;
     flowHorarios: TFlowLayout;
-    rectHora0900: TRectangle;
-    lblHora0900: TLabel;
-    rectHora0930: TRectangle;
-    lblHora0930: TLabel;
-    rectHora1000: TRectangle;
-    lblHora1000: TLabel;
-    rectHora1030: TRectangle;
-    lblHora1030: TLabel;
-    rectHora1100: TRectangle;
-    lblHora1100: TLabel;
-    rectHora1130: TRectangle;
-    lblHora1130: TLabel;
-    rectHora1200: TRectangle;
-    lblHora1200: TLabel;
-    rectHora1230: TRectangle;
-    lblHora1230: TLabel;
-    rectHora1300: TRectangle;
-    lblHora1300: TLabel;
-    rectHora1330: TRectangle;
-    lblHora1330: TLabel;
-    rectHora1400: TRectangle;
-    lblHora1400: TLabel;
-    rectHora1430: TRectangle;
-    lblHora1430: TLabel;
-    rectHora1500: TRectangle;
-    lblHora1500: TLabel;
-    rectHora1530: TRectangle;
-    lblHora1530: TLabel;
-    rectHora1600: TRectangle;
-    lblHora1600: TLabel;
-    rectHora1630: TRectangle;
-    lblHora1630: TLabel;
-    rectHora1700: TRectangle;
-    lblHora1700: TLabel;
-    rectHora1730: TRectangle;
-    lblHora1730: TLabel;
-    rectHora1800: TRectangle;
-    lblHora1800: TLabel;
-    rectHora1830: TRectangle;
-    lblHora1830: TLabel;
     lblTituloBarbeiros: TLabel;
     imgLogoApp: TImage;
     imgLogoAppNovaConta: TImage;
@@ -272,6 +232,9 @@ type
     procedure circlePerfilClick(Sender: TObject);
     procedure lblFecharPerfilClick(Sender: TObject);
     procedure rectBtnLogoutClick(Sender: TObject);
+    procedure DiaSelecionadoClick(Sender: TObject);
+    procedure rectSetaAnteriorClick(Sender: TObject);
+    procedure rectSetaProximoClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -286,6 +249,9 @@ type
     FUsuarioNome  : string;
     FUsuarioEmail : string;
     FUsuarioPerfil: string;
+    FMesAtual: TDate;
+    FDiaSelecionadoRect: TRectangle;
+    FDatasCalendario: array[0..6] of TDate;
     function HashSenha(const Senha: string): string;
     function ValidarEmail(const Email: string): Boolean;
     procedure CarregarServicos(const Filtro: string = ''; const Busca: string = '');
@@ -298,6 +264,8 @@ type
     function GetImagemPorCategoria(const Categoria: string): string;
     procedure CarregarNotificacoes;
     procedure AbrirPopupPerfil;
+    procedure PopularCalendario;
+    function DiaSemanaAbrev(DiaSemana: Word): string;
   public
     procedure LimparSessao;
   end;
@@ -351,6 +319,8 @@ begin
       TTabTransition.Slide, TTabTransitionDirection.Normal);
     CarregarHorarios;
     CarregarBarbeiros;
+    FMesAtual := Date;
+    PopularCalendario;
   end
   else
     TabControlPrincipal.SetActiveTabWithTransition(TabAgendamento,
@@ -716,6 +686,8 @@ begin
 
   CarregarHorarios;
   CarregarBarbeiros;
+  FMesAtual := Date;
+  PopularCalendario;
 end;
 
 procedure TFrmPrincipal.CarregarBarbeiros;
@@ -863,18 +835,6 @@ var
   Lbl: TLabel;
   Ocupado: Boolean;
 begin
-  // Oculta os 20 rectHora* estáticos
-  rectHora0900.Visible := False;  rectHora0930.Visible := False;
-  rectHora1000.Visible := False;  rectHora1030.Visible := False;
-  rectHora1100.Visible := False;  rectHora1130.Visible := False;
-  rectHora1200.Visible := False;  rectHora1230.Visible := False;
-  rectHora1300.Visible := False;  rectHora1330.Visible := False;
-  rectHora1400.Visible := False;  rectHora1430.Visible := False;
-  rectHora1500.Visible := False;  rectHora1530.Visible := False;
-  rectHora1600.Visible := False;  rectHora1630.Visible := False;
-  rectHora1700.Visible := False;  rectHora1730.Visible := False;
-  rectHora1800.Visible := False;  rectHora1830.Visible := False;
-
   // Limpa horários dinâmicos anteriores (Tag=96)
   for I := flowHorarios.ControlsCount - 1 downto 0 do
     if (flowHorarios.Controls[I] is TRectangle) and
@@ -937,7 +897,7 @@ begin
   end;
 
   // Expande o flowHorarios para caber todos os botões (20 horários, ~3 por linha)
-  flowHorarios.Height := 380;
+  flowHorarios.Height := 220;
 end;
 
 procedure TFrmPrincipal.HorarioSelecionadoClick(Sender: TObject);
@@ -1420,6 +1380,8 @@ begin
   FUsuarioNome   := '';
   FUsuarioEmail  := '';
   FUsuarioPerfil := '';
+  edtEmail.Text := '';
+  edtSenha.Text := '';
 end;
 
 procedure TFrmPrincipal.AbrirPopupPerfil;
@@ -1461,6 +1423,131 @@ begin
   rectOverlayPerfil.Visible := False;
   LimparSessao;
   TabControlPrincipal.ActiveTab := TabLogin;
+end;
+
+function TFrmPrincipal.DiaSemanaAbrev(DiaSemana: Word): string;
+const
+  Abrevs: array[1..7] of string = ('Dom','Seg','Ter','Qua','Qui','Sex','Sáb');
+begin
+  Result := Abrevs[DiaSemana];
+end;
+
+procedure TFrmPrincipal.PopularCalendario;
+const
+  Meses: array[1..12] of string = (
+    'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+    'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro');
+var
+  DiasRect: array[0..6] of TRectangle;
+  LblsSemana: array[0..6] of TLabel;
+  LblsNumero: array[0..6] of TLabel;
+  PrimeiroDiaMes, DiaInicio, DiaDoSlot: TDate;
+  I: Integer;
+  Rect: TRectangle;
+  LblSem, LblNum: TLabel;
+begin
+  lblMesAtual.Text := Meses[MonthOf(FMesAtual)] + ' ' + IntToStr(YearOf(FMesAtual));
+
+  DiasRect[0] := rectDiaSabado;
+  DiasRect[1] := rectDiaDomingo;
+  DiasRect[2] := rectDiaSegunda;
+  DiasRect[3] := rectDiaTerca;
+  DiasRect[4] := rectDiaQuarta;
+  DiasRect[5] := rectDiaQuinta;
+  DiasRect[6] := rectDiaSexta;
+
+  LblsSemana[0] := lblDiaSemanaSabado;
+  LblsSemana[1] := lblDiaSemanaDomingo;
+  LblsSemana[2] := lblDiaSemanaSegunda;
+  LblsSemana[3] := lblDiaSemanaTerca;
+  LblsSemana[4] := lblDiaSemanaQuarta;
+  LblsSemana[5] := lblDiaSemanaQuinta;
+  LblsSemana[6] := lblDiaSemanaSexta;
+
+  LblsNumero[0] := lblDiaNumeroSabado;
+  LblsNumero[1] := lblDiaNumeroDomingo;
+  LblsNumero[2] := lblDiaNumeroSegunda;
+  LblsNumero[3] := lblDiaNumeroTerca;
+  LblsNumero[4] := lblDiaNumeroQuarta;
+  LblsNumero[5] := lblDiaNumeroQuinta;
+  LblsNumero[6] := lblDiaNumeroSexta;
+
+  PrimeiroDiaMes := EncodeDate(YearOf(FMesAtual), MonthOf(FMesAtual), 1);
+  if (YearOf(FMesAtual) = YearOf(Date)) and (MonthOf(FMesAtual) = MonthOf(Date)) then
+    DiaInicio := Date
+  else
+    DiaInicio := PrimeiroDiaMes;
+
+  for I := 0 to 6 do
+  begin
+    DiaDoSlot := DiaInicio + I;
+    FDatasCalendario[I] := DiaDoSlot;
+
+    Rect   := DiasRect[I];
+    LblSem := LblsSemana[I];
+    LblNum := LblsNumero[I];
+
+    LblSem.StyledSettings := [];
+    LblNum.StyledSettings := [];
+
+    LblSem.Text := DiaSemanaAbrev(DayOfWeek(DiaDoSlot));
+    LblNum.Text := IntToStr(DayOf(DiaDoSlot));
+
+    if (FDataSelecionada > 0) and (Trunc(DiaDoSlot) = Trunc(FDataSelecionada)) then
+    begin
+      Rect.Fill.Color               := $FFF58A00;
+      LblSem.TextSettings.FontColor := $FF000000;
+      LblNum.TextSettings.FontColor := $FF000000;
+    end
+    else
+    begin
+      Rect.Fill.Color               := $FF1E293B;
+      LblSem.TextSettings.FontColor := $FF94A3B8;
+      LblNum.TextSettings.FontColor := $FFFFFFFF;
+    end;
+  end;
+end;
+
+procedure TFrmPrincipal.DiaSelecionadoClick(Sender: TObject);
+var
+  Rect: TRectangle;
+  DiasRect: array[0..6] of TRectangle;
+  I: Integer;
+begin
+  Rect := Sender as TRectangle;
+
+  DiasRect[0] := rectDiaSabado;
+  DiasRect[1] := rectDiaDomingo;
+  DiasRect[2] := rectDiaSegunda;
+  DiasRect[3] := rectDiaTerca;
+  DiasRect[4] := rectDiaQuarta;
+  DiasRect[5] := rectDiaQuinta;
+  DiasRect[6] := rectDiaSexta;
+
+  for I := 0 to 6 do
+    if DiasRect[I] = Rect then
+    begin
+      FDataSelecionada := FDatasCalendario[I];
+      Break;
+    end;
+
+  lblResumoData.Text := FormatDateTime('dd/mm/yyyy', FDataSelecionada);
+  PopularCalendario;
+  CarregarHorarios;
+end;
+
+procedure TFrmPrincipal.rectSetaAnteriorClick(Sender: TObject);
+begin
+  FMesAtual := IncMonth(FMesAtual, -1);
+  FDataSelecionada := 0;
+  PopularCalendario;
+end;
+
+procedure TFrmPrincipal.rectSetaProximoClick(Sender: TObject);
+begin
+  FMesAtual := IncMonth(FMesAtual, 1);
+  FDataSelecionada := 0;
+  PopularCalendario;
 end;
 
 end.

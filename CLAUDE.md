@@ -147,6 +147,19 @@ BarberManager/
 - `AbrirPopupPerfil`: preenche dados da sessão + badge por perfil + `BringToFront`
 - `circlePerfilClick` → `AbrirPopupPerfil`; `lblFecharPerfilClick` → fecha overlay; `rectBtnLogoutClick` → fecha overlay + `LimparSessao` + `TabLogin`
 
+**Calendário dinâmico (Agendamento)**
+- `FMesAtual: TDate`, `FDatasCalendario: array[0..6] of TDate`
+- `PopularCalendario`: preenche os 7 slots com dias reais, `lblMesAtual` com mês/ano em português, visual laranja no dia seleccionado (`$FFF58A00`), neutro (`$FF1E293B`)
+- `DiaSemanaAbrev`: função que retorna `Dom`/`Seg`/`Ter`/`Qua`/`Qui`/`Sex`/`Sáb`
+- `DiaSelecionadoClick`: handler único para os 7 `rectDia*`, actualiza `FDataSelecionada` e redesenha calendário
+- `rectSetaAnteriorClick` / `rectSetaProximoClick`: navegação entre meses com `IncMonth`
+- 20 `rectHora*` estáticos removidos do `.fmx` e `.pas` (491 linhas eliminadas — código mais limpo)
+- `flowHorarios.Height` ajustado para 220
+- Margem `lblTituloBarbeiros` ajustada para 20
+
+**Segurança adicional**
+- `LimparSessao`: limpa também `edtEmail` e `edtSenha` para não deixar dados do login anterior visíveis
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -163,14 +176,23 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Ajuste visual do Popup de Perfil** (pequeno, fazer primeiro):
-   - Corrigir cores das fontes que ficaram apagadas
+1. **Fix visual — Popup Notificações** (pequeno, fazer primeiro):
+   - Margem direita do `rectPainelNotif` colada no ecrã
+   - Reduzir Width ou ajustar Position para ter margem simétrica dos dois lados
 
-2. **Horários ocupados reais** (`CarregarHorarios`):
-   - Substituir array hardcoded por query a `TB_AGENDAMENTOS`
-   - Filtrar por `BARBEIRO_ID + DT_AGENDAMENTO + STATUS <> 'CANCELADO'`
+2. **Tela de Avaliação de Serviço** (próxima grande feature):
+   - Acessível clicando numa notificação com `STATUS = CONCLUIDO`
+   - Nova tab no TabControl ou overlay dentro da Home
+   - Campos: nota de 1 a 5 estrelas (interactivas), comentário (`TEdit` ou `TMemo`), botão Confirmar
+   - INSERT em `TB_AVALIACOES` com `AGENDAMENTO_ID`, `CLIENTE_ID` (`FUsuarioID`), `BARBEIRO_ID`, `NOTA`, `COMENTARIO`
+   - Após avaliar: desabilitar clique nessa notificação (para não avaliar duas vezes)
 
-3. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
+3. **Pontuação dinâmica dos barbeiros**:
+   - Verificar se `CarregarBarbeiros` usa `AVALIACAO_MEDIA` da BD
+   - Se não usar: corrigir para mostrar média real
+   - Após nova avaliação: recalcular `AVALIACAO_MEDIA` em `TB_BARBEIROS` com UPDATE
+
+4. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
    - Carregar lista de `TB_SERVICOS` dinamicamente
    - Filtros e toggle Ativos/Inativos funcionais
    - Busca com `CONTAINING`
@@ -178,11 +200,11 @@ BarberManager/
    - Botão "Novo Serviço" (INSERT)
    - Acções: editar (UPDATE), eliminar (DELETE), toggle ativo
 
-4. **Dashboard Admin — dados complementares**:
+5. **Dashboard Admin — dados complementares**:
    - Gráfico de barras semanal com receita real
    - Barra de meta configurável
 
-5. **Deploy com D2Bridge** — empacotamento para Android/iOS
+6. **Deploy com D2Bridge**
 
 ---
 
@@ -233,7 +255,7 @@ BarberManager/
 
 ### TFlowLayout
 - Não tem propriedade `.Content` — usar `flowHorarios.Height` com valor fixo calculado
-- Fórmula usada: `7 linhas × 48px + padding = 380`
+- Valor actual: `flowHorarios.Height = 220` (20 slots × 80px wide, ~4 por linha = 5 linhas × 40px + margens)
 
 ### SHA-256 para passwords
 - `System.Hash.THashSHA2.GetHashString(senha, THashSHA2.TSHA2Version.SHA256)`
@@ -252,6 +274,7 @@ BarberManager/
 | 95  | Cards da linha de tempo (TLayout, Dashboard) |
 | 88  | Cards de notificações (TRectangle + TImage dentro de scrollNotificacoes) |
 | 87  | Componentes do popup de perfil (reservado para futuro uso dinâmico) |
+| 86  | Cards de avaliação (reservado para tela de feedback) |
 
 ---
 

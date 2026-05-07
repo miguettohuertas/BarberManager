@@ -16,7 +16,7 @@ object FrmPrincipal: TFrmPrincipal
     Size.Width = 392.000000000000000000
     Size.Height = 844.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 1
+    TabIndex = 3
     TabOrder = 0
     TabPosition = None
     Sizes = (
@@ -1590,7 +1590,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -5238,7 +5238,7 @@ object FrmPrincipal: TFrmPrincipal
           Size.PlatformDefault = False
           TabOrder = 1
           ShowScrollBars = False
-          Viewport.Width = 390.000000000000000000
+          Viewport.Width = 392.000000000000000000
           Viewport.Height = 774.000000000000000000
           object lytHeaderHome: TLayout
             Align = Top
@@ -5247,14 +5247,14 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 20.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 80.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             object lblBemVindo: TLabel
               Align = Top
               StyledSettings = [Family, Size, Style]
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 17.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -5265,7 +5265,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Top
               StyledSettings = [Family]
               Position.Y = 17.000000000000000000
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 24.000000000000000000
@@ -5276,7 +5276,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytAcoesHeader: TLayout
               Align = Right
-              Position.X = 250.000000000000000000
+              Position.X = 252.000000000000000000
               Position.Y = 49.000000000000000000
               Size.Width = 100.000000000000000000
               Size.Height = 31.000000000000000000
@@ -5623,11 +5623,10 @@ object FrmPrincipal: TFrmPrincipal
                       'oon--notification.png'
                   end>
                 Align = Left
-                HitTest = True
-                OnClick = imgNotificacaoClick
                 Size.Width = 40.000000000000000000
                 Size.Height = 31.000000000000000000
                 Size.PlatformDefault = False
+                OnClick = imgNotificacaoClick
               end
               object circlePerfil: TCircle
                 Align = Right
@@ -5635,7 +5634,6 @@ object FrmPrincipal: TFrmPrincipal
                 Size.Width = 45.000000000000000000
                 Size.Height = 31.000000000000000000
                 Size.PlatformDefault = False
-                HitTest = True
                 OnClick = circlePerfilClick
                 object imgIconePerfil: TImage
                   MultiResBitmap.Height = 512
@@ -5924,14 +5922,14 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 120.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
             object rectFundoBusca: TRectangle
               Align = Client
               Fill.Color = xFF141C2B
-              Size.Width = 350.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               Stroke.Color = xFF2E3B52
@@ -5945,7 +5943,7 @@ object FrmPrincipal: TFrmPrincipal
                 TextSettings.FontColor = claWhite
                 Margins.Left = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
-                Size.Width = 285.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = 'Buscar Servi'#231'o...'
@@ -6459,7 +6457,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 195.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 150.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -6470,7 +6468,7 @@ object FrmPrincipal: TFrmPrincipal
               StyledSettings = [Family, Size, Style]
               Position.X = 15.000000000000000000
               Position.Y = 15.000000000000000000
-              Size.Width = 320.000000000000000000
+              Size.Width = 322.000000000000000000
               Size.Height = 20.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF0B1220
@@ -6483,7 +6481,7 @@ object FrmPrincipal: TFrmPrincipal
               Margins.Top = 5.000000000000000000
               Position.X = 15.000000000000000000
               Position.Y = 40.000000000000000000
-              Size.Width = 320.000000000000000000
+              Size.Width = 322.000000000000000000
               Size.Height = 55.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 18.000000000000000000
@@ -6496,7 +6494,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Bottom
               Position.X = 15.000000000000000000
               Position.Y = 100.000000000000000000
-              Size.Width = 320.000000000000000000
+              Size.Width = 322.000000000000000000
               Size.Height = 35.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -6531,12 +6529,12 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Top = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 365.000000000000000000
-            Size.Width = 370.000000000000000000
+            Size.Width = 372.000000000000000000
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
             ShowScrollBars = False
-            Viewport.Width = 370.000000000000000000
+            Viewport.Width = 372.000000000000000000
             Viewport.Height = 40.000000000000000000
             object rectFiltroTodos: TRectangle
               Align = Left
@@ -6565,7 +6563,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Left
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
-              Position.X = 300.000000000000000000
+              Position.X = 270.000000000000000000
               Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
@@ -6588,7 +6586,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Left
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
-              Position.X = 100.000000000000000000
+              Position.X = 90.000000000000000000
               Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
@@ -6611,7 +6609,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Left
               Fill.Color = xFF141C2B
               Margins.Right = 10.000000000000000000
-              Position.X = 200.000000000000000000
+              Position.X = 180.000000000000000000
               Size.Width = 80.000000000000000000
               Size.Height = 40.000000000000000000
               Size.PlatformDefault = False
@@ -6635,7 +6633,7 @@ object FrmPrincipal: TFrmPrincipal
             Align = Top
             Margins.Top = 20.000000000000000000
             Position.Y = 425.000000000000000000
-            Size.Width = 390.000000000000000000
+            Size.Width = 392.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -6655,7 +6653,7 @@ object FrmPrincipal: TFrmPrincipal
               Align = Right
               StyledSettings = [Family, Size, Style]
               HitTest = True
-              Position.X = 270.000000000000000000
+              Position.X = 272.000000000000000000
               Size.Width = 120.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
@@ -6669,189 +6667,186 @@ object FrmPrincipal: TFrmPrincipal
         object rectOverlayNotif: TRectangle
           Align = Contents
           Fill.Color = xCC000000
-          HitTest = True
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
           Visible = False
           object rectPainelNotif: TRectangle
-            Align = None
+            Fill.Color = xFF141C2B
             Position.X = 10.000000000000000000
             Position.Y = 60.000000000000000000
             Size.Width = 380.000000000000000000
             Size.Height = 400.000000000000000000
             Size.PlatformDefault = False
-            Fill.Color = xFF141C2B
             Stroke.Kind = None
             XRadius = 16.000000000000000000
             YRadius = 16.000000000000000000
             object lblTituloNotif: TLabel
+              StyledSettings = []
               Position.X = 20.000000000000000000
               Position.Y = 20.000000000000000000
               Size.Width = 200.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = 'Notifica'#231#245'es'
               TextSettings.Font.Size = 18.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = claWhite
+              Text = 'Notifica'#231#245'es'
               TabOrder = 0
             end
             object lblFecharNotif: TLabel
+              StyledSettings = []
               HitTest = True
               Position.X = 340.000000000000000000
               Position.Y = 20.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = 'X'
               TextSettings.Font.Size = 18.000000000000000000
               TextSettings.FontColor = claWhite
               TextSettings.HorzAlign = Center
+              Text = 'X'
               TabOrder = 1
               OnClick = lblFecharNotifClick
             end
             object scrollNotificacoes: TVertScrollBox
-              Align = None
-              Position.X = 0.000000000000000000
               Position.Y = 60.000000000000000000
               Size.Width = 360.000000000000000000
               Size.Height = 320.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
+              Viewport.Width = 360.000000000000000000
+              Viewport.Height = 320.000000000000000000
             end
           end
         end
         object rectOverlayPerfil: TRectangle
           Align = Contents
           Fill.Color = xCC000000
-          HitTest = True
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
           Visible = False
           object rectPainelPerfil: TRectangle
-            Align = None
+            Fill.Color = xFF141C2B
             Position.X = 10.000000000000000000
             Position.Y = 60.000000000000000000
             Size.Width = 380.000000000000000000
             Size.Height = 320.000000000000000000
             Size.PlatformDefault = False
-            Fill.Color = xFF141C2B
             Stroke.Kind = None
             XRadius = 16.000000000000000000
             YRadius = 16.000000000000000000
             object circleAvatarPerfil: TCircle
+              Fill.Color = xFFF58A00
               Position.X = 155.000000000000000000
               Position.Y = 24.000000000000000000
               Size.Width = 70.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
-              Fill.Color = xFFF58A00
               Stroke.Kind = None
             end
             object lblInicialPerfil: TLabel
+              StyledSettings = []
               Position.X = 155.000000000000000000
               Position.Y = 24.000000000000000000
               Size.Width = 70.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = '?'
               TextSettings.Font.Size = 28.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
-              TextSettings.FontColor = claBlack
               TextSettings.HorzAlign = Center
-              TextSettings.VertAlign = Center
-              HitTest = False
+              Text = '?'
             end
             object lblNomePerfilPopup: TLabel
+              StyledSettings = []
               Position.X = 20.000000000000000000
               Position.Y = 108.000000000000000000
               Size.Width = 340.000000000000000000
               Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = ''
               TextSettings.Font.Size = 16.000000000000000000
               TextSettings.Font.StyleExt = {00070000000000000004000000}
               TextSettings.FontColor = claWhite
               TextSettings.HorzAlign = Center
-              HitTest = False
             end
             object lblEmailPerfilPopup: TLabel
+              StyledSettings = []
               Position.X = 20.000000000000000000
               Position.Y = 140.000000000000000000
               Size.Width = 340.000000000000000000
               Size.Height = 22.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = ''
-              TextSettings.Font.Size = 12.000000000000000000
               TextSettings.FontColor = xFF94A3B8
               TextSettings.HorzAlign = Center
-              HitTest = False
             end
             object rectBadgePerfil: TRectangle
+              Fill.Color = xFF1E3A5F
               Position.X = 155.000000000000000000
               Position.Y = 172.000000000000000000
               Size.Width = 70.000000000000000000
               Size.Height = 24.000000000000000000
               Size.PlatformDefault = False
-              Fill.Color = xFF1E3A5F
               Stroke.Kind = None
               XRadius = 12.000000000000000000
               YRadius = 12.000000000000000000
               object lblBadgePerfil: TLabel
                 Align = Client
                 StyledSettings = []
-                Text = 'Cliente'
+                Size.Width = 70.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
                 TextSettings.Font.Size = 10.000000000000000000
                 TextSettings.FontColor = xFF60A5FA
                 TextSettings.HorzAlign = Center
-                HitTest = False
+                Text = 'Cliente'
               end
             end
             object rectLinhaPerfil: TRectangle
+              Fill.Color = xFF2D3F55
               Position.X = 20.000000000000000000
               Position.Y = 212.000000000000000000
               Size.Width = 340.000000000000000000
               Size.Height = 1.000000000000000000
               Size.PlatformDefault = False
-              Fill.Color = xFF2D3F55
               Stroke.Kind = None
             end
             object lblFecharPerfil: TLabel
+              StyledSettings = []
               HitTest = True
               Position.X = 340.000000000000000000
               Position.Y = 16.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
-              StyledSettings = []
-              Text = 'X'
               TextSettings.Font.Size = 18.000000000000000000
               TextSettings.FontColor = claWhite
               TextSettings.HorzAlign = Center
+              Text = 'X'
               OnClick = lblFecharPerfilClick
             end
             object rectBtnLogout: TRectangle
+              Fill.Color = xFF7F1D1D
               Position.X = 20.000000000000000000
               Position.Y = 228.000000000000000000
               Size.Width = 340.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
-              Fill.Color = xFF7F1D1D
               Stroke.Kind = None
               XRadius = 12.000000000000000000
               YRadius = 12.000000000000000000
-              HitTest = True
               OnClick = rectBtnLogoutClick
               object lblBtnLogout: TLabel
                 Align = Client
                 StyledSettings = []
-                Text = 'Sair da Conta'
+                Size.Width = 340.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
                 TextSettings.Font.Size = 14.000000000000000000
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFFEF4444
+                TextSettings.FontColor = claWhite
                 TextSettings.HorzAlign = Center
-                HitTest = False
+                Text = 'Sair da Conta'
               end
             end
           end
@@ -6863,7 +6858,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -7513,7 +7508,7 @@ object FrmPrincipal: TFrmPrincipal
           Size.PlatformDefault = False
           TabOrder = 0
           ShowScrollBars = False
-          Viewport.Width = 390.000000000000000000
+          Viewport.Width = 392.000000000000000000
           Viewport.Height = 664.000000000000000000
           object lytHeaderAgendar: TLayout
             Align = Top
@@ -7521,7 +7516,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Top = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 20.000000000000000000
-            Size.Width = 370.000000000000000000
+            Size.Width = 372.000000000000000000
             Size.Height = 60.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
@@ -7660,14 +7655,14 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytTextosHeader: TLayout
               Align = Client
-              Size.Width = 315.000000000000000000
+              Size.Width = 317.000000000000000000
               Size.Height = 60.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
               object lblTituloAgendar: TLabel
                 Align = Top
                 StyledSettings = [Family]
-                Size.Width = 315.000000000000000000
+                Size.Width = 317.000000000000000000
                 Size.Height = 33.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 22.000000000000000000
@@ -7680,7 +7675,7 @@ object FrmPrincipal: TFrmPrincipal
                 Align = Top
                 StyledSettings = [Family, Size, Style]
                 Position.Y = 33.000000000000000000
-                Size.Width = 315.000000000000000000
+                Size.Width = 317.000000000000000000
                 Size.Height = 17.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.FontColor = xFF94A3B8
@@ -7697,7 +7692,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 105.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 80.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFFF58A00
@@ -8230,7 +8225,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytContainerBadge: TLayout
               Align = Right
-              Position.X = 250.000000000000000000
+              Position.X = 252.000000000000000000
               Size.Width = 100.000000000000000000
               Size.Height = 80.000000000000000000
               Size.PlatformDefault = False
@@ -8261,14 +8256,14 @@ object FrmPrincipal: TFrmPrincipal
               Align = Client
               Margins.Left = 5.000000000000000000
               Margins.Top = 15.000000000000000000
-              Size.Width = 165.000000000000000000
+              Size.Width = 167.000000000000000000
               Size.Height = 65.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
               object lblNomeServicoAgendar: TLabel
                 Align = Top
                 StyledSettings = [Family, Size]
-                Size.Width = 165.000000000000000000
+                Size.Width = 167.000000000000000000
                 Size.Height = 17.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.StyleExt = {00070000000000000004000000}
@@ -8280,7 +8275,7 @@ object FrmPrincipal: TFrmPrincipal
                 Align = Top
                 Margins.Top = 3.000000000000000000
                 Position.Y = 20.000000000000000000
-                Size.Width = 165.000000000000000000
+                Size.Width = 167.000000000000000000
                 Size.Height = 25.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 1
@@ -8288,7 +8283,7 @@ object FrmPrincipal: TFrmPrincipal
                   Align = Left
                   AutoSize = True
                   StyledSettings = [Family, Size, Style]
-                  Size.Width = 49.000000000000000000
+                  Size.Width = 49.599998474121090000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.FontColor = xFF94A3B8
@@ -8299,7 +8294,7 @@ object FrmPrincipal: TFrmPrincipal
                   Align = Left
                   AutoSize = True
                   StyledSettings = [Family, Size]
-                  Position.X = 49.000000000000000000
+                  Position.X = 49.599998474121090000
                   Size.Width = 48.000000000000000000
                   Size.Height = 25.000000000000000000
                   Size.PlatformDefault = False
@@ -8318,7 +8313,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 210.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
@@ -8336,7 +8331,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytSetasMes: TLayout
               Align = Right
-              Position.X = 280.000000000000000000
+              Position.X = 282.000000000000000000
               Size.Width = 70.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
@@ -8350,6 +8345,7 @@ object FrmPrincipal: TFrmPrincipal
                 Stroke.Kind = None
                 XRadius = 8.000000000000000000
                 YRadius = 8.000000000000000000
+                OnClick = rectSetaAnteriorClick
                 object imgIconeVoltar2: TImage
                   MultiResBitmap.Height = 512
                   MultiResBitmap.Width = 512
@@ -8462,6 +8458,7 @@ object FrmPrincipal: TFrmPrincipal
                         'oon--arrow-left-2-light.png'
                     end>
                   Align = Client
+                  HitTest = False
                   Size.Width = 30.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
@@ -8477,6 +8474,7 @@ object FrmPrincipal: TFrmPrincipal
                 Stroke.Kind = None
                 XRadius = 8.000000000000000000
                 YRadius = 8.000000000000000000
+                OnClick = rectSetaProximoClick
                 object imgIconeIr: TImage
                   MultiResBitmap.Height = 512
                   MultiResBitmap.Width = 512
@@ -8588,6 +8586,7 @@ object FrmPrincipal: TFrmPrincipal
                         'oon--arrow-right-2-light.png'
                     end>
                   Align = Client
+                  HitTest = False
                   Size.Width = 30.000000000000000000
                   Size.Height = 30.000000000000000000
                   Size.PlatformDefault = False
@@ -8601,11 +8600,11 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Top = 15.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 255.000000000000000000
-            Size.Width = 370.000000000000000000
+            Size.Width = 372.000000000000000000
             Size.Height = 80.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 3
-            Viewport.Width = 370.000000000000000000
+            Viewport.Width = 372.000000000000000000
             Viewport.Height = 64.000000000000000000
             object rectDiaSabado: TRectangle
               Align = Left
@@ -8617,6 +8616,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaSabado: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8654,6 +8654,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaDomingo: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8691,6 +8692,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaSegunda: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8728,6 +8730,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaTerca: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8765,6 +8768,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaQuarta: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8801,6 +8805,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaQuinta: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8838,6 +8843,7 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               XRadius = 25.000000000000000000
               YRadius = 25.000000000000000000
+              OnClick = DiaSelecionadoClick
               object lblDiaSemanaSexta: TLabel
                 Align = Top
                 StyledSettings = [Family, Size, Style]
@@ -8873,7 +8879,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 360.000000000000000000
-            Size.Width = 350.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 4
@@ -8890,7 +8896,7 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytLegendaCores: TLayout
               Align = Right
-              Position.X = 190.000000000000000000
+              Position.X = 192.000000000000000000
               Size.Width = 160.000000000000000000
               Size.Height = 30.000000000000000000
               Size.PlatformDefault = False
@@ -8957,514 +8963,23 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Right = 20.000000000000000000
             Position.X = 20.000000000000000000
             Position.Y = 405.000000000000000000
-            Size.Width = 350.000000000000000000
-            Size.Height = 250.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 220.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
             Justify = Left
             JustifyLastLine = Left
             FlowDirection = LeftToRight
-            object rectHora0900: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora0900: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '09:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora0930: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 85.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora0930: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '09:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1000: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 170.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1000: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '10:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1030: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 255.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1030: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '10:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1100: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.Y = 50.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1100: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '11:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1130: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 85.000000000000000000
-              Position.Y = 50.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1130: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '11:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1200: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 170.000000000000000000
-              Position.Y = 50.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1200: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '12:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1230: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 255.000000000000000000
-              Position.Y = 50.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1230: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '12:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1300: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.Y = 100.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1300: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '13:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1330: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 85.000000000000000000
-              Position.Y = 100.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1330: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '13:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1400: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 170.000000000000000000
-              Position.Y = 100.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1400: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '14:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1430: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 255.000000000000000000
-              Position.Y = 100.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1430: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '14:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1500: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.Y = 150.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1500: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '15:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1530: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 85.000000000000000000
-              Position.Y = 150.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1530: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '15:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1600: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 170.000000000000000000
-              Position.Y = 150.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1600: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '16:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1630: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 255.000000000000000000
-              Position.Y = 150.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1630: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '16:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1700: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.Y = 200.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1700: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '17:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1730: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 85.000000000000000000
-              Position.Y = 200.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1730: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '17:30'
-                TabOrder = 0
-              end
-            end
-            object rectHora1800: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 170.000000000000000000
-              Position.Y = 200.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1800: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '18:00'
-                TabOrder = 0
-              end
-            end
-            object rectHora1830: TRectangle
-              Fill.Color = xFFF58A00
-              Margins.Right = 10.000000000000000000
-              Margins.Bottom = 10.000000000000000000
-              Position.X = 255.000000000000000000
-              Position.Y = 200.000000000000000000
-              Size.Width = 75.000000000000000000
-              Size.Height = 40.000000000000000000
-              Size.PlatformDefault = False
-              Stroke.Kind = None
-              XRadius = 10.000000000000000000
-              YRadius = 10.000000000000000000
-              object lblHora1830: TLabel
-                Align = Client
-                StyledSettings = [Family, Size]
-                Size.Width = 75.000000000000000000
-                Size.Height = 40.000000000000000000
-                Size.PlatformDefault = False
-                TextSettings.Font.StyleExt = {00070000000000000004000000}
-                TextSettings.FontColor = xFF0B1220
-                TextSettings.HorzAlign = Center
-                Text = '18:30'
-                TabOrder = 0
-              end
-            end
           end
           object lblTituloBarbeiros: TLabel
             Align = Top
             StyledSettings = [Family, Size]
             Margins.Left = 20.000000000000000000
-            Margins.Top = 25.000000000000000000
+            Margins.Top = 20.000000000000000000
             Margins.Bottom = 15.000000000000000000
             Position.X = 20.000000000000000000
-            Position.Y = 680.000000000000000000
-            Size.Width = 370.000000000000000000
+            Position.Y = 633.000000000000000000
+            Size.Width = 372.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.StyleExt = {00070000000000000004000000}
