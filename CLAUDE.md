@@ -125,7 +125,27 @@ BarberManager/
 - `CarregarNotificacoes`: query `TB_AGENDAMENTOS JOIN TB_SERVICOS ORDER BY DT_AGENDAMENTO DESC ROWS 10`; cards dinâmicos com `Tag=88`, `TImage` com ícone de sino (`docs\images\iconamoon--notification.png`), cor por status
 - `imgNotificacaoClick`: `CarregarNotificacoes` + overlay visible + `BringToFront`
 - `lblFecharNotifClick`: overlay invisible
-- `CLIENTE_ID = 1` hardcoded (pendente sessão)
+- `CLIENTE_ID` usa agora `FUsuarioID` real (hardcode removido)
+
+**Sessão de utilizador — completa**
+- Variáveis de sessão declaradas na `private`: `FUsuarioID: Integer`, `FUsuarioNome: string`, `FUsuarioEmail: string`, `FUsuarioPerfil: string`
+- `rectBtnEntrarClick`: SELECT inclui EMAIL, preenche as 4 variáveis de sessão após login, redirecionamento condicional: `ADMIN → FrmDashboardAdmin.Show` / `CLIENTE → TabClienteHome`
+- `LimparSessao`: método `public` que zera as 4 variáveis de sessão
+- `rectMenuSairClick` (DashboardAdmin): chama `FrmPrincipal.LimparSessao` antes de esconder o dashboard
+- `CLIENTE_ID` real em `CarregarNotificacoes` e `rectBtnConfirmarClick` (substituído o hardcode `= 1`)
+
+**Segurança — atalho de dev removido**
+- `imgLogoAppClick` removido completamente (`.fmx` + `.pas`) — era atalho directo para DashboardAdmin
+- `imgIconePerfil`: `HitTest = False` adicionado — fix de cliques bloqueados pelo filho com `Align=Client`
+
+**Popup de Perfil do utilizador**
+- `rectOverlayPerfil`: overlay `Align=Contents`, `Fill=$CC000000`, `Visible=False` — após `rectOverlayNotif` dentro de `rectFundoHome`
+- `circleAvatarPerfil`: círculo laranja `$FFF58A00` com inicial do nome (`lblInicialPerfil`)
+- `lblNomePerfilPopup`, `lblEmailPerfilPopup`: dados da sessão
+- `rectBadgePerfil` + `lblBadgePerfil`: badge colorido por perfil — ADMIN → roxo (`$FF3B1F6B` / `$FFA78BFA`), CLIENTE → azul (`$FF1E3A5F` / `$FF60A5FA`)
+- `rectBtnLogout`: botão vermelho `$FF7F1D1D`, texto `$FFEF4444`
+- `AbrirPopupPerfil`: preenche dados da sessão + badge por perfil + `BringToFront`
+- `circlePerfilClick` → `AbrirPopupPerfil`; `lblFecharPerfilClick` → fecha overlay; `rectBtnLogoutClick` → fecha overlay + `LimparSessao` + `TabLogin`
 
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
@@ -133,7 +153,7 @@ BarberManager/
 - `AtualizarKPIs`: query agregada a TB_AGENDAMENTOS (hoje) → preenche 4 cards KPI (Faturamento, Total, Pendentes, Cancelamentos)
 - `CarregarLinhaTempo`: query com JOIN a 4 tabelas → cria cards dinâmicos (Tag=95) em `scrollLinhaTempo` com cores por status
 - `rectMenuServicosClick`: carrega `TFrameServicos` em `lytAreaPrincipal`
-- `rectMenuSairClick`: volta a `FrmPrincipal.TabLogin`
+- `rectMenuSairClick`: chama `FrmPrincipal.LimparSessao` + volta a `FrmPrincipal.TabLogin`
 
 ### View.Frame.Servicos.pas
 - Visual completo: KPIs de serviços, filtros, toggle Todos/Ativos/Inativos, tabela com 3 linhas estáticas
@@ -143,21 +163,14 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Popup de Perfil do utilizador** (próximo passo):
-   - Overlay igual ao de Notificações
-   - Mostrar: nome, email, perfil do utilizador logado
-   - Botão Logout → volta a TabLogin + limpa sessão
+1. **Ajuste visual do Popup de Perfil** (pequeno, fazer primeiro):
+   - Corrigir cores das fontes que ficaram apagadas
 
-2. **Sessão de utilizador**:
-   - Guardar `FUsuarioID` real após login
-   - Substituir `CLIENTE_ID = 1` hardcoded em: `CarregarNotificacoes` e `rectBtnConfirmarClick`
-   - Mostrar nome real em `lblNomeCliente` na Home
-
-3. **Horários ocupados reais** (`CarregarHorarios`):
+2. **Horários ocupados reais** (`CarregarHorarios`):
    - Substituir array hardcoded por query a `TB_AGENDAMENTOS`
    - Filtrar por `BARBEIRO_ID + DT_AGENDAMENTO + STATUS <> 'CANCELADO'`
 
-4. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
+3. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
    - Carregar lista de `TB_SERVICOS` dinamicamente
    - Filtros e toggle Ativos/Inativos funcionais
    - Busca com `CONTAINING`
@@ -165,11 +178,11 @@ BarberManager/
    - Botão "Novo Serviço" (INSERT)
    - Acções: editar (UPDATE), eliminar (DELETE), toggle ativo
 
-5. **Dashboard Admin — dados complementares**:
+4. **Dashboard Admin — dados complementares**:
    - Gráfico de barras semanal com receita real
    - Barra de meta configurável
 
-6. **Deploy com D2Bridge** — empacotamento para Android/iOS
+5. **Deploy com D2Bridge** — empacotamento para Android/iOS
 
 ---
 
@@ -238,6 +251,7 @@ BarberManager/
 | 96  | Slots de horário (TRectangle, Agendamento)|
 | 95  | Cards da linha de tempo (TLayout, Dashboard) |
 | 88  | Cards de notificações (TRectangle + TImage dentro de scrollNotificacoes) |
+| 87  | Componentes do popup de perfil (reservado para futuro uso dinâmico) |
 
 ---
 

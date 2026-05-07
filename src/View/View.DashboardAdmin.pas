@@ -522,10 +522,9 @@ end;
 
 procedure TFrmDashboardAdmin.rectMenuSairClick(Sender: TObject);
 begin
+  FrmPrincipal.LimparSessao;
   Self.Hide;
-
   FrmPrincipal.TabControlPrincipal.ActiveTab := FrmPrincipal.TabLogin;
-
   FrmPrincipal.Show;
 end;
 

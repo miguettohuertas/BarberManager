@@ -580,7 +580,6 @@ object FrmPrincipal: TFrmPrincipal
                 Size.Width = 50.000000000000000000
                 Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
-                OnClick = imgLogoAppClick
               end
             end
           end
@@ -5636,6 +5635,8 @@ object FrmPrincipal: TFrmPrincipal
                 Size.Width = 45.000000000000000000
                 Size.Height = 31.000000000000000000
                 Size.PlatformDefault = False
+                HitTest = True
+                OnClick = circlePerfilClick
                 object imgIconePerfil: TImage
                   MultiResBitmap.Height = 512
                   MultiResBitmap.Width = 512
@@ -5908,6 +5909,7 @@ object FrmPrincipal: TFrmPrincipal
                         '--user.png'
                     end>
                   Align = Client
+                  HitTest = False
                   Size.Width = 45.000000000000000000
                   Size.Height = 31.000000000000000000
                   Size.PlatformDefault = False
@@ -6716,6 +6718,141 @@ object FrmPrincipal: TFrmPrincipal
               Size.Height = 320.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
+            end
+          end
+        end
+        object rectOverlayPerfil: TRectangle
+          Align = Contents
+          Fill.Color = xCC000000
+          HitTest = True
+          Visible = False
+          object rectPainelPerfil: TRectangle
+            Align = None
+            Position.X = 10.000000000000000000
+            Position.Y = 60.000000000000000000
+            Size.Width = 380.000000000000000000
+            Size.Height = 320.000000000000000000
+            Size.PlatformDefault = False
+            Fill.Color = xFF141C2B
+            Stroke.Kind = None
+            XRadius = 16.000000000000000000
+            YRadius = 16.000000000000000000
+            object circleAvatarPerfil: TCircle
+              Position.X = 155.000000000000000000
+              Position.Y = 24.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              Fill.Color = xFFF58A00
+              Stroke.Kind = None
+            end
+            object lblInicialPerfil: TLabel
+              Position.X = 155.000000000000000000
+              Position.Y = 24.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = '?'
+              TextSettings.Font.Size = 28.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claBlack
+              TextSettings.HorzAlign = Center
+              TextSettings.VertAlign = Center
+              HitTest = False
+            end
+            object lblNomePerfilPopup: TLabel
+              Position.X = 20.000000000000000000
+              Position.Y = 108.000000000000000000
+              Size.Width = 340.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = ''
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              HitTest = False
+            end
+            object lblEmailPerfilPopup: TLabel
+              Position.X = 20.000000000000000000
+              Position.Y = 140.000000000000000000
+              Size.Width = 340.000000000000000000
+              Size.Height = 22.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = ''
+              TextSettings.Font.Size = 12.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              HitTest = False
+            end
+            object rectBadgePerfil: TRectangle
+              Position.X = 155.000000000000000000
+              Position.Y = 172.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 24.000000000000000000
+              Size.PlatformDefault = False
+              Fill.Color = xFF1E3A5F
+              Stroke.Kind = None
+              XRadius = 12.000000000000000000
+              YRadius = 12.000000000000000000
+              object lblBadgePerfil: TLabel
+                Align = Client
+                StyledSettings = []
+                Text = 'Cliente'
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFF60A5FA
+                TextSettings.HorzAlign = Center
+                HitTest = False
+              end
+            end
+            object rectLinhaPerfil: TRectangle
+              Position.X = 20.000000000000000000
+              Position.Y = 212.000000000000000000
+              Size.Width = 340.000000000000000000
+              Size.Height = 1.000000000000000000
+              Size.PlatformDefault = False
+              Fill.Color = xFF2D3F55
+              Stroke.Kind = None
+            end
+            object lblFecharPerfil: TLabel
+              HitTest = True
+              Position.X = 340.000000000000000000
+              Position.Y = 16.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              StyledSettings = []
+              Text = 'X'
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              OnClick = lblFecharPerfilClick
+            end
+            object rectBtnLogout: TRectangle
+              Position.X = 20.000000000000000000
+              Position.Y = 228.000000000000000000
+              Size.Width = 340.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              Fill.Color = xFF7F1D1D
+              Stroke.Kind = None
+              XRadius = 12.000000000000000000
+              YRadius = 12.000000000000000000
+              HitTest = True
+              OnClick = rectBtnLogoutClick
+              object lblBtnLogout: TLabel
+                Align = Client
+                StyledSettings = []
+                Text = 'Sair da Conta'
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = xFFEF4444
+                TextSettings.HorzAlign = Center
+                HitTest = False
+              end
             end
           end
         end

@@ -235,13 +235,24 @@ type
     lblTituloNotif: TLabel;
     lblFecharNotif: TLabel;
     scrollNotificacoes: TVertScrollBox;
+    rectOverlayPerfil: TRectangle;
+    rectPainelPerfil: TRectangle;
+    circleAvatarPerfil: TCircle;
+    lblInicialPerfil: TLabel;
+    lblNomePerfilPopup: TLabel;
+    lblEmailPerfilPopup: TLabel;
+    rectBadgePerfil: TRectangle;
+    lblBadgePerfil: TLabel;
+    rectLinhaPerfil: TRectangle;
+    lblFecharPerfil: TLabel;
+    rectBtnLogout: TRectangle;
+    lblBtnLogout: TLabel;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
     procedure rectBtnNovaContaClick(Sender: TObject);
     procedure rectBtnEntrarClick(Sender: TObject);
     procedure rectBtnAddCorteClick(Sender: TObject);
     procedure rectBtnVoltarAgendarClick(Sender: TObject);
-    procedure imgLogoAppClick(Sender: TObject);
     procedure lytMenuAgendaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure rectFiltroTodosClick(Sender: TObject);
@@ -258,6 +269,9 @@ type
     procedure rectBtnAproveitarClick(Sender: TObject);
     procedure imgNotificacaoClick(Sender: TObject);
     procedure lblFecharNotifClick(Sender: TObject);
+    procedure circlePerfilClick(Sender: TObject);
+    procedure lblFecharPerfilClick(Sender: TObject);
+    procedure rectBtnLogoutClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -268,6 +282,10 @@ type
     FHoraSelecionada: string;
     FBarbeiroIDSelecionado: Integer;
     FBarbeiroNomeSelecionado: string;
+    FUsuarioID    : Integer;
+    FUsuarioNome  : string;
+    FUsuarioEmail : string;
+    FUsuarioPerfil: string;
     function HashSenha(const Senha: string): string;
     function ValidarEmail(const Email: string): Boolean;
     procedure CarregarServicos(const Filtro: string = ''; const Busca: string = '');
@@ -279,8 +297,9 @@ type
     procedure CarregarHorarios;
     function GetImagemPorCategoria(const Categoria: string): string;
     procedure CarregarNotificacoes;
+    procedure AbrirPopupPerfil;
   public
-    { Public declarations }
+    procedure LimparSessao;
   end;
 
 var
@@ -296,13 +315,6 @@ uses View.DashboardAdmin, Model.Conexao, FireDAC.Comp.Client, Data.DB,
 procedure TFrmPrincipal.FormShow(Sender: TObject);
 begin
   TabControlPrincipal.ActiveTab := TabLogin;
-end;
-
-procedure TFrmPrincipal.imgLogoAppClick(Sender: TObject);
-begin
-  Self.Hide;
-
-  FrmDashboardAdmin.Show;
 end;
 
 procedure TFrmPrincipal.lblJaTenhoContaClick(Sender: TObject);
@@ -576,7 +588,6 @@ end;
 procedure TFrmPrincipal.rectBtnEntrarClick(Sender: TObject);
 var
   Query: TFDQuery;
-  PrimeiroNome: string;
 begin
   if (Trim(edtEmail.Text) = '') or (Trim(edtSenha.Text) = '') then
   begin
@@ -588,7 +599,7 @@ begin
   try
     Query.Connection := dmConexao.FDConnection1;
     Query.SQL.Text :=
-      'SELECT ID, NOME_COMPLETO, PERFIL FROM TB_USUARIOS ' +
+      'SELECT ID, NOME_COMPLETO, EMAIL, PERFIL FROM TB_USUARIOS ' +
       'WHERE EMAIL = :EMAIL AND SENHA_HASH = :SENHA AND ATIVO = 1';
     Query.ParamByName('EMAIL').AsString := edtEmail.Text;
     Query.ParamByName('SENHA').AsString := HashSenha(edtSenha.Text);
@@ -596,14 +607,26 @@ begin
 
     if not Query.IsEmpty then
     begin
-      PrimeiroNome := Query.FieldByName('NOME_COMPLETO').AsString;
-      if Pos(' ', PrimeiroNome) > 0 then
-        PrimeiroNome := Copy(PrimeiroNome, 1, Pos(' ', PrimeiroNome) - 1);
-      lblNomeCliente.Text := PrimeiroNome;
+      FUsuarioID     := Query.FieldByName('ID').AsInteger;
+      FUsuarioNome   := Query.FieldByName('NOME_COMPLETO').AsString;
+      FUsuarioEmail  := Query.FieldByName('EMAIL').AsString;
+      FUsuarioPerfil := Query.FieldByName('PERFIL').AsString;
 
-      TabControlPrincipal.SetActiveTabWithTransition(TabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Normal);
-      CarregarServicos('');
-      CarregarBannerOferta;
+      if FUsuarioPerfil = 'ADMIN' then
+      begin
+        Self.Hide;
+        FrmDashboardAdmin.Show;
+      end
+      else
+      begin
+        lblNomeCliente.Text := Copy(FUsuarioNome, 1,
+          Pos(' ', FUsuarioNome + ' ') - 1);
+        TabControlPrincipal.SetActiveTabWithTransition(
+          TabClienteHome, TTabTransition.Slide,
+          TTabTransitionDirection.Normal);
+        CarregarServicos('');
+        CarregarBannerOferta;
+      end;
     end
     else
       ShowMessage('E-mail ou senha incorrectos');
@@ -1048,7 +1071,7 @@ begin
       '  (CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, ' +
       '   HR_INICIO, HR_FIM, VALOR_COBRADO, STATUS) ' +
       'VALUES (:CID, :BID, :SID, :DTA, :HRI, :HRF, :VAL, ''PENDENTE'')';
-    Query.ParamByName('CID').AsInteger := 1; // hardcoded até sessão implementada
+    Query.ParamByName('CID').AsInteger := FUsuarioID;
     Query.ParamByName('BID').AsInteger := FBarbeiroIDSelecionado;
     Query.ParamByName('SID').AsInteger := FServicoIDSelecionado;
     Query.ParamByName('DTA').AsDate := FDataSelecionada;
@@ -1244,7 +1267,7 @@ begin
       'WHERE A.CLIENTE_ID = :ID ' +
       'ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO DESC ' +
       'ROWS 10';
-    Query.ParamByName('ID').AsInteger := 1; // hardcoded até sessão implementada
+    Query.ParamByName('ID').AsInteger := FUsuarioID;
     Query.Open;
 
     IconePath := TPath.Combine(
@@ -1389,6 +1412,55 @@ begin
     AtivarBotao(rectFiltroTodos, lblFiltroTodos);
     CarregarServicos('', edtBusca.Text);
   end;
+end;
+
+procedure TFrmPrincipal.LimparSessao;
+begin
+  FUsuarioID     := 0;
+  FUsuarioNome   := '';
+  FUsuarioEmail  := '';
+  FUsuarioPerfil := '';
+end;
+
+procedure TFrmPrincipal.AbrirPopupPerfil;
+begin
+  lblInicialPerfil.Text    := UpperCase(Copy(FUsuarioNome, 1, 1));
+  lblNomePerfilPopup.Text  := FUsuarioNome;
+  lblEmailPerfilPopup.Text := FUsuarioEmail;
+
+  lblBadgePerfil.StyledSettings := [];
+  if FUsuarioPerfil = 'ADMIN' then
+  begin
+    lblBadgePerfil.Text := 'Admin';
+    rectBadgePerfil.Fill.Color := $FF3B1F6B;
+    lblBadgePerfil.TextSettings.FontColor := $FFA78BFA;
+  end
+  else
+  begin
+    lblBadgePerfil.Text := 'Cliente';
+    rectBadgePerfil.Fill.Color := $FF1E3A5F;
+    lblBadgePerfil.TextSettings.FontColor := $FF60A5FA;
+  end;
+
+  rectOverlayPerfil.Visible := True;
+  rectOverlayPerfil.BringToFront;
+end;
+
+procedure TFrmPrincipal.circlePerfilClick(Sender: TObject);
+begin
+  AbrirPopupPerfil;
+end;
+
+procedure TFrmPrincipal.lblFecharPerfilClick(Sender: TObject);
+begin
+  rectOverlayPerfil.Visible := False;
+end;
+
+procedure TFrmPrincipal.rectBtnLogoutClick(Sender: TObject);
+begin
+  rectOverlayPerfil.Visible := False;
+  LimparSessao;
+  TabControlPrincipal.ActiveTab := TabLogin;
 end;
 
 end.
