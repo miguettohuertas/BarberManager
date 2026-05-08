@@ -160,6 +160,19 @@ BarberManager/
 **Segurança adicional**
 - `LimparSessao`: limpa também `edtEmail` e `edtSenha` para não deixar dados do login anterior visíveis
 
+**Menu inferior dinâmico**
+- `AtualizarMenuAtivo(Index)`: actualiza cor dos 4 labels do menu — laranja (`$FFF58A00`) para activo, cinzento (`$FF94A3B8`) para inactivo
+- `lytMenuInicioClick`, `lytMenuCarrinhoClick`, `lytMenuPerfilClick`: novos handlers ligados no `.fmx`
+- `imgMenuInicio`, `imgMenuCarrinho`, `imgMenuPerfil`: `HitTest = False` adicionado (fix de cliques — `TImage` tem `HitTest = True` por defeito e interceptava os toques)
+- Fix margens popup Notificações e Perfil: `rectPainelNotif` Width 380→360, `rectPainelPerfil` Width 380→360, elementos internos ajustados; `lblFecharNotif`/`lblFecharPerfil` `Position.X` 340→320
+
+**Tela Carrinho (Meus Agendamentos)**
+- `tabCarrinho`: nova `TTabItem` após `tabAgendamento`
+- `CarregarCarrinho`: query `TB_AGENDAMENTOS JOIN TB_SERVICOS JOIN TB_BARBEIROS JOIN TB_USUARIOS WHERE CLIENTE_ID = FUsuarioID ORDER BY DT_AGENDAMENTO DESC`
+- Cards dinâmicos `Tag=85` com: nome serviço (branco, bold), barbeiro (cinzento), data+hora, valor (laranja), badge de status colorido (CONCLUIDO→verde, PENDENTE→laranja, CANCELADO→vermelho, EM_ANDAMENTO→azul)
+- `rectMenuInfCarrinho`: menu inferior replicado na tab Carrinho com `TGridPanelLayout` e 4 botões (Inicio/Agenda/Carrinho/Perfil) reutilizando os handlers existentes; "Carrinho" aparece laranja (estado activo)
+- PENDENTE: ícones no menu do Carrinho (só labels por agora)
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -176,29 +189,23 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Fix visual — Popup Notificações** (pequeno, fazer primeiro):
-   - Margem direita do `rectPainelNotif` colada no ecrã
-   - Reduzir Width ou ajustar Position para ter margem simétrica dos dois lados
+1. **Ícones no menu inferior do Carrinho** (pequeno):
+   - Adicionar `imgMenu*C` com os mesmos ícones do menu da Home
 
-2. **Tela de Avaliação de Serviço** (próxima grande feature):
-   - Acessível clicando numa notificação com `STATUS = CONCLUIDO`
-   - Nova tab no TabControl ou overlay dentro da Home
-   - Campos: nota de 1 a 5 estrelas (interactivas), comentário (`TEdit` ou `TMemo`), botão Confirmar
+2. **Tela de Avaliação de Serviço**:
+   - Acessível clicando num card `CONCLUIDO` no Carrinho
+   - Campos: nota 1–5 estrelas interactivas, comentário, botão Confirmar
    - INSERT em `TB_AVALIACOES` com `AGENDAMENTO_ID`, `CLIENTE_ID` (`FUsuarioID`), `BARBEIRO_ID`, `NOTA`, `COMENTARIO`
-   - Após avaliar: desabilitar clique nessa notificação (para não avaliar duas vezes)
+   - Após avaliar: recalcular `AVALIACAO_MEDIA` em `TB_BARBEIROS` com UPDATE
 
 3. **Pontuação dinâmica dos barbeiros**:
    - Verificar se `CarregarBarbeiros` usa `AVALIACAO_MEDIA` da BD
-   - Se não usar: corrigir para mostrar média real
-   - Após nova avaliação: recalcular `AVALIACAO_MEDIA` em `TB_BARBEIROS` com UPDATE
+   - Corrigir para mostrar média real se necessário
 
 4. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
-   - Carregar lista de `TB_SERVICOS` dinamicamente
-   - Filtros e toggle Ativos/Inativos funcionais
-   - Busca com `CONTAINING`
-   - KPIs reais
-   - Botão "Novo Serviço" (INSERT)
-   - Acções: editar (UPDATE), eliminar (DELETE), toggle ativo
+   - Carregar `TB_SERVICOS` dinamicamente
+   - Filtros, toggle Ativos/Inativos, busca com `CONTAINING`, KPIs reais
+   - CRUD completo: Botão "Novo Serviço" (INSERT), editar (UPDATE), eliminar (DELETE), toggle ativo
 
 5. **Dashboard Admin — dados complementares**:
    - Gráfico de barras semanal com receita real
@@ -275,6 +282,7 @@ BarberManager/
 | 88  | Cards de notificações (TRectangle + TImage dentro de scrollNotificacoes) |
 | 87  | Componentes do popup de perfil (reservado para futuro uso dinâmico) |
 | 86  | Cards de avaliação (reservado para tela de feedback) |
+| 85  | Cards de agendamento no Carrinho (TRectangle dentro de scrollCarrinho) |
 
 ---
 

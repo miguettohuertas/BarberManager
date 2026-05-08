@@ -155,6 +155,9 @@ Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, ond
 - [x] Popup de Notificações com agendamentos reais
 - [x] Popup de Perfil com avatar, badge e logout
 - [x] Segurança: limpeza de dados no logout
+- [x] Menu inferior dinâmico com cores activo/inactivo
+- [x] Tela Carrinho com agendamentos reais do utilizador
+- [ ] Ícones no menu do Carrinho
 - [ ] Tela de Avaliação de Serviço (estrelas + comentário)
 - [ ] Pontuação dinâmica dos barbeiros
 

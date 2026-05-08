@@ -16,10 +16,12 @@ object FrmPrincipal: TFrmPrincipal
     Size.Width = 392.000000000000000000
     Size.Height = 844.000000000000000000
     Size.PlatformDefault = False
-    TabIndex = 3
+    TabIndex = 4
     TabOrder = 0
     TabPosition = None
     Sizes = (
+      392s
+      844s
       392s
       844s
       392s
@@ -3839,10 +3841,12 @@ object FrmPrincipal: TFrmPrincipal
               end>
             object lytMenuInicio: TLayout
               Align = Client
+              HitTest = True
               Size.Width = 98.064254760742190000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
+              OnClick = lytMenuInicioClick
               object lblMenuInicio: TLabel
                 Align = Bottom
                 StyledSettings = [Family, Size, Style]
@@ -4053,6 +4057,7 @@ object FrmPrincipal: TFrmPrincipal
                       '--house-outline.png'
                   end>
                 Align = Center
+                HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
@@ -4259,10 +4264,12 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytMenuCarrinho: TLayout
               Align = Client
+              HitTest = True
               Size.Width = 97.914031982421880000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
+              OnClick = lytMenuCarrinhoClick
               object lblMenuCarrinho: TLabel
                 Align = Bottom
                 StyledSettings = [Family, Size, Style]
@@ -4639,6 +4646,7 @@ object FrmPrincipal: TFrmPrincipal
                       'ark-outline--mall-bag.png'
                   end>
                 Align = Center
+                HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
@@ -4646,10 +4654,12 @@ object FrmPrincipal: TFrmPrincipal
             end
             object lytMenuPerfil: TLayout
               Align = Client
+              HitTest = True
               Size.Width = 98.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
+              OnClick = lytMenuPerfilClick
               object lblMenuPerfil: TLabel
                 Align = Bottom
                 StyledSettings = [Family, Size, Style]
@@ -5224,6 +5234,7 @@ object FrmPrincipal: TFrmPrincipal
                       '-user-linear.png'
                   end>
                 Align = Center
+                HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
@@ -6675,7 +6686,7 @@ object FrmPrincipal: TFrmPrincipal
             Fill.Color = xFF141C2B
             Position.X = 10.000000000000000000
             Position.Y = 60.000000000000000000
-            Size.Width = 380.000000000000000000
+            Size.Width = 360.000000000000000000
             Size.Height = 400.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -6697,7 +6708,7 @@ object FrmPrincipal: TFrmPrincipal
             object lblFecharNotif: TLabel
               StyledSettings = []
               HitTest = True
-              Position.X = 340.000000000000000000
+              Position.X = 320.000000000000000000
               Position.Y = 20.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 30.000000000000000000
@@ -6711,11 +6722,11 @@ object FrmPrincipal: TFrmPrincipal
             end
             object scrollNotificacoes: TVertScrollBox
               Position.Y = 60.000000000000000000
-              Size.Width = 360.000000000000000000
+              Size.Width = 340.000000000000000000
               Size.Height = 320.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
-              Viewport.Width = 360.000000000000000000
+              Viewport.Width = 340.000000000000000000
               Viewport.Height = 320.000000000000000000
             end
           end
@@ -6731,7 +6742,7 @@ object FrmPrincipal: TFrmPrincipal
             Fill.Color = xFF141C2B
             Position.X = 10.000000000000000000
             Position.Y = 60.000000000000000000
-            Size.Width = 380.000000000000000000
+            Size.Width = 360.000000000000000000
             Size.Height = 320.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
@@ -6762,7 +6773,7 @@ object FrmPrincipal: TFrmPrincipal
               StyledSettings = []
               Position.X = 20.000000000000000000
               Position.Y = 108.000000000000000000
-              Size.Width = 340.000000000000000000
+              Size.Width = 320.000000000000000000
               Size.Height = 28.000000000000000000
               Size.PlatformDefault = False
               TextSettings.Font.Size = 16.000000000000000000
@@ -6774,7 +6785,7 @@ object FrmPrincipal: TFrmPrincipal
               StyledSettings = []
               Position.X = 20.000000000000000000
               Position.Y = 140.000000000000000000
-              Size.Width = 340.000000000000000000
+              Size.Width = 320.000000000000000000
               Size.Height = 22.000000000000000000
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
@@ -6806,7 +6817,7 @@ object FrmPrincipal: TFrmPrincipal
               Fill.Color = xFF2D3F55
               Position.X = 20.000000000000000000
               Position.Y = 212.000000000000000000
-              Size.Width = 340.000000000000000000
+              Size.Width = 320.000000000000000000
               Size.Height = 1.000000000000000000
               Size.PlatformDefault = False
               Stroke.Kind = None
@@ -6814,7 +6825,7 @@ object FrmPrincipal: TFrmPrincipal
             object lblFecharPerfil: TLabel
               StyledSettings = []
               HitTest = True
-              Position.X = 340.000000000000000000
+              Position.X = 320.000000000000000000
               Position.Y = 16.000000000000000000
               Size.Width = 30.000000000000000000
               Size.Height = 30.000000000000000000
@@ -6829,7 +6840,7 @@ object FrmPrincipal: TFrmPrincipal
               Fill.Color = xFF7F1D1D
               Position.X = 20.000000000000000000
               Position.Y = 228.000000000000000000
-              Size.Width = 340.000000000000000000
+              Size.Width = 320.000000000000000000
               Size.Height = 50.000000000000000000
               Size.PlatformDefault = False
               Stroke.Kind = None
@@ -6839,7 +6850,7 @@ object FrmPrincipal: TFrmPrincipal
               object lblBtnLogout: TLabel
                 Align = Client
                 StyledSettings = []
-                Size.Width = 340.000000000000000000
+                Size.Width = 320.000000000000000000
                 Size.Height = 50.000000000000000000
                 Size.PlatformDefault = False
                 TextSettings.Font.Size = 14.000000000000000000
@@ -6858,7 +6869,7 @@ object FrmPrincipal: TFrmPrincipal
         item
         end>
       TextSettings.Trimming = None
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -8978,7 +8989,7 @@ object FrmPrincipal: TFrmPrincipal
             Margins.Top = 20.000000000000000000
             Margins.Bottom = 15.000000000000000000
             Position.X = 20.000000000000000000
-            Position.Y = 633.000000000000000000
+            Position.Y = 645.000000000000000000
             Size.Width = 372.000000000000000000
             Size.Height = 17.000000000000000000
             Size.PlatformDefault = False
@@ -8987,6 +8998,208 @@ object FrmPrincipal: TFrmPrincipal
             Text = 'Escolha o Barbeiro'
             TabOrder = 6
           end
+        end
+      end
+    end
+    object tabCarrinho: TTabItem
+      CustomIcon = <
+        item
+        end>
+      TextSettings.Trimming = None
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'tabCarrinho'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object rectFundoCarrinho: TRectangle
+        Align = Client
+        Fill.Color = xFF0B1220
+        Size.Width = 392.000000000000000000
+        Size.Height = 844.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        object lytHeaderCarrinho: TLayout
+          Align = Top
+          Size.Width = 392.000000000000000000
+          Size.Height = 60.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object lblTituloCarrinho: TLabel
+            Align = Left
+            StyledSettings = []
+            Margins.Left = 20.000000000000000000
+            Margins.Top = 15.000000000000000000
+            Position.X = 20.000000000000000000
+            Position.Y = 15.000000000000000000
+            Size.Width = 260.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 20.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.FontColor = claWhite
+            Text = 'Meus Agendamentos'
+            TabOrder = 0
+          end
+        end
+        object rectMenuInfCarrinho: TRectangle
+          Align = Bottom
+          Fill.Color = xFF141C2B
+          Position.Y = 774.000000000000000000
+          Size.Width = 392.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Color = xFF1E293B
+          object gridMenuCarrinho: TGridPanelLayout
+            Align = Client
+            Size.Width = 392.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            ColumnCollection = <
+              item
+                Value = 25.000000000000000000
+              end
+              item
+                Value = 25.000000000000000000
+              end
+              item
+                Value = 25.000000000000000000
+              end
+              item
+                Value = 25.000000000000000000
+              end>
+            ControlCollection = <
+              item
+                Column = 0
+                Control = lytMenuInicioC
+                Row = 0
+              end
+              item
+                Column = 1
+                Control = lytMenuAgendaC
+                Row = 0
+              end
+              item
+                Column = 2
+                Control = lytMenuCarrinhoC
+                Row = 0
+              end
+              item
+                Column = 3
+                Control = lytMenuPerfilC
+                Row = 0
+              end>
+            RowCollection = <
+              item
+                Value = 100.000000000000000000
+              end>
+            object lytMenuInicioC: TLayout
+              Align = Client
+              HitTest = True
+              Size.Width = 98.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              OnClick = lytMenuInicioClick
+              object lblMenuInicioC: TLabel
+                Align = Bottom
+                StyledSettings = []
+                Margins.Bottom = 5.000000000000000000
+                Position.Y = 45.000000000000000000
+                Size.Width = 98.000000000000000000
+                Size.Height = 20.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFF94A3B8
+                TextSettings.HorzAlign = Center
+                Text = 'Inicio'
+                TabOrder = 0
+              end
+            end
+            object lytMenuAgendaC: TLayout
+              Align = Client
+              HitTest = True
+              Size.Width = 98.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              OnClick = lytMenuAgendaClick
+              object lblMenuAgendaC: TLabel
+                Align = Bottom
+                StyledSettings = []
+                Margins.Bottom = 5.000000000000000000
+                Position.Y = 45.000000000000000000
+                Size.Width = 98.000000000000000000
+                Size.Height = 20.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFF94A3B8
+                TextSettings.HorzAlign = Center
+                Text = 'Agenda'
+                TabOrder = 0
+              end
+            end
+            object lytMenuCarrinhoC: TLayout
+              Align = Client
+              HitTest = True
+              Size.Width = 98.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              OnClick = lytMenuCarrinhoClick
+              object lblMenuCarrinhoC: TLabel
+                Align = Bottom
+                StyledSettings = []
+                Margins.Bottom = 5.000000000000000000
+                Position.Y = 45.000000000000000000
+                Size.Width = 98.000000000000000000
+                Size.Height = 20.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFFF58A00
+                TextSettings.HorzAlign = Center
+                Text = 'Carrinho'
+                TabOrder = 0
+              end
+            end
+            object lytMenuPerfilC: TLayout
+              Align = Client
+              HitTest = True
+              Size.Width = 98.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              OnClick = lytMenuPerfilClick
+              object lblMenuPerfilC: TLabel
+                Align = Bottom
+                StyledSettings = []
+                Margins.Bottom = 5.000000000000000000
+                Position.Y = 45.000000000000000000
+                Size.Width = 98.000000000000000000
+                Size.Height = 20.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFF94A3B8
+                TextSettings.HorzAlign = Center
+                Text = 'Perfil'
+                TabOrder = 0
+              end
+            end
+          end
+        end
+        object scrollCarrinho: TVertScrollBox
+          Align = Client
+          Margins.Top = 8.000000000000000000
+          Size.Width = 392.000000000000000000
+          Size.Height = 706.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Viewport.Width = 392.000000000000000000
+          Viewport.Height = 706.000000000000000000
         end
       end
     end

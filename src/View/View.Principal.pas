@@ -207,6 +207,21 @@ type
     lblFecharPerfil: TLabel;
     rectBtnLogout: TRectangle;
     lblBtnLogout: TLabel;
+    tabCarrinho: TTabItem;
+    rectFundoCarrinho: TRectangle;
+    lytHeaderCarrinho: TLayout;
+    lblTituloCarrinho: TLabel;
+    scrollCarrinho: TVertScrollBox;
+    rectMenuInfCarrinho: TRectangle;
+    gridMenuCarrinho: TGridPanelLayout;
+    lytMenuInicioC: TLayout;
+    lblMenuInicioC: TLabel;
+    lytMenuAgendaC: TLayout;
+    lblMenuAgendaC: TLabel;
+    lytMenuCarrinhoC: TLayout;
+    lblMenuCarrinhoC: TLabel;
+    lytMenuPerfilC: TLayout;
+    lblMenuPerfilC: TLabel;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
     procedure rectBtnNovaContaClick(Sender: TObject);
@@ -235,6 +250,9 @@ type
     procedure DiaSelecionadoClick(Sender: TObject);
     procedure rectSetaAnteriorClick(Sender: TObject);
     procedure rectSetaProximoClick(Sender: TObject);
+    procedure lytMenuPerfilClick(Sender: TObject);
+    procedure lytMenuCarrinhoClick(Sender: TObject);
+    procedure lytMenuInicioClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -266,6 +284,8 @@ type
     procedure AbrirPopupPerfil;
     procedure PopularCalendario;
     function DiaSemanaAbrev(DiaSemana: Word): string;
+    procedure AtualizarMenuAtivo(Index: Integer);
+    procedure CarregarCarrinho;
   public
     procedure LimparSessao;
   end;
@@ -297,6 +317,7 @@ end;
 
 procedure TFrmPrincipal.lytMenuAgendaClick(Sender: TObject);
 begin
+  AtualizarMenuAtivo(1);
   if FServicoIDSelecionado = 0 then
   begin
     FServicoIDSelecionado    := 0;
@@ -1548,6 +1569,192 @@ begin
   FMesAtual := IncMonth(FMesAtual, 1);
   FDataSelecionada := 0;
   PopularCalendario;
+end;
+
+procedure TFrmPrincipal.AtualizarMenuAtivo(Index: Integer);
+const
+  Ativo   = $FFF58A00;
+  Inativo = $FF94A3B8;
+var
+  Labels: array[0..3] of TLabel;
+  I: Integer;
+begin
+  Labels[0] := lblMenuInicio;
+  Labels[1] := lblMenuAgenda;
+  Labels[2] := lblMenuCarrinho;
+  Labels[3] := lblMenuPerfil;
+  for I := 0 to 3 do
+  begin
+    Labels[I].StyledSettings := [];
+    if I = Index then
+      Labels[I].TextSettings.FontColor := Ativo
+    else
+      Labels[I].TextSettings.FontColor := Inativo;
+  end;
+end;
+
+procedure TFrmPrincipal.lytMenuInicioClick(Sender: TObject);
+begin
+  AtualizarMenuAtivo(0);
+  TabControlPrincipal.SetActiveTabWithTransition(
+    tabClienteHome, TTabTransition.Slide, TTabTransitionDirection.Reversed);
+end;
+
+procedure TFrmPrincipal.lytMenuPerfilClick(Sender: TObject);
+begin
+  AtualizarMenuAtivo(3);
+  AbrirPopupPerfil;
+end;
+
+procedure TFrmPrincipal.CarregarCarrinho;
+var
+  Query: TFDQuery;
+  I, CardCount: Integer;
+  Card, BadgeRect: TRectangle;
+  LblServico, LblBarbeiro, LblDataHora, LblValor, LblStatus: TLabel;
+  StatusText: string;
+  StatusCor: TAlphaColor;
+  StartY: Single;
+begin
+  for I := scrollCarrinho.Content.ControlsCount - 1 downto 0 do
+    if scrollCarrinho.Content.Controls[I].Tag = 85 then
+      scrollCarrinho.Content.Controls[I].Free;
+
+  StartY    := 10;
+  CardCount := 0;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT A.ID, S.NOME AS SERVICO, ' +
+      '       U.NOME_COMPLETO AS BARBEIRO, ' +
+      '       A.DT_AGENDAMENTO, A.HR_INICIO, A.HR_FIM, ' +
+      '       A.VALOR_COBRADO, A.STATUS ' +
+      'FROM TB_AGENDAMENTOS A ' +
+      'JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID ' +
+      'JOIN TB_BARBEIROS B ON B.ID = A.BARBEIRO_ID ' +
+      'JOIN TB_USUARIOS U ON U.ID = B.USUARIO_ID ' +
+      'WHERE A.CLIENTE_ID = :CID ' +
+      'ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO DESC';
+    Query.ParamByName('CID').AsInteger := FUsuarioID;
+    Query.Open;
+
+    while not Query.EOF do
+    begin
+      StatusText := Query.FieldByName('STATUS').AsString;
+      if StatusText = 'CONCLUIDO' then
+        StatusCor := $FF22C55E
+      else if StatusText = 'CANCELADO' then
+        StatusCor := $FFEF4444
+      else if StatusText = 'EM_ANDAMENTO' then
+        StatusCor := $FF3B82F6
+      else
+        StatusCor := $FFF58A00;
+
+      Card := TRectangle.Create(scrollCarrinho);
+      Card.Parent := scrollCarrinho;
+      Card.Tag := 85;
+      Card.Align := TAlignLayout.None;
+      Card.Position.X := 10;
+      Card.Position.Y := StartY + CardCount * 110;
+      Card.Width := scrollCarrinho.Width - 20;
+      Card.Height := 100;
+      Card.Fill.Color := $FF141C2B;
+      Card.Stroke.Kind := TBrushKind.None;
+      Card.XRadius := 12;
+      Card.YRadius := 12;
+
+      LblServico := TLabel.Create(Card);
+      LblServico.Parent := Card;
+      LblServico.HitTest := False;
+      LblServico.StyledSettings := [];
+      LblServico.Position.X := 12;
+      LblServico.Position.Y := 12;
+      LblServico.Width := Card.Width - 110;
+      LblServico.Height := 20;
+      LblServico.TextSettings.Font.Size := 14;
+      LblServico.TextSettings.Font.Style := [TFontStyle.fsBold];
+      LblServico.TextSettings.FontColor := $FFFFFFFF;
+      LblServico.Text := Query.FieldByName('SERVICO').AsString;
+
+      LblBarbeiro := TLabel.Create(Card);
+      LblBarbeiro.Parent := Card;
+      LblBarbeiro.HitTest := False;
+      LblBarbeiro.StyledSettings := [];
+      LblBarbeiro.Position.X := 12;
+      LblBarbeiro.Position.Y := 34;
+      LblBarbeiro.Width := Card.Width - 110;
+      LblBarbeiro.Height := 18;
+      LblBarbeiro.TextSettings.Font.Size := 12;
+      LblBarbeiro.TextSettings.FontColor := $FF94A3B8;
+      LblBarbeiro.Text := Query.FieldByName('BARBEIRO').AsString;
+
+      LblDataHora := TLabel.Create(Card);
+      LblDataHora.Parent := Card;
+      LblDataHora.HitTest := False;
+      LblDataHora.StyledSettings := [];
+      LblDataHora.Position.X := 12;
+      LblDataHora.Position.Y := 54;
+      LblDataHora.Width := Card.Width - 110;
+      LblDataHora.Height := 18;
+      LblDataHora.TextSettings.Font.Size := 12;
+      LblDataHora.TextSettings.FontColor := $FF94A3B8;
+      LblDataHora.Text :=
+        FormatDateTime('dd/mm/yyyy', Query.FieldByName('DT_AGENDAMENTO').AsDateTime) +
+        ' · ' + Query.FieldByName('HR_INICIO').AsString;
+
+      LblValor := TLabel.Create(Card);
+      LblValor.Parent := Card;
+      LblValor.HitTest := False;
+      LblValor.StyledSettings := [];
+      LblValor.Position.X := 12;
+      LblValor.Position.Y := 74;
+      LblValor.Width := Card.Width - 110;
+      LblValor.Height := 18;
+      LblValor.TextSettings.Font.Size := 13;
+      LblValor.TextSettings.FontColor := $FFF58A00;
+      LblValor.Text := 'R$ ' + FormatFloat('#,##0.00', Query.FieldByName('VALOR_COBRADO').AsFloat);
+
+      BadgeRect := TRectangle.Create(Card);
+      BadgeRect.Parent := Card;
+      BadgeRect.Tag := 85;
+      BadgeRect.Align := TAlignLayout.None;
+      BadgeRect.Position.X := Card.Width - 105;
+      BadgeRect.Position.Y := 12;
+      BadgeRect.Width := 90;
+      BadgeRect.Height := 24;
+      BadgeRect.Fill.Color := StatusCor;
+      BadgeRect.Stroke.Kind := TBrushKind.None;
+      BadgeRect.XRadius := 8;
+      BadgeRect.YRadius := 8;
+
+      LblStatus := TLabel.Create(BadgeRect);
+      LblStatus.Parent := BadgeRect;
+      LblStatus.HitTest := False;
+      LblStatus.Align := TAlignLayout.Client;
+      LblStatus.StyledSettings := [];
+      LblStatus.TextSettings.Font.Size := 10;
+      LblStatus.TextSettings.FontColor := $FFFFFFFF;
+      LblStatus.TextSettings.HorzAlign := TTextAlign.Center;
+      LblStatus.Text := StatusText;
+
+      Inc(CardCount);
+      Query.Next;
+    end;
+
+    scrollCarrinho.Content.Height := StartY + CardCount * 110 + 20;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrmPrincipal.lytMenuCarrinhoClick(Sender: TObject);
+begin
+  AtualizarMenuAtivo(2);
+  CarregarCarrinho;
+  TabControlPrincipal.SetActiveTabWithTransition(
+    tabCarrinho, TTabTransition.Slide, TTabTransitionDirection.Normal);
 end;
 
 end.
