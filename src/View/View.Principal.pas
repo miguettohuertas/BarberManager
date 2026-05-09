@@ -222,6 +222,37 @@ type
     lblMenuCarrinhoC: TLabel;
     lytMenuPerfilC: TLayout;
     lblMenuPerfilC: TLabel;
+    imgMenuInicioC: TImage;
+    imgMenuAgendaC: TImage;
+    imgMenuCarrinhoC: TImage;
+    imgMenuPerfilC: TImage;
+    rectOverlayPerfilC: TRectangle;
+    rectPainelPerfilC: TRectangle;
+    circleAvatarPerfilC: TCircle;
+    lblInicialPerfilC: TLabel;
+    lblNomePerfilPopupC: TLabel;
+    lblEmailPerfilPopupC: TLabel;
+    rectBadgePerfilC: TRectangle;
+    lblBadgePerfilC: TLabel;
+    rectLinhaPerfilC: TRectangle;
+    lblFecharPerfilC: TLabel;
+    rectBtnLogoutC: TRectangle;
+    lblBtnLogoutC: TLabel;
+    rectOverlayAvaliacao: TRectangle;
+    rectPainelAvaliacao: TRectangle;
+    lblFecharAvaliacao: TLabel;
+    lblTituloAvaliacao: TLabel;
+    lblSubtituloAvaliacao: TLabel;
+    lblEstrela1: TLabel;
+    lblEstrela2: TLabel;
+    lblEstrela3: TLabel;
+    lblEstrela4: TLabel;
+    lblEstrela5: TLabel;
+    lblNotaAtual: TLabel;
+    edtComentarioAvaliacao: TEdit;
+    rectSeparadorAvaliacao: TRectangle;
+    rectBtnAvaliar: TRectangle;
+    lblBtnAvaliar: TLabel;
     procedure lblVoltarClick(Sender: TObject);
     procedure lblJaTenhoContaClick(Sender: TObject);
     procedure rectBtnNovaContaClick(Sender: TObject);
@@ -253,6 +284,12 @@ type
     procedure lytMenuPerfilClick(Sender: TObject);
     procedure lytMenuCarrinhoClick(Sender: TObject);
     procedure lytMenuInicioClick(Sender: TObject);
+    procedure lblFecharPerfilCClick(Sender: TObject);
+    procedure rectBtnLogoutCClick(Sender: TObject);
+    procedure lblFecharAvaliacaoClick(Sender: TObject);
+    procedure EstrelaAvaliacaoClick(Sender: TObject);
+    procedure rectBtnAvaliarClick(Sender: TObject);
+    procedure CardAvaliacaoClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FServicoIDSelecionado: Integer;
@@ -270,6 +307,9 @@ type
     FMesAtual: TDate;
     FDiaSelecionadoRect: TRectangle;
     FDatasCalendario: array[0..6] of TDate;
+    FAgendamentoIDAvaliacao: Integer;
+    FBarbeiroIDAvaliacao: Integer;
+    FNotaAvaliacao: Integer;
     function HashSenha(const Senha: string): string;
     function ValidarEmail(const Email: string): Boolean;
     procedure CarregarServicos(const Filtro: string = ''; const Busca: string = '');
@@ -282,10 +322,14 @@ type
     function GetImagemPorCategoria(const Categoria: string): string;
     procedure CarregarNotificacoes;
     procedure AbrirPopupPerfil;
+    procedure AbrirPopupPerfilCarrinho;
     procedure PopularCalendario;
     function DiaSemanaAbrev(DiaSemana: Word): string;
     procedure AtualizarMenuAtivo(Index: Integer);
     procedure CarregarCarrinho;
+    procedure CarregarIconesMenuCarrinho;
+    procedure AtualizarEstrelas(Nota: Integer);
+    procedure AbrirOverlayAvaliacao(AgendID, BarbID: Integer; const BarbNome: string);
   public
     procedure LimparSessao;
   end;
@@ -1576,17 +1620,21 @@ const
   Ativo   = $FFF58A00;
   Inativo = $FF94A3B8;
 var
-  Labels: array[0..3] of TLabel;
+  Labels: array[0..7] of TLabel;
   I: Integer;
 begin
   Labels[0] := lblMenuInicio;
   Labels[1] := lblMenuAgenda;
   Labels[2] := lblMenuCarrinho;
   Labels[3] := lblMenuPerfil;
-  for I := 0 to 3 do
+  Labels[4] := lblMenuInicioC;
+  Labels[5] := lblMenuAgendaC;
+  Labels[6] := lblMenuCarrinhoC;
+  Labels[7] := lblMenuPerfilC;
+  for I := 0 to 7 do
   begin
     Labels[I].StyledSettings := [];
-    if I = Index then
+    if (I = Index) or (I = Index + 4) then
       Labels[I].TextSettings.FontColor := Ativo
     else
       Labels[I].TextSettings.FontColor := Inativo;
@@ -1603,7 +1651,190 @@ end;
 procedure TFrmPrincipal.lytMenuPerfilClick(Sender: TObject);
 begin
   AtualizarMenuAtivo(3);
-  AbrirPopupPerfil;
+  if TabControlPrincipal.ActiveTab = tabCarrinho then
+    AbrirPopupPerfilCarrinho
+  else
+    AbrirPopupPerfil;
+end;
+
+procedure TFrmPrincipal.AbrirPopupPerfilCarrinho;
+begin
+  lblInicialPerfilC.Text    := UpperCase(Copy(FUsuarioNome, 1, 1));
+  lblNomePerfilPopupC.Text  := FUsuarioNome;
+  lblEmailPerfilPopupC.Text := FUsuarioEmail;
+
+  lblBadgePerfilC.StyledSettings := [];
+  if FUsuarioPerfil = 'ADMIN' then
+  begin
+    lblBadgePerfilC.Text := 'Admin';
+    rectBadgePerfilC.Fill.Color := $FF3B1F6B;
+    lblBadgePerfilC.TextSettings.FontColor := $FFA78BFA;
+  end
+  else
+  begin
+    lblBadgePerfilC.Text := 'Cliente';
+    rectBadgePerfilC.Fill.Color := $FF1E3A5F;
+    lblBadgePerfilC.TextSettings.FontColor := $FF60A5FA;
+  end;
+
+  rectOverlayPerfilC.Visible := True;
+  rectOverlayPerfilC.BringToFront;
+end;
+
+procedure TFrmPrincipal.lblFecharPerfilCClick(Sender: TObject);
+begin
+  rectOverlayPerfilC.Visible := False;
+end;
+
+procedure TFrmPrincipal.rectBtnLogoutCClick(Sender: TObject);
+begin
+  rectOverlayPerfilC.Visible := False;
+  LimparSessao;
+  TabControlPrincipal.ActiveTab := TabLogin;
+end;
+
+procedure TFrmPrincipal.AtualizarEstrelas(Nota: Integer);
+var
+  Stars: array[1..5] of TLabel;
+  I: Integer;
+begin
+  FNotaAvaliacao := Nota;
+  Stars[1] := lblEstrela1;
+  Stars[2] := lblEstrela2;
+  Stars[3] := lblEstrela3;
+  Stars[4] := lblEstrela4;
+  Stars[5] := lblEstrela5;
+  for I := 1 to 5 do
+  begin
+    Stars[I].StyledSettings := [];
+    if I <= Nota then
+    begin
+      Stars[I].Text := #9733;
+      Stars[I].TextSettings.FontColor := $FFFBBF24;
+    end
+    else
+    begin
+      Stars[I].Text := #9734;
+      Stars[I].TextSettings.FontColor := $FF94A3B8;
+    end;
+  end;
+  lblNotaAtual.StyledSettings := [];
+  lblNotaAtual.TextSettings.FontColor := $FFF58A00;
+  if Nota = 0 then
+    lblNotaAtual.Text := 'Selecione uma nota'
+  else if Nota = 1 then
+    lblNotaAtual.Text := '1 estrela'
+  else
+    lblNotaAtual.Text := IntToStr(Nota) + ' estrelas';
+end;
+
+procedure TFrmPrincipal.AbrirOverlayAvaliacao(AgendID, BarbID: Integer; const BarbNome: string);
+begin
+  FAgendamentoIDAvaliacao := AgendID;
+  FBarbeiroIDAvaliacao    := BarbID;
+  lblSubtituloAvaliacao.StyledSettings := [];
+  lblSubtituloAvaliacao.TextSettings.FontColor := $FF94A3B8;
+  lblSubtituloAvaliacao.Text := 'Barbeiro: ' + BarbNome;
+  edtComentarioAvaliacao.Text := '';
+  AtualizarEstrelas(0);
+  rectOverlayAvaliacao.Visible := True;
+  rectOverlayAvaliacao.BringToFront;
+end;
+
+procedure TFrmPrincipal.CardAvaliacaoClick(Sender: TObject);
+var
+  Card: TRectangle;
+  I: Integer;
+  LblID: TLabel;
+  S: string;
+  P1, P2: Integer;
+  AgendID, BarbID: Integer;
+  BarbNome: string;
+begin
+  Card := Sender as TRectangle;
+  LblID := nil;
+  for I := 0 to Card.ChildrenCount - 1 do
+    if (Card.Children[I] is TLabel) and (not TLabel(Card.Children[I]).Visible) then
+    begin
+      LblID := TLabel(Card.Children[I]);
+      Break;
+    end;
+  if LblID = nil then
+    Exit;
+  S := LblID.Text;
+  P1 := Pos('|', S);
+  if P1 = 0 then
+    Exit;
+  P2 := Pos('|', Copy(S, P1 + 1, MaxInt));
+  if P2 = 0 then
+    Exit;
+  P2 := P1 + P2;
+  AgendID  := StrToIntDef(Copy(S, 1, P1 - 1), 0);
+  BarbID   := StrToIntDef(Copy(S, P1 + 1, P2 - P1 - 1), 0);
+  BarbNome := Copy(S, P2 + 1, MaxInt);
+  AbrirOverlayAvaliacao(AgendID, BarbID, BarbNome);
+end;
+
+procedure TFrmPrincipal.EstrelaAvaliacaoClick(Sender: TObject);
+begin
+  AtualizarEstrelas((Sender as TLabel).Tag);
+end;
+
+procedure TFrmPrincipal.lblFecharAvaliacaoClick(Sender: TObject);
+begin
+  rectOverlayAvaliacao.Visible := False;
+end;
+
+procedure TFrmPrincipal.rectBtnAvaliarClick(Sender: TObject);
+var
+  Query: TFDQuery;
+  JaAvaliado: Boolean;
+begin
+  if FNotaAvaliacao = 0 then
+  begin
+    ShowMessage('Selecione uma nota de 1 a 5 estrelas.');
+    Exit;
+  end;
+  JaAvaliado := False;
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT COUNT(*) FROM TB_AVALIACOES WHERE AGENDAMENTO_ID = :AID';
+    Query.ParamByName('AID').AsInteger := FAgendamentoIDAvaliacao;
+    Query.Open;
+    JaAvaliado := Query.Fields[0].AsInteger > 0;
+    Query.Close;
+    if not JaAvaliado then
+    begin
+      Query.SQL.Text :=
+        'INSERT INTO TB_AVALIACOES ' +
+        '  (AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA, COMENTARIO) ' +
+        'VALUES (:AID, :CID, :BID, :NOTA, :COMENT)';
+      Query.ParamByName('AID').AsInteger   := FAgendamentoIDAvaliacao;
+      Query.ParamByName('CID').AsInteger   := FUsuarioID;
+      Query.ParamByName('BID').AsInteger   := FBarbeiroIDAvaliacao;
+      Query.ParamByName('NOTA').AsInteger  := FNotaAvaliacao;
+      Query.ParamByName('COMENT').AsString := edtComentarioAvaliacao.Text;
+      Query.ExecSQL;
+      Query.SQL.Text :=
+        'UPDATE TB_BARBEIROS SET AVALIACAO_MEDIA = ' +
+        '  (SELECT AVG(CAST(NOTA AS FLOAT)) FROM TB_AVALIACOES WHERE BARBEIRO_ID = :BID) ' +
+        'WHERE ID = :BID';
+      Query.ParamByName('BID').AsInteger := FBarbeiroIDAvaliacao;
+      Query.ExecSQL;
+    end;
+  finally
+    Query.Free;
+  end;
+  rectOverlayAvaliacao.Visible := False;
+  if JaAvaliado then
+    ShowMessage('Este agendamento j'#225' foi avaliado.')
+  else
+  begin
+    ShowMessage('Avalia'#231#227'o enviada. Obrigado!');
+    CarregarCarrinho;
+  end;
 end;
 
 procedure TFrmPrincipal.CarregarCarrinho;
@@ -1611,7 +1842,7 @@ var
   Query: TFDQuery;
   I, CardCount: Integer;
   Card, BadgeRect: TRectangle;
-  LblServico, LblBarbeiro, LblDataHora, LblValor, LblStatus: TLabel;
+  LblServico, LblBarbeiro, LblDataHora, LblValor, LblStatus, LblID: TLabel;
   StatusText: string;
   StatusCor: TAlphaColor;
   StartY: Single;
@@ -1629,6 +1860,7 @@ begin
     Query.SQL.Text :=
       'SELECT A.ID, S.NOME AS SERVICO, ' +
       '       U.NOME_COMPLETO AS BARBEIRO, ' +
+      '       B.ID AS BARBEIRO_ID, ' +
       '       A.DT_AGENDAMENTO, A.HR_INICIO, A.HR_FIM, ' +
       '       A.VALOR_COBRADO, A.STATUS ' +
       'FROM TB_AGENDAMENTOS A ' +
@@ -1664,6 +1896,20 @@ begin
       Card.Stroke.Kind := TBrushKind.None;
       Card.XRadius := 12;
       Card.YRadius := 12;
+
+      if StatusText = 'CONCLUIDO' then
+      begin
+        Card.HitTest := True;
+        LblID := TLabel.Create(Card);
+        LblID.Parent := Card;
+        LblID.Visible := False;
+        LblID.Text := Query.FieldByName('ID').AsString + '|' +
+          Query.FieldByName('BARBEIRO_ID').AsString + '|' +
+          Query.FieldByName('BARBEIRO').AsString;
+        Card.OnClick := CardAvaliacaoClick;
+      end
+      else
+        Card.HitTest := False;
 
       LblServico := TLabel.Create(Card);
       LblServico.Parent := Card;
@@ -1749,9 +1995,34 @@ begin
   end;
 end;
 
+procedure TFrmPrincipal.CarregarIconesMenuCarrinho;
+var
+  BaseDir: string;
+  Icone: string;
+begin
+  BaseDir := TPath.Combine(ExtractFilePath(ParamStr(0)), '..\..\..');
+
+  Icone := TPath.Combine(BaseDir, 'docs\images\lsicon--house-outline.png');
+  if FileExists(Icone) then
+    imgMenuInicioC.Bitmap.LoadFromFile(Icone);
+
+  Icone := TPath.Combine(BaseDir, 'docs\images\mingcute--calendar-line.png');
+  if FileExists(Icone) then
+    imgMenuAgendaC.Bitmap.LoadFromFile(Icone);
+
+  Icone := TPath.Combine(BaseDir, 'docs\images\icon-park-outline--mall-bag.png');
+  if FileExists(Icone) then
+    imgMenuCarrinhoC.Bitmap.LoadFromFile(Icone);
+
+  Icone := TPath.Combine(BaseDir, 'docs\images\solar--user-linear.png');
+  if FileExists(Icone) then
+    imgMenuPerfilC.Bitmap.LoadFromFile(Icone);
+end;
+
 procedure TFrmPrincipal.lytMenuCarrinhoClick(Sender: TObject);
 begin
   AtualizarMenuAtivo(2);
+  CarregarIconesMenuCarrinho;
   CarregarCarrinho;
   TabControlPrincipal.SetActiveTabWithTransition(
     tabCarrinho, TTabTransition.Slide, TTabTransitionDirection.Normal);

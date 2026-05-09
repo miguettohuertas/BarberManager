@@ -158,8 +158,8 @@ Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, ond
 - [x] Menu inferior dinâmico com cores activo/inactivo
 - [x] Tela Carrinho com agendamentos reais do utilizador
 - [ ] Ícones no menu do Carrinho
-- [ ] Tela de Avaliação de Serviço (estrelas + comentário)
-- [ ] Pontuação dinâmica dos barbeiros
+- [x] Tela de Avaliação de Serviço (estrelas + comentário)
+- [x] Pontuação dinâmica dos barbeiros (via TB_AVALIACOES)
 
 ### Módulo Barbeiro/Admin *(Front-End + Back-End Concluídos)*
 

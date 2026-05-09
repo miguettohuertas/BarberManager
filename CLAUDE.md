@@ -65,6 +65,7 @@ BarberManager/
 | `TB_CATEGORIAS`   | Categorias de serviços. Colunas: ID, NOME (ex: 'Cabelo', 'Barba', 'Estética') |
 | `TB_BARBEIROS`    | Barbeiros. Colunas: ID, USUARIO_ID (FK → TB_USUARIOS), CARGO, AVALIACAO_MEDIA, ATIVO |
 | `TB_AGENDAMENTOS` | Agendamentos. Colunas: ID, CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, HR_INICIO, HR_FIM, STATUS ('PENDENTE'/'EM_ANDAMENTO'/'CONCLUIDO'/'CANCELADO'), VALOR_COBRADO |
+| `TB_AVALIACOES`   | Avaliações de serviço. Colunas: ID, AGENDAMENTO_ID (FK TB_AGENDAMENTOS), CLIENTE_ID (FK TB_USUARIOS), BARBEIRO_ID (FK TB_BARBEIROS), NOTA INTEGER (1-5), COMENTARIO VARCHAR(500), DT_AVALIACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP |
 
 ---
 
@@ -170,8 +171,15 @@ BarberManager/
 - `tabCarrinho`: nova `TTabItem` após `tabAgendamento`
 - `CarregarCarrinho`: query `TB_AGENDAMENTOS JOIN TB_SERVICOS JOIN TB_BARBEIROS JOIN TB_USUARIOS WHERE CLIENTE_ID = FUsuarioID ORDER BY DT_AGENDAMENTO DESC`
 - Cards dinâmicos `Tag=85` com: nome serviço (branco, bold), barbeiro (cinzento), data+hora, valor (laranja), badge de status colorido (CONCLUIDO→verde, PENDENTE→laranja, CANCELADO→vermelho, EM_ANDAMENTO→azul)
+- Cards `CONCLUIDO` têm `HitTest=True` + `OnClick=CardAvaliacaoClick` + `TLabel` oculto (Visible=False) com `Text='AgendID|BarbID|BarbNome'` para transportar dados
 - `rectMenuInfCarrinho`: menu inferior replicado na tab Carrinho com `TGridPanelLayout` e 4 botões (Inicio/Agenda/Carrinho/Perfil) reutilizando os handlers existentes; "Carrinho" aparece laranja (estado activo)
-- PENDENTE: ícones no menu do Carrinho (só labels por agora)
+- `imgMenuInicioC/AgendaC/CarrinhoC/PerfilC`: `TImage` nos 4 botões do menu Carrinho; `CarregarIconesMenuCarrinho` carrega os PNG em runtime via `LoadFromFile`
+- `rectOverlayPerfilC`: overlay de perfil duplicado para a tab Carrinho (`*C` suffix); `lytMenuPerfilClick` detecta tab activa e abre o overlay correcto
+- `AtualizarMenuAtivo(Index)`: array[0..7] — Labels[0..3] = Home, Labels[4..7] = Carrinho; ambos coloridos simultaneamente
+- `rectOverlayAvaliacao`: overlay de avaliação em `rectFundoCarrinho`; painel X=10/Y=70/W=360/H=380; contém: título, subtítulo com nome barbeiro, 5 estrelas clicáveis (`lblEstrela1-5`, `Tag=1-5`, `OnClick=EstrelaAvaliacaoClick`), `lblNotaAtual`, separador, `edtComentarioAvaliacao`, `rectBtnAvaliar`
+- `AtualizarEstrelas(Nota)`: pinta ★ (amarelo `$FFFBBF24`) até Nota, ☆ (cinzento) acima; actualiza `lblNotaAtual`
+- `rectBtnAvaliarClick`: valida nota>0, verifica duplicado em `TB_AVALIACOES`, INSERT + UPDATE `AVALIACAO_MEDIA` em `TB_BARBEIROS`; exibe mensagem; chama `CarregarCarrinho`
+- **Pré-requisito**: tabela `TB_AVALIACOES` deve ser criada no Firebird antes de usar esta funcionalidade
 
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
@@ -189,29 +197,24 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Ícones no menu inferior do Carrinho** (pequeno):
-   - Adicionar `imgMenu*C` com os mesmos ícones do menu da Home
+1. **Criar TB_AVALIACOES no Firebird** (pré-requisito para tela de avaliação):
+   - Executar o script SQL no BARBERMANAGER.FDB (script já gerado em sessão anterior)
+   - Colunas: ID (PK auto-increment via trigger), AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA INTEGER, COMENTARIO VARCHAR(500), DT_AVALIACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
-2. **Tela de Avaliação de Serviço**:
-   - Acessível clicando num card `CONCLUIDO` no Carrinho
-   - Campos: nota 1–5 estrelas interactivas, comentário, botão Confirmar
-   - INSERT em `TB_AVALIACOES` com `AGENDAMENTO_ID`, `CLIENTE_ID` (`FUsuarioID`), `BARBEIRO_ID`, `NOTA`, `COMENTARIO`
-   - Após avaliar: recalcular `AVALIACAO_MEDIA` em `TB_BARBEIROS` com UPDATE
+2. **Pontuação dinâmica dos barbeiros**:
+   - `CarregarBarbeiros` já usa `AVALIACAO_MEDIA` de `TB_BARBEIROS` (campo estático)
+   - Após `TB_AVALIACOES` existir, `rectBtnAvaliarClick` actualiza automaticamente este campo
 
-3. **Pontuação dinâmica dos barbeiros**:
-   - Verificar se `CarregarBarbeiros` usa `AVALIACAO_MEDIA` da BD
-   - Corrigir para mostrar média real se necessário
-
-4. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
+3. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
    - Carregar `TB_SERVICOS` dinamicamente
    - Filtros, toggle Ativos/Inativos, busca com `CONTAINING`, KPIs reais
    - CRUD completo: Botão "Novo Serviço" (INSERT), editar (UPDATE), eliminar (DELETE), toggle ativo
 
-5. **Dashboard Admin — dados complementares**:
+4. **Dashboard Admin — dados complementares**:
    - Gráfico de barras semanal com receita real
    - Barra de meta configurável
 
-6. **Deploy com D2Bridge**
+5. **Deploy com D2Bridge**
 
 ---
 

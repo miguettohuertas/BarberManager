@@ -9105,6 +9105,19 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               TabOrder = 0
               OnClick = lytMenuInicioClick
+              object imgMenuInicioC: TImage
+                Align = Center
+                HitTest = False
+                Size.Width = 24.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                MultiResBitmap = <
+                  item
+                    FileName =
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\lsicon' +
+                      '--house-outline.png'
+                  end>
+              end
               object lblMenuInicioC: TLabel
                 Align = Bottom
                 StyledSettings = []
@@ -9128,6 +9141,19 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               TabOrder = 1
               OnClick = lytMenuAgendaClick
+              object imgMenuAgendaC: TImage
+                Align = Center
+                HitTest = False
+                Size.Width = 24.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                MultiResBitmap = <
+                  item
+                    FileName =
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\mingcu' +
+                      'te--calendar-line.png'
+                  end>
+              end
               object lblMenuAgendaC: TLabel
                 Align = Bottom
                 StyledSettings = []
@@ -9151,6 +9177,19 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               TabOrder = 2
               OnClick = lytMenuCarrinhoClick
+              object imgMenuCarrinhoC: TImage
+                Align = Center
+                HitTest = False
+                Size.Width = 24.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                MultiResBitmap = <
+                  item
+                    FileName =
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\icon-p' +
+                      'ark-outline--mall-bag.png'
+                  end>
+              end
               object lblMenuCarrinhoC: TLabel
                 Align = Bottom
                 StyledSettings = []
@@ -9174,6 +9213,19 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               TabOrder = 3
               OnClick = lytMenuPerfilClick
+              object imgMenuPerfilC: TImage
+                Align = Center
+                HitTest = False
+                Size.Width = 24.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                MultiResBitmap = <
+                  item
+                    FileName =
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\solar-' +
+                      '-user-linear.png'
+                  end>
+              end
               object lblMenuPerfilC: TLabel
                 Align = Bottom
                 StyledSettings = []
@@ -9187,6 +9239,325 @@ object FrmPrincipal: TFrmPrincipal
                 TextSettings.HorzAlign = Center
                 Text = 'Perfil'
                 TabOrder = 0
+              end
+            end
+          end
+        end
+        object rectOverlayPerfilC: TRectangle
+          Align = Contents
+          Fill.Color = xCC000000
+          HitTest = True
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Visible = False
+          object rectPainelPerfilC: TRectangle
+            Fill.Color = xFF141C2B
+            Position.X = 10.000000000000000000
+            Position.Y = 60.000000000000000000
+            Size.Width = 360.000000000000000000
+            Size.Height = 320.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 16.000000000000000000
+            YRadius = 16.000000000000000000
+            object circleAvatarPerfilC: TCircle
+              Fill.Color = xFFF58A00
+              Position.X = 155.000000000000000000
+              Position.Y = 24.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+            end
+            object lblInicialPerfilC: TLabel
+              StyledSettings = []
+              Position.X = 155.000000000000000000
+              Position.Y = 24.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 70.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 28.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.HorzAlign = Center
+              Text = '?'
+            end
+            object lblNomePerfilPopupC: TLabel
+              StyledSettings = []
+              Position.X = 20.000000000000000000
+              Position.Y = 108.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 16.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+            end
+            object lblEmailPerfilPopupC: TLabel
+              StyledSettings = []
+              Position.X = 20.000000000000000000
+              Position.Y = 140.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 22.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+            end
+            object rectBadgePerfilC: TRectangle
+              Fill.Color = xFF1E3A5F
+              Position.X = 155.000000000000000000
+              Position.Y = 172.000000000000000000
+              Size.Width = 70.000000000000000000
+              Size.Height = 24.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 12.000000000000000000
+              YRadius = 12.000000000000000000
+              object lblBadgePerfilC: TLabel
+                Align = Client
+                StyledSettings = []
+                Size.Width = 70.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 10.000000000000000000
+                TextSettings.FontColor = xFF60A5FA
+                TextSettings.HorzAlign = Center
+                Text = 'Cliente'
+              end
+            end
+            object rectLinhaPerfilC: TRectangle
+              Fill.Color = xFF2D3F55
+              Position.X = 20.000000000000000000
+              Position.Y = 212.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 1.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+            end
+            object lblFecharPerfilC: TLabel
+              StyledSettings = []
+              HitTest = True
+              Position.X = 320.000000000000000000
+              Position.Y = 16.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'X'
+              OnClick = lblFecharPerfilCClick
+            end
+            object rectBtnLogoutC: TRectangle
+              Fill.Color = xFF7F1D1D
+              HitTest = True
+              Position.X = 20.000000000000000000
+              Position.Y = 228.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 12.000000000000000000
+              YRadius = 12.000000000000000000
+              OnClick = rectBtnLogoutCClick
+              object lblBtnLogoutC: TLabel
+                Align = Client
+                StyledSettings = []
+                Size.Width = 320.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = claWhite
+                TextSettings.HorzAlign = Center
+                Text = 'Sair da Conta'
+              end
+            end
+          end
+        end
+        object rectOverlayAvaliacao: TRectangle
+          Align = Contents
+          Fill.Color = xCC000000
+          HitTest = True
+          Size.Width = 50.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          Visible = False
+          object rectPainelAvaliacao: TRectangle
+            Fill.Color = xFF141C2B
+            Position.X = 10.000000000000000000
+            Position.Y = 70.000000000000000000
+            Size.Width = 360.000000000000000000
+            Size.Height = 380.000000000000000000
+            Size.PlatformDefault = False
+            Stroke.Kind = None
+            XRadius = 16.000000000000000000
+            YRadius = 16.000000000000000000
+            object lblFecharAvaliacao: TLabel
+              StyledSettings = []
+              HitTest = True
+              Position.X = 316.000000000000000000
+              Position.Y = 14.000000000000000000
+              Size.Width = 30.000000000000000000
+              Size.Height = 30.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'X'
+              OnClick = lblFecharAvaliacaoClick
+            end
+            object lblTituloAvaliacao: TLabel
+              StyledSettings = []
+              Position.X = 20.000000000000000000
+              Position.Y = 20.000000000000000000
+              Size.Width = 280.000000000000000000
+              Size.Height = 28.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.Font.StyleExt = {00070000000000000004000000}
+              TextSettings.FontColor = claWhite
+              TextSettings.HorzAlign = Center
+              Text = 'Avaliar Servi'#231'o'
+            end
+            object lblSubtituloAvaliacao: TLabel
+              StyledSettings = []
+              Position.X = 20.000000000000000000
+              Position.Y = 54.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 22.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = ''
+            end
+            object lblEstrela1: TLabel
+              StyledSettings = []
+              HitTest = True
+              Tag = 1
+              Position.X = 36.000000000000000000
+              Position.Y = 94.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = #9734
+              OnClick = EstrelaAvaliacaoClick
+            end
+            object lblEstrela2: TLabel
+              StyledSettings = []
+              HitTest = True
+              Tag = 2
+              Position.X = 96.000000000000000000
+              Position.Y = 94.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = #9734
+              OnClick = EstrelaAvaliacaoClick
+            end
+            object lblEstrela3: TLabel
+              StyledSettings = []
+              HitTest = True
+              Tag = 3
+              Position.X = 156.000000000000000000
+              Position.Y = 94.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = #9734
+              OnClick = EstrelaAvaliacaoClick
+            end
+            object lblEstrela4: TLabel
+              StyledSettings = []
+              HitTest = True
+              Tag = 4
+              Position.X = 216.000000000000000000
+              Position.Y = 94.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = #9734
+              OnClick = EstrelaAvaliacaoClick
+            end
+            object lblEstrela5: TLabel
+              StyledSettings = []
+              HitTest = True
+              Tag = 5
+              Position.X = 276.000000000000000000
+              Position.Y = 94.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 32.000000000000000000
+              TextSettings.FontColor = xFF94A3B8
+              TextSettings.HorzAlign = Center
+              Text = #9734
+              OnClick = EstrelaAvaliacaoClick
+            end
+            object lblNotaAtual: TLabel
+              StyledSettings = []
+              Position.X = 20.000000000000000000
+              Position.Y = 154.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 22.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.FontColor = xFFF58A00
+              TextSettings.HorzAlign = Center
+              Text = 'Selecione uma nota'
+            end
+            object rectSeparadorAvaliacao: TRectangle
+              Fill.Color = xFF2D3F55
+              Position.X = 20.000000000000000000
+              Position.Y = 188.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 1.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+            end
+            object edtComentarioAvaliacao: TEdit
+              Position.X = 20.000000000000000000
+              Position.Y = 204.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 44.000000000000000000
+              Size.PlatformDefault = False
+              TextPrompt = 'Coment'#225'rio (opcional)'
+            end
+            object rectBtnAvaliar: TRectangle
+              Fill.Color = xFFF58A00
+              HitTest = True
+              Position.X = 20.000000000000000000
+              Position.Y = 266.000000000000000000
+              Size.Width = 320.000000000000000000
+              Size.Height = 50.000000000000000000
+              Size.PlatformDefault = False
+              Stroke.Kind = None
+              XRadius = 12.000000000000000000
+              YRadius = 12.000000000000000000
+              OnClick = rectBtnAvaliarClick
+              object lblBtnAvaliar: TLabel
+                Align = Client
+                StyledSettings = []
+                Size.Width = 320.000000000000000000
+                Size.Height = 50.000000000000000000
+                Size.PlatformDefault = False
+                TextSettings.Font.Size = 14.000000000000000000
+                TextSettings.Font.StyleExt = {00070000000000000004000000}
+                TextSettings.FontColor = claWhite
+                TextSettings.HorzAlign = Center
+                Text = 'Enviar Avalia'#231#227'o'
               end
             end
           end
