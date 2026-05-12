@@ -240,10 +240,12 @@ type
     procedure rectMenuServicosClick(Sender: TObject);
     procedure rectMenuInicioClick(Sender: TObject);
     procedure rectMenuSairClick(Sender: TObject);
+    procedure rectMenuAgendaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     procedure AtualizarKPIs;
     procedure CarregarLinhaTempo;
+    procedure AtualizarMenuLateral(const ItemAtivo: string);
   public
     { Public declarations }
   end;
@@ -260,6 +262,7 @@ uses View.Frame.Servicos, View.Principal,
 
 procedure TFrmDashboardAdmin.FormShow(Sender: TObject);
 begin
+  AtualizarMenuLateral('inicio');
   lblDataDash.StyledSettings := [];
   lblDataDash.Text := FormatDateTime('dddd, d "de" MMMM "de" yyyy', Now);
   AtualizarKPIs;
@@ -510,12 +513,15 @@ procedure TFrmDashboardAdmin.rectMenuInicioClick(Sender: TObject);
 var
   I: Integer;
 begin
+  AtualizarMenuLateral('inicio');
+
   for I := lytAreaPrincipal.ControlsCount - 1 downto 0 do
   begin
     if lytAreaPrincipal.Controls[I] is TFrame then
       lytAreaPrincipal.Controls[I].Free;
   end;
 
+  lytHeaderDashboard.Visible := True;
   scrollDashboard.Visible := True;
 
 end;
@@ -531,15 +537,78 @@ end;
 procedure TFrmDashboardAdmin.rectMenuServicosClick(Sender: TObject);
 var
   FrameServicos: TFrameServicos;
+  I: Integer;
 begin
+  AtualizarMenuLateral('servicos');
+
+  for I := lytAreaPrincipal.ControlsCount - 1 downto 0 do
+    if lytAreaPrincipal.Controls[I] is TFrame then
+      lytAreaPrincipal.Controls[I].Free;
+
   scrollDashboard.Visible := False;
+  lytHeaderDashboard.Visible := False;
 
   FrameServicos := TFrameServicos.Create(Self);
-
   FrameServicos.Parent := lytAreaPrincipal;
-
   FrameServicos.Align := TAlignLayout.Client;
 
+end;
+
+procedure TFrmDashboardAdmin.AtualizarMenuLateral(const ItemAtivo: string);
+
+  procedure SetAtivo(Rect: TRectangle; Lbl: TLabel; Seta: TLabel = nil);
+  begin
+    Rect.Fill.Color := $FF1E293B;
+    Rect.Fill.Kind := TBrushKind.Solid;
+    Rect.Stroke.Color := $FFF58A00;
+    Rect.Stroke.Kind := TBrushKind.Solid;
+    Rect.XRadius := 8;
+    Rect.YRadius := 8;
+    Lbl.StyledSettings := [];
+    Lbl.TextSettings.FontColor := $FFF58A00;
+    if Seta <> nil then
+    begin
+      Seta.StyledSettings := [];
+      Seta.TextSettings.FontColor := $FFF58A00;
+      Seta.Text := '>';
+    end;
+  end;
+
+  procedure SetInativo(Rect: TRectangle; Lbl: TLabel; Seta: TLabel = nil);
+  begin
+    Rect.Fill.Kind := TBrushKind.None;
+    Rect.Stroke.Kind := TBrushKind.None;
+    Rect.XRadius := 0;
+    Rect.YRadius := 0;
+    Lbl.StyledSettings := [];
+    Lbl.TextSettings.FontColor := $FFFFFFFF;
+    if Seta <> nil then
+      Seta.Text := '';
+  end;
+
+begin
+  if ItemAtivo = 'inicio' then SetAtivo(rectMenuInicio, lblMenuInicio)
+  else SetInativo(rectMenuInicio, lblMenuInicio);
+
+  if ItemAtivo = 'agenda' then SetAtivo(rectMenuAgenda, lblMenuAgenda, lblSetaAgenda)
+  else SetInativo(rectMenuAgenda, lblMenuAgenda, lblSetaAgenda);
+
+  if ItemAtivo = 'servicos' then SetAtivo(rectMenuServicos, lblMenuServicos)
+  else SetInativo(rectMenuServicos, lblMenuServicos);
+
+  if ItemAtivo = 'clientes' then SetAtivo(rectMenuClientes, lblMenuClientes)
+  else SetInativo(rectMenuClientes, lblMenuClientes);
+
+  if ItemAtivo = 'financeiro' then SetAtivo(rectMenuFinanceiro, lblMenuFinanceiro)
+  else SetInativo(rectMenuFinanceiro, lblMenuFinanceiro);
+
+  if ItemAtivo = 'configuracoes' then SetAtivo(rectMenuConfig, lblMenuConfig)
+  else SetInativo(rectMenuConfig, lblMenuConfig);
+end;
+
+procedure TFrmDashboardAdmin.rectMenuAgendaClick(Sender: TObject);
+begin
+  AtualizarMenuLateral('agenda');
 end;
 
 end.

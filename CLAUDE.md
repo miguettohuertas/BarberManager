@@ -181,6 +181,17 @@ BarberManager/
 - `rectBtnAvaliarClick`: valida nota>0, verifica duplicado em `TB_AVALIACOES`, INSERT + UPDATE `AVALIACAO_MEDIA` em `TB_BARBEIROS`; exibe mensagem; chama `CarregarCarrinho`
 - **Pré-requisito**: tabela `TB_AVALIACOES` deve ser criada no Firebird antes de usar esta funcionalidade
 
+**Dashboard Admin — melhorias**
+- Header duplicado corrigido: `rectMenuServicosClick` esconde `lytHeaderDashboard` ao injectar frame; `rectMenuInicioClick` restaura ao voltar ao início
+- Memory leak corrigido: `rectMenuServicosClick` tem agora loop de limpeza de frames antes de criar novo
+- Sidebar dinâmico: `AtualizarMenuLateral(ItemAtivo)` com helpers locais `SetAtivo`/`SetInativo`
+  — XRadius=8 activo, XRadius=0 inactivo
+  — Stroke laranja activo, None inactivo
+  — FontColor laranja activo, branco inactivo
+  — `lblSetaAgenda` mostra `'>'` quando activo (único item com seta)
+- Chamado em: `FormShow` ('inicio'), `rectMenuInicioClick`, `rectMenuServicosClick`, `rectMenuAgendaClick` (novo handler)
+- `rectMenuAgenda`: `OnClick` ligado no `.fmx`
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -197,24 +208,29 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Criar TB_AVALIACOES no Firebird** (pré-requisito para tela de avaliação):
-   - Executar o script SQL no BARBERMANAGER.FDB (script já gerado em sessão anterior)
-   - Colunas: ID (PK auto-increment via trigger), AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA INTEGER, COMENTARIO VARCHAR(500), DT_AVALIACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+1. **Tela Agenda do Dashboard** (próximo passo):
+   - Carregar agendamentos do dia em linha do tempo
+   - Filtros por barbeiro e status
+   - Acções: confirmar, cancelar agendamento
 
-2. **Pontuação dinâmica dos barbeiros**:
-   - `CarregarBarbeiros` já usa `AVALIACAO_MEDIA` de `TB_BARBEIROS` (campo estático)
-   - Após `TB_AVALIACOES` existir, `rectBtnAvaliarClick` actualiza automaticamente este campo
+2. **Tela Clientes do Dashboard**:
+   - Lista de clientes com busca
+   - Ver histórico de agendamentos por cliente
 
-3. **Frame Serviços — CRUD dinâmico** (`View.Frame.Servicos.pas`):
-   - Carregar `TB_SERVICOS` dinamicamente
-   - Filtros, toggle Ativos/Inativos, busca com `CONTAINING`, KPIs reais
-   - CRUD completo: Botão "Novo Serviço" (INSERT), editar (UPDATE), eliminar (DELETE), toggle ativo
+3. **Tela Financeiro do Dashboard**:
+   - KPIs financeiros detalhados
+   - Gráfico de receita por período
 
-4. **Dashboard Admin — dados complementares**:
-   - Gráfico de barras semanal com receita real
-   - Barra de meta configurável
+4. **Tela Configurações do Dashboard**:
+   - Gestão de barbeiros
+   - Configurações gerais
 
-5. **Deploy com D2Bridge**
+5. **Frame Serviços — CRUD dinâmico completo**:
+   - Botão Novo Serviço funcional (INSERT)
+   - Editar (UPDATE), eliminar (DELETE)
+   - Toggle ativo/inativo
+
+6. **Deploy com D2Bridge**
 
 ---
 

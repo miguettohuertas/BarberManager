@@ -865,6 +865,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Stroke.Color = xFFF58A00
           XRadius = 8.000000000000000000
           YRadius = 8.000000000000000000
+          OnClick = rectMenuAgendaClick
           object lblMenuAgenda: TLabel
             Align = Client
             StyledSettings = [Family, Size]

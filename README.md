@@ -167,6 +167,13 @@ Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, ond
 - [x] Cards de Resumo Financeiro com dados reais do dia (KPIs via query agregada)
 - [x] Linha do Tempo com agendamentos reais, coloridos por status
 - [x] Tela de Gestão de Serviços (visual concluído — lógica CRUD em desenvolvimento)
+- [x] Sidebar dinâmico com estado activo/inactivo
+- [x] Header isolado por secção (sem duplicação)
+- [ ] Tela Agenda dinâmica
+- [ ] Tela Clientes
+- [ ] Tela Financeiro
+- [ ] Tela Configurações
+- [ ] Frame Serviços CRUD completo
 
 ---
 
