@@ -237,15 +237,26 @@ type
     imgIconePendentes: TImage;
     rectIconeCancelamentos: TRectangle;
     imgIconeCancelamentos: TImage;
+    lytNavData: TLayout;
+    rectSetaAnteriorAgenda: TRectangle;
+    imgSetaAnteriorAgenda: TImage;
+    lblDataAgenda: TLabel;
+    rectSetaProximaAgenda: TRectangle;
+    imgSetaProximaAgenda: TImage;
     procedure rectMenuServicosClick(Sender: TObject);
     procedure rectMenuInicioClick(Sender: TObject);
     procedure rectMenuSairClick(Sender: TObject);
     procedure rectMenuAgendaClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure rectSetaAnteriorAgendaClick(Sender: TObject);
+    procedure rectSetaProximaAgendaClick(Sender: TObject);
   private
+    FDataAgenda: TDate;
     procedure AtualizarKPIs;
     procedure CarregarLinhaTempo;
     procedure AtualizarMenuLateral(const ItemAtivo: string);
+    procedure AtualizarDataAgenda;
+    procedure CarregarIconesSetas;
   public
     { Public declarations }
   end;
@@ -258,13 +269,17 @@ implementation
 {$R *.fmx}
 
 uses View.Frame.Servicos, View.Principal,
-  Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param;
+  Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
+  System.DateUtils, System.IOUtils;
 
 procedure TFrmDashboardAdmin.FormShow(Sender: TObject);
 begin
   AtualizarMenuLateral('inicio');
   lblDataDash.StyledSettings := [];
   lblDataDash.Text := FormatDateTime('dddd, d "de" MMMM "de" yyyy', Now);
+  FDataAgenda := Date;
+  CarregarIconesSetas;
+  AtualizarDataAgenda;
   AtualizarKPIs;
   CarregarLinhaTempo;
 end;
@@ -284,7 +299,8 @@ begin
       '  SUM(CASE WHEN STATUS = ''CANCELADO'' THEN 1 ELSE 0 END) AS CANCELADOS, ' +
       '  SUM(CASE WHEN STATUS = ''CONCLUIDO'' THEN VALOR_COBRADO ELSE 0 END) AS FATURAMENTO ' +
       'FROM TB_AGENDAMENTOS ' +
-      'WHERE DT_AGENDAMENTO = CURRENT_DATE';
+      'WHERE DT_AGENDAMENTO = :DATA';
+    Query.ParamByName('DATA').AsDate := FDataAgenda;
     Query.Open;
 
     lblValFaturamento.StyledSettings := [];
@@ -308,6 +324,16 @@ begin
 
     lblSubCancelamentos.StyledSettings := [];
     lblSubCancelamentos.Text := 'Hoje';
+
+    var SubTexto: string;
+    if Trunc(FDataAgenda) = Trunc(Date) then
+      SubTexto := 'Hoje'
+    else
+      SubTexto := FormatDateTime('dd/mm', FDataAgenda);
+    lblSubLinhaTempo.StyledSettings := [];
+    lblSubLinhaTempo.Text :=
+      IntToStr(Query.FieldByName('TOTAL').AsInteger) +
+      ' Agendamento(s) em ' + SubTexto;
   finally
     Query.Free;
   end;
@@ -350,8 +376,9 @@ begin
       'INNER JOIN TB_BARBEIROS B ON B.ID = A.BARBEIRO_ID ' +
       'INNER JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
       'INNER JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID ' +
-      'WHERE A.DT_AGENDAMENTO = CURRENT_DATE ' +
+      'WHERE A.DT_AGENDAMENTO = :DATA ' +
       'ORDER BY A.HR_INICIO';
+    Query.ParamByName('DATA').AsDate := FDataAgenda;
     Query.Open;
 
     CardWidth := scrollLinhaTempo.Width - 16;
@@ -590,8 +617,8 @@ begin
   if ItemAtivo = 'inicio' then SetAtivo(rectMenuInicio, lblMenuInicio)
   else SetInativo(rectMenuInicio, lblMenuInicio);
 
-  if ItemAtivo = 'agenda' then SetAtivo(rectMenuAgenda, lblMenuAgenda, lblSetaAgenda)
-  else SetInativo(rectMenuAgenda, lblMenuAgenda, lblSetaAgenda);
+  if ItemAtivo = 'agenda' then SetAtivo(rectMenuAgenda, lblMenuAgenda)
+  else SetInativo(rectMenuAgenda, lblMenuAgenda);
 
   if ItemAtivo = 'servicos' then SetAtivo(rectMenuServicos, lblMenuServicos)
   else SetInativo(rectMenuServicos, lblMenuServicos);
@@ -609,6 +636,55 @@ end;
 procedure TFrmDashboardAdmin.rectMenuAgendaClick(Sender: TObject);
 begin
   AtualizarMenuLateral('agenda');
+end;
+
+procedure TFrmDashboardAdmin.CarregarIconesSetas;
+var
+  BaseDir, IconeEsq, IconeDir: string;
+begin
+  BaseDir := TPath.Combine(ExtractFilePath(ParamStr(0)), '..\..\..');
+  IconeEsq := TPath.Combine(BaseDir,
+    'docs\images\iconamoon--arrow-left-2-light.png');
+  IconeDir := TPath.Combine(BaseDir,
+    'docs\images\iconamoon--arrow-right-2-light.png');
+  if FileExists(IconeEsq) then
+    imgSetaAnteriorAgenda.Bitmap.LoadFromFile(IconeEsq);
+  if FileExists(IconeDir) then
+    imgSetaProximaAgenda.Bitmap.LoadFromFile(IconeDir);
+end;
+
+procedure TFrmDashboardAdmin.AtualizarDataAgenda;
+begin
+  lblDataAgenda.StyledSettings := [];
+  lblDataAgenda.TextSettings.FontColor := $FFF58A00;
+  if Trunc(FDataAgenda) = Trunc(Date) then
+    lblDataAgenda.Text := 'Hoje'
+  else if Trunc(FDataAgenda) = Trunc(Date - 1) then
+    lblDataAgenda.Text := 'Ontem'
+  else
+    lblDataAgenda.Text := FormatDateTime('dd/mm/yyyy', FDataAgenda);
+
+  if Trunc(FDataAgenda) < Trunc(Date) then
+    rectSetaProximaAgenda.Fill.Color := $FF1E293B
+  else
+    rectSetaProximaAgenda.Fill.Color := $FF0B1220;
+end;
+
+procedure TFrmDashboardAdmin.rectSetaAnteriorAgendaClick(Sender: TObject);
+begin
+  FDataAgenda := FDataAgenda - 1;
+  AtualizarDataAgenda;
+  AtualizarKPIs;
+  CarregarLinhaTempo;
+end;
+
+procedure TFrmDashboardAdmin.rectSetaProximaAgendaClick(Sender: TObject);
+begin
+  if Trunc(FDataAgenda) >= Trunc(Date) then Exit;
+  FDataAgenda := FDataAgenda + 1;
+  AtualizarDataAgenda;
+  AtualizarKPIs;
+  CarregarLinhaTempo;
 end;
 
 end.

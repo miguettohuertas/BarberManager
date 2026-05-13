@@ -886,7 +886,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
             TextSettings.FontColor = xFFF58A00
-            Text = '>'
+            Text = ''
             TabOrder = 1
           end
           object imgIconeMenuAgendaDash: TImage
@@ -7306,7 +7306,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                 Padding.Right = 10.000000000000000000
                 Padding.Bottom = 10.000000000000000000
                 Size.Width = 580.000000000000000000
-                Size.Height = 60.000000000000000000
+                Size.Height = 92.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 0
                 object lytTitulosAgenda: TLayout
@@ -7314,7 +7314,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   Position.X = 10.000000000000000000
                   Position.Y = 10.000000000000000000
                   Size.Width = 200.000000000000000000
-                  Size.Height = 40.000000000000000000
+                  Size.Height = 72.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 0
                   object lblTitLinhaTempo: TLabel
@@ -7339,6 +7339,54 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                     TextSettings.FontColor = xFF94A3B8
                     Text = '10 Agendamentos Hoje'
                     TabOrder = 1
+                  end
+                  object lytNavData: TLayout
+                    Align = Top
+                    Margins.Top = 4.000000000000000000
+                    Size.Width = 200.000000000000000000
+                    Size.Height = 32.000000000000000000
+                    Size.PlatformDefault = False
+                    object rectSetaAnteriorAgenda: TRectangle
+                      Align = Left
+                      Fill.Color = xFF1E293B
+                      Size.Width = 32.000000000000000000
+                      Size.Height = 32.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      XRadius = 6.000000000000000000
+                      YRadius = 6.000000000000000000
+                      OnClick = rectSetaAnteriorAgendaClick
+                      object imgSetaAnteriorAgenda: TImage
+                        Align = Client
+                        HitTest = False
+                        WrapMode = Fit
+                      end
+                    end
+                    object lblDataAgenda: TLabel
+                      Align = Client
+                      HitTest = False
+                      StyledSettings = []
+                      TextSettings.Font.Size = 12.000000000000000000
+                      TextSettings.FontColor = xFFF58A00
+                      TextSettings.HorzAlign = Center
+                      Text = 'Hoje'
+                    end
+                    object rectSetaProximaAgenda: TRectangle
+                      Align = Right
+                      Fill.Color = xFF1E293B
+                      Size.Width = 32.000000000000000000
+                      Size.Height = 32.000000000000000000
+                      Size.PlatformDefault = False
+                      Stroke.Kind = None
+                      XRadius = 6.000000000000000000
+                      YRadius = 6.000000000000000000
+                      OnClick = rectSetaProximaAgendaClick
+                      object imgSetaProximaAgenda: TImage
+                        Align = Client
+                        HitTest = False
+                        WrapMode = Fit
+                      end
+                    end
                   end
                 end
                 object lytLegendaAgenda: TLayout
@@ -7453,7 +7501,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
             object scrollLinhaTempo: TVertScrollBox
               Align = Client
               Margins.Left = 20.000000000000000000
-              Margins.Top = 60.000000000000000000
+              Margins.Top = 100.000000000000000000
               Margins.Right = 20.000000000000000000
               Margins.Bottom = 20.000000000000000000
               Size.Width = 540.000000000000000000

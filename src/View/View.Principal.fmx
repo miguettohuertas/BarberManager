@@ -9106,17 +9106,17 @@ object FrmPrincipal: TFrmPrincipal
               TabOrder = 0
               OnClick = lytMenuInicioClick
               object imgMenuInicioC: TImage
+                MultiResBitmap = <
+                  item
+                    FileName = 
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\lsicon' +
+                      '--house-outline.png'
+                  end>
                 Align = Center
                 HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
-                MultiResBitmap = <
-                  item
-                    FileName =
-                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\lsicon' +
-                      '--house-outline.png'
-                  end>
               end
               object lblMenuInicioC: TLabel
                 Align = Bottom
@@ -9142,17 +9142,17 @@ object FrmPrincipal: TFrmPrincipal
               TabOrder = 1
               OnClick = lytMenuAgendaClick
               object imgMenuAgendaC: TImage
+                MultiResBitmap = <
+                  item
+                    FileName = 
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\mingcu' +
+                      'te--calendar-line.png'
+                  end>
                 Align = Center
                 HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
-                MultiResBitmap = <
-                  item
-                    FileName =
-                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\mingcu' +
-                      'te--calendar-line.png'
-                  end>
               end
               object lblMenuAgendaC: TLabel
                 Align = Bottom
@@ -9178,17 +9178,17 @@ object FrmPrincipal: TFrmPrincipal
               TabOrder = 2
               OnClick = lytMenuCarrinhoClick
               object imgMenuCarrinhoC: TImage
+                MultiResBitmap = <
+                  item
+                    FileName = 
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\icon-p' +
+                      'ark-outline--mall-bag.png'
+                  end>
                 Align = Center
                 HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
-                MultiResBitmap = <
-                  item
-                    FileName =
-                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\icon-p' +
-                      'ark-outline--mall-bag.png'
-                  end>
               end
               object lblMenuCarrinhoC: TLabel
                 Align = Bottom
@@ -9214,17 +9214,17 @@ object FrmPrincipal: TFrmPrincipal
               TabOrder = 3
               OnClick = lytMenuPerfilClick
               object imgMenuPerfilC: TImage
+                MultiResBitmap = <
+                  item
+                    FileName = 
+                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\solar-' +
+                      '-user-linear.png'
+                  end>
                 Align = Center
                 HitTest = False
                 Size.Width = 24.000000000000000000
                 Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
-                MultiResBitmap = <
-                  item
-                    FileName =
-                      'C:\ProjetosDelphi\BarberManager\BarberManager\docs\images\solar-' +
-                      '-user-linear.png'
-                  end>
               end
               object lblMenuPerfilC: TLabel
                 Align = Bottom
@@ -9246,7 +9246,6 @@ object FrmPrincipal: TFrmPrincipal
         object rectOverlayPerfilC: TRectangle
           Align = Contents
           Fill.Color = xCC000000
-          HitTest = True
           Size.Width = 50.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
@@ -9351,7 +9350,6 @@ object FrmPrincipal: TFrmPrincipal
             end
             object rectBtnLogoutC: TRectangle
               Fill.Color = xFF7F1D1D
-              HitTest = True
               Position.X = 20.000000000000000000
               Position.Y = 228.000000000000000000
               Size.Width = 320.000000000000000000
@@ -9379,7 +9377,6 @@ object FrmPrincipal: TFrmPrincipal
         object rectOverlayAvaliacao: TRectangle
           Align = Contents
           Fill.Color = xCC000000
-          HitTest = True
           Size.Width = 50.000000000000000000
           Size.Height = 50.000000000000000000
           Size.PlatformDefault = False
@@ -9430,12 +9427,11 @@ object FrmPrincipal: TFrmPrincipal
               Size.PlatformDefault = False
               TextSettings.FontColor = xFF94A3B8
               TextSettings.HorzAlign = Center
-              Text = ''
             end
             object lblEstrela1: TLabel
+              Tag = 1
               StyledSettings = []
               HitTest = True
-              Tag = 1
               Position.X = 36.000000000000000000
               Position.Y = 94.000000000000000000
               Size.Width = 48.000000000000000000
@@ -9448,9 +9444,9 @@ object FrmPrincipal: TFrmPrincipal
               OnClick = EstrelaAvaliacaoClick
             end
             object lblEstrela2: TLabel
+              Tag = 2
               StyledSettings = []
               HitTest = True
-              Tag = 2
               Position.X = 96.000000000000000000
               Position.Y = 94.000000000000000000
               Size.Width = 48.000000000000000000
@@ -9463,9 +9459,9 @@ object FrmPrincipal: TFrmPrincipal
               OnClick = EstrelaAvaliacaoClick
             end
             object lblEstrela3: TLabel
+              Tag = 3
               StyledSettings = []
               HitTest = True
-              Tag = 3
               Position.X = 156.000000000000000000
               Position.Y = 94.000000000000000000
               Size.Width = 48.000000000000000000
@@ -9478,9 +9474,9 @@ object FrmPrincipal: TFrmPrincipal
               OnClick = EstrelaAvaliacaoClick
             end
             object lblEstrela4: TLabel
+              Tag = 4
               StyledSettings = []
               HitTest = True
-              Tag = 4
               Position.X = 216.000000000000000000
               Position.Y = 94.000000000000000000
               Size.Width = 48.000000000000000000
@@ -9493,9 +9489,9 @@ object FrmPrincipal: TFrmPrincipal
               OnClick = EstrelaAvaliacaoClick
             end
             object lblEstrela5: TLabel
+              Tag = 5
               StyledSettings = []
               HitTest = True
-              Tag = 5
               Position.X = 276.000000000000000000
               Position.Y = 94.000000000000000000
               Size.Width = 48.000000000000000000
@@ -9528,6 +9524,7 @@ object FrmPrincipal: TFrmPrincipal
               Stroke.Kind = None
             end
             object edtComentarioAvaliacao: TEdit
+              Touch.InteractiveGestures = [LongTap, DoubleTap]
               Position.X = 20.000000000000000000
               Position.Y = 204.000000000000000000
               Size.Width = 320.000000000000000000
@@ -9537,7 +9534,6 @@ object FrmPrincipal: TFrmPrincipal
             end
             object rectBtnAvaliar: TRectangle
               Fill.Color = xFFF58A00
-              HitTest = True
               Position.X = 20.000000000000000000
               Position.Y = 266.000000000000000000
               Size.Width = 320.000000000000000000

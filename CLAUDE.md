@@ -192,6 +192,17 @@ BarberManager/
 - Chamado em: `FormShow` ('inicio'), `rectMenuInicioClick`, `rectMenuServicosClick`, `rectMenuAgendaClick` (novo handler)
 - `rectMenuAgenda`: `OnClick` ligado no `.fmx`
 
+**Navegação de datas na Linha do Tempo**
+- `FDataAgenda: TDate` — variável de estado da data activa
+- `lytNavData`: layout com setas `<` `>` e `lblDataAgenda` (laranja) inserido dentro de `lytTitulosAgenda`
+- Ícones carregados em runtime via `CarregarIconesSetas`: `iconamoon--arrow-left-2-light.png` e `iconamoon--arrow-right-2-light.png`
+- `AtualizarDataAgenda`: mostra "Hoje"/"Ontem"/dd/mm/yyyy; seta direita desactivada (`$FF0B1220`) quando em "Hoje"
+- `rectSetaAnteriorAgendaClick`: `FDataAgenda - 1`
+- `rectSetaProximaAgendaClick`: `FDataAgenda + 1` (bloqueado em Hoje)
+- `AtualizarKPIs` e `CarregarLinhaTempo`: `CURRENT_DATE` substituído por `:DATA` com `FDataAgenda` como parâmetro
+- `lblSubLinhaTempo` dinâmico: "N Agendamento(s) em Hoje/dd/mm"
+- `scrollLinhaTempo` `Margins.Top`: 60 → 100 (evita sobreposição com o header de navegação)
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
