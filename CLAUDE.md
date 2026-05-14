@@ -223,6 +223,26 @@ BarberManager/
 - `CarregarLinhaTempo`: SQL dinâmico — filtro `CONTAINING` por `NOME_COMPLETO` do cliente ou `NOME` do serviço inserido antes do `ORDER BY` quando `edtBuscaAdmin.Text <> ''`
 - Parâmetros `:DATA` e `:BUSCA` definidos após construção completa do SQL, antes de `Open`
 
+**Gráfico de Faturamento Semanal — dinâmico**
+- `AtualizarGraficoSemanal`: calcula Segunda/Domingo da semana de `FDataAgenda` usando `(DayOfWeek+5) mod 7`
+- Query agrupada por `DT_AGENDAMENTO` com `SUM(VALOR_COBRADO WHERE STATUS='CONCLUIDO')` para os 7 dias
+- Campo `DT_AGENDAMENTO` é `TDateTimeField` no FireDAC — usar `.AsDateTime` + `Trunc()` para obter `TDate` (`.AsDate` não existe)
+- Barras normalizadas entre `AlturaMinima=4` e `AlturaMaxima=120` proporcionalmente ao `MaxFat`
+- `lblTotalGrafico` actualizado com total da semana; `StyledSettings := []` antes do texto
+- Chamado em `FormShow`, `rectSetaAnteriorAgendaClick`, `rectSetaProximaAgendaClick`
+
+**Relatório Semanal**
+- `lblLinkGrafico`: `HitTest = True` + `OnClick = lblLinkGraficoClick` adicionados no `.fmx`
+- `rectOverlayRelatorio`: overlay `Align=Contents`, `Fill=$FF0B1220`, `Visible=False` — após `rectOverlayNotifDash` dentro de `rectFundoDashboard`
+- `lytHeaderRelatorio` (Align=Top, 70px) com `rectBtnVoltarRel` (botão `<`, `OnClick=rectBtnVoltarRelClick`) e `lblTituloRelatorio` (bold 20px, Align=Client)
+- `scrollRelatorio`: `TVertScrollBox` `Align=Client` com margens 30px laterais
+- `CarregarRelatorioSemanal`: query expandida com `COUNT(*)`, `CONCLUIDOS`, `CANCELADOS`, `FATURAMENTO` por dia; actualiza `lblTituloRelatorio` com período "dd/mm a dd/mm/yyyy"
+- Tabela dinâmica `Tag=83` com cabeçalho (`$FF0F172A`), linhas alternadas (par=`$FF1E293B`, ímpar=`$FF141C2B`, 50px) e rodapé bold (`$FF0B1220`) com totais
+- Colunas: Dia (branco) | Agend. (branco) | Concluídos (`$FF22C55E`) | Faturamento (`$FFF58A00`)
+- `DiaSemanaAbrevDash`: função local com `const array[1..7]` indexado por `DayOfWeek` (1=Dom..7=Sáb)
+- `lblLinkGraficoClick` → `CarregarRelatorioSemanal` + overlay visible + `BringToFront`
+- `rectBtnVoltarRelClick` → overlay invisible
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -239,7 +259,8 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Frame Serviços — CRUD dinâmico completo**:
+1. **Frame Serviços — CRUD dinâmico completo**
+   (PRÓXIMO — módulo Início do Dashboard concluído):
    - Carregar TB_SERVICOS dinamicamente
    - Filtros, toggle, busca, KPIs reais
    - Botão Novo Serviço (INSERT)
@@ -330,6 +351,7 @@ BarberManager/
 | 86  | Cards de avaliação (reservado para tela de feedback) |
 | 85  | Cards de agendamento no Carrinho (TRectangle dentro de scrollCarrinho) |
 | 84  | Cards de avaliação no popup do Admin (TRectangle dentro de scrollNotifDash) |
+| 83  | Linhas do Relatório Semanal (TRectangle dentro de scrollRelatorio) |
 
 ---
 

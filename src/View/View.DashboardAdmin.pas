@@ -248,6 +248,12 @@ type
     lblTituloNotifDash: TLabel;
     lblFecharNotifDash: TLabel;
     scrollNotifDash: TVertScrollBox;
+    rectOverlayRelatorio: TRectangle;
+    lytHeaderRelatorio: TLayout;
+    rectBtnVoltarRel: TRectangle;
+    lblBtnVoltarRel: TLabel;
+    lblTituloRelatorio: TLabel;
+    scrollRelatorio: TVertScrollBox;
     procedure rectMenuServicosClick(Sender: TObject);
     procedure rectMenuInicioClick(Sender: TObject);
     procedure rectMenuSairClick(Sender: TObject);
@@ -258,6 +264,8 @@ type
     procedure circleSinoClick(Sender: TObject);
     procedure lblFecharNotifDashClick(Sender: TObject);
     procedure edtBuscaAdminChange(Sender: TObject);
+    procedure rectBtnVoltarRelClick(Sender: TObject);
+    procedure lblLinkGraficoClick(Sender: TObject);
   private
     FDataAgenda: TDate;
     procedure AtualizarKPIs;
@@ -266,6 +274,8 @@ type
     procedure AtualizarDataAgenda;
     procedure CarregarIconesSetas;
     procedure CarregarNotificacoesDash;
+    procedure AtualizarGraficoSemanal;
+    procedure CarregarRelatorioSemanal;
   public
     { Public declarations }
   end;
@@ -291,6 +301,7 @@ begin
   AtualizarDataAgenda;
   AtualizarKPIs;
   CarregarLinhaTempo;
+  AtualizarGraficoSemanal;
 end;
 
 procedure TFrmDashboardAdmin.AtualizarKPIs;
@@ -773,6 +784,7 @@ begin
   AtualizarDataAgenda;
   AtualizarKPIs;
   CarregarLinhaTempo;
+  AtualizarGraficoSemanal;
 end;
 
 procedure TFrmDashboardAdmin.rectSetaProximaAgendaClick(Sender: TObject);
@@ -782,6 +794,7 @@ begin
   AtualizarDataAgenda;
   AtualizarKPIs;
   CarregarLinhaTempo;
+  AtualizarGraficoSemanal;
 end;
 
 procedure TFrmDashboardAdmin.edtBuscaAdminChange(Sender: TObject);
@@ -927,6 +940,324 @@ end;
 procedure TFrmDashboardAdmin.lblFecharNotifDashClick(Sender: TObject);
 begin
   rectOverlayNotifDash.Visible := False;
+end;
+
+procedure TFrmDashboardAdmin.AtualizarGraficoSemanal;
+var
+  Query: TFDQuery;
+  Fats: array[0..6] of Currency;
+  Barras: array[0..6] of TRectangle;
+  Segunda, Domingo: TDate;
+  DiasDesdeSegunda, DiaSemana, Idx, I: Integer;
+  MaxFat, TotalSemana: Currency;
+  Altura, AlturaMaxima, AlturaMinima: Single;
+begin
+  DiasDesdeSegunda := (DayOfWeek(FDataAgenda) + 5) mod 7;
+  Segunda := FDataAgenda - DiasDesdeSegunda;
+  Domingo := Segunda + 6;
+
+  for I := 0 to 6 do
+    Fats[I] := 0;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT DT_AGENDAMENTO, ' +
+      '  SUM(CASE WHEN STATUS = ''CONCLUIDO'' THEN VALOR_COBRADO ELSE 0 END) AS FATURAMENTO ' +
+      'FROM TB_AGENDAMENTOS ' +
+      'WHERE DT_AGENDAMENTO >= :SEGUNDA ' +
+      '  AND DT_AGENDAMENTO <= :DOMINGO ' +
+      'GROUP BY DT_AGENDAMENTO ' +
+      'ORDER BY DT_AGENDAMENTO';
+    Query.ParamByName('SEGUNDA').AsDate := Segunda;
+    Query.ParamByName('DOMINGO').AsDate := Domingo;
+    Query.Open;
+
+    while not Query.EOF do
+    begin
+      DiaSemana := DayOfWeek(Trunc(Query.FieldByName('DT_AGENDAMENTO').AsDateTime));
+      Idx := (DiaSemana + 5) mod 7;
+      Fats[Idx] := Query.FieldByName('FATURAMENTO').AsCurrency;
+      Query.Next;
+    end;
+  finally
+    Query.Free;
+  end;
+
+  MaxFat := 0;
+  for I := 0 to 6 do
+    if Fats[I] > MaxFat then
+      MaxFat := Fats[I];
+
+  Barras[0] := rectBarraSeg;
+  Barras[1] := rectBarraTer;
+  Barras[2] := rectBarraQuar;
+  Barras[3] := rectBarraQui;
+  Barras[4] := rectBarraSex;
+  Barras[5] := rectBarraSab;
+  Barras[6] := rectBarraDom;
+
+  AlturaMaxima := 120.0;
+  AlturaMinima := 4.0;
+
+  for I := 0 to 6 do
+  begin
+    if MaxFat > 0 then
+      Altura := AlturaMinima + (Fats[I] / MaxFat) * (AlturaMaxima - AlturaMinima)
+    else
+      Altura := AlturaMinima;
+    Barras[I].Height := Altura;
+  end;
+
+  TotalSemana := 0;
+  for I := 0 to 6 do
+    TotalSemana := TotalSemana + Fats[I];
+  lblTotalGrafico.StyledSettings := [];
+  lblTotalGrafico.Text := 'Total na Semana: R$' + FormatFloat('#,##0.00', TotalSemana);
+end;
+
+procedure TFrmDashboardAdmin.lblLinkGraficoClick(Sender: TObject);
+begin
+  CarregarRelatorioSemanal;
+  rectOverlayRelatorio.Visible := True;
+  rectOverlayRelatorio.BringToFront;
+end;
+
+procedure TFrmDashboardAdmin.rectBtnVoltarRelClick(Sender: TObject);
+begin
+  rectOverlayRelatorio.Visible := False;
+end;
+
+procedure TFrmDashboardAdmin.CarregarRelatorioSemanal;
+
+  function DiaSemanaAbrevDash(DW: Integer): string;
+  const
+    Dias: array[1..7] of string = ('Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb');
+  begin
+    Result := Dias[DW];
+  end;
+
+var
+  Query: TFDQuery;
+  Segunda, Domingo: TDate;
+  DiasDesdeSegunda, J, CardCount: Integer;
+  TotalAgend, TotalConc, SumAgend, SumConc: Integer;
+  TotalFat, SumFat: Currency;
+  LinhaFundo: TAlphaColor;
+  Rect: TRectangle;
+  Lbl: TLabel;
+  Data: TDate;
+  YPos, CardW: Single;
+begin
+  for J := scrollRelatorio.Content.ControlsCount - 1 downto 0 do
+    if scrollRelatorio.Content.Controls[J].Tag = 83 then
+      scrollRelatorio.Content.Controls[J].Free;
+
+  DiasDesdeSegunda := (DayOfWeek(FDataAgenda) + 5) mod 7;
+  Segunda := FDataAgenda - DiasDesdeSegunda;
+  Domingo := Segunda + 6;
+
+  lblTituloRelatorio.StyledSettings := [];
+  lblTituloRelatorio.Text := 'Relatório Semanal  ' +
+    FormatDateTime('dd/mm', Segunda) + ' a ' +
+    FormatDateTime('dd/mm/yyyy', Domingo);
+
+  CardW := scrollRelatorio.Width - 20;
+  YPos := 10;
+
+  Rect := TRectangle.Create(scrollRelatorio);
+  Rect.Parent := scrollRelatorio;
+  Rect.Tag := 83;
+  Rect.Fill.Color := $FF0F172A;
+  Rect.Stroke.Kind := TBrushKind.None;
+  Rect.XRadius := 8;
+  Rect.YRadius := 8;
+  Rect.Height := 40;
+  Rect.Width := CardW;
+  Rect.Position.X := 10;
+  Rect.Position.Y := YPos;
+  Rect.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 10; Lbl.Position.Y := 10;
+  Lbl.Width := 100; Lbl.Height := 20;
+  Lbl.Text := 'Dia';
+  Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 12;
+  Lbl.TextSettings.FontColor := $FF94A3B8; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 120; Lbl.Position.Y := 10;
+  Lbl.Width := 90; Lbl.Height := 20;
+  Lbl.Text := 'Agend.';
+  Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 12;
+  Lbl.TextSettings.FontColor := $FF94A3B8; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 220; Lbl.Position.Y := 10;
+  Lbl.Width := 70; Lbl.Height := 20;
+  Lbl.Text := 'Concluídos';
+  Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 12;
+  Lbl.TextSettings.FontColor := $FF94A3B8; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 300; Lbl.Position.Y := 10;
+  Lbl.Width := CardW - 310; Lbl.Height := 20;
+  Lbl.Text := 'Faturamento';
+  Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 12;
+  Lbl.TextSettings.FontColor := $FF94A3B8; Lbl.HitTest := False;
+
+  YPos := YPos + 44;
+  TotalAgend := 0;
+  TotalConc := 0;
+  TotalFat := 0;
+  CardCount := 0;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT DT_AGENDAMENTO, ' +
+      '  COUNT(*) AS TOTAL, ' +
+      '  SUM(CASE WHEN STATUS = ''CONCLUIDO'' THEN 1 ELSE 0 END) AS CONCLUIDOS, ' +
+      '  SUM(CASE WHEN STATUS = ''CANCELADO'' THEN 1 ELSE 0 END) AS CANCELADOS, ' +
+      '  SUM(CASE WHEN STATUS = ''CONCLUIDO'' THEN VALOR_COBRADO ELSE 0 END) AS FATURAMENTO ' +
+      'FROM TB_AGENDAMENTOS ' +
+      'WHERE DT_AGENDAMENTO >= :SEGUNDA ' +
+      '  AND DT_AGENDAMENTO <= :DOMINGO ' +
+      'GROUP BY DT_AGENDAMENTO ' +
+      'ORDER BY DT_AGENDAMENTO';
+    Query.ParamByName('SEGUNDA').AsDate := Segunda;
+    Query.ParamByName('DOMINGO').AsDate := Domingo;
+    Query.Open;
+
+    while not Query.EOF do
+    begin
+      Data := Trunc(Query.FieldByName('DT_AGENDAMENTO').AsDateTime);
+      SumAgend := Query.FieldByName('TOTAL').AsInteger;
+      SumConc := Query.FieldByName('CONCLUIDOS').AsInteger;
+      SumFat := Query.FieldByName('FATURAMENTO').AsCurrency;
+
+      Inc(TotalAgend, SumAgend);
+      Inc(TotalConc, SumConc);
+      TotalFat := TotalFat + SumFat;
+
+      if CardCount mod 2 = 0 then
+        LinhaFundo := $FF1E293B
+      else
+        LinhaFundo := $FF141C2B;
+
+      Rect := TRectangle.Create(scrollRelatorio);
+      Rect.Parent := scrollRelatorio;
+      Rect.Tag := 83;
+      Rect.Fill.Color := LinhaFundo;
+      Rect.Stroke.Kind := TBrushKind.None;
+      Rect.Height := 50;
+      Rect.Width := CardW;
+      Rect.Position.X := 10;
+      Rect.Position.Y := YPos;
+      Rect.HitTest := False;
+
+      Lbl := TLabel.Create(Rect);
+      Lbl.Parent := Rect;
+      Lbl.Position.X := 10; Lbl.Position.Y := 15;
+      Lbl.Width := 100;
+      Lbl.Text := DiaSemanaAbrevDash(DayOfWeek(Data)) + ' ' +
+        FormatDateTime('dd/mm', Data);
+      Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 13;
+      Lbl.TextSettings.FontColor := $FFFFFFFF; Lbl.HitTest := False;
+
+      Lbl := TLabel.Create(Rect);
+      Lbl.Parent := Rect;
+      Lbl.Position.X := 120; Lbl.Position.Y := 15;
+      Lbl.Width := 80;
+      Lbl.Text := IntToStr(SumAgend);
+      Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 13;
+      Lbl.TextSettings.FontColor := $FFFFFFFF; Lbl.HitTest := False;
+
+      Lbl := TLabel.Create(Rect);
+      Lbl.Parent := Rect;
+      Lbl.Position.X := 220; Lbl.Position.Y := 15;
+      Lbl.Width := 70;
+      Lbl.Text := IntToStr(SumConc);
+      Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 13;
+      Lbl.TextSettings.FontColor := $FF22C55E; Lbl.HitTest := False;
+
+      Lbl := TLabel.Create(Rect);
+      Lbl.Parent := Rect;
+      Lbl.Position.X := 300; Lbl.Position.Y := 15;
+      Lbl.Width := CardW - 310;
+      Lbl.Text := 'R$ ' + FormatFloat('#,##0.00', SumFat);
+      Lbl.StyledSettings := []; Lbl.TextSettings.Font.Size := 13;
+      Lbl.TextSettings.FontColor := $FFF58A00; Lbl.HitTest := False;
+
+      YPos := YPos + 52;
+      Inc(CardCount);
+      Query.Next;
+    end;
+  finally
+    Query.Free;
+  end;
+
+  YPos := YPos + 6;
+  Rect := TRectangle.Create(scrollRelatorio);
+  Rect.Parent := scrollRelatorio;
+  Rect.Tag := 83;
+  Rect.Fill.Color := $FF0B1220;
+  Rect.Stroke.Kind := TBrushKind.None;
+  Rect.XRadius := 8;
+  Rect.YRadius := 8;
+  Rect.Height := 50;
+  Rect.Width := CardW;
+  Rect.Position.X := 10;
+  Rect.Position.Y := YPos;
+  Rect.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 10; Lbl.Position.Y := 15;
+  Lbl.Width := 100;
+  Lbl.Text := 'TOTAL';
+  Lbl.StyledSettings := [];
+  Lbl.TextSettings.Font.Size := 13;
+  Lbl.TextSettings.Font.Style := [TFontStyle.fsBold];
+  Lbl.TextSettings.FontColor := $FFFFFFFF; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 120; Lbl.Position.Y := 15;
+  Lbl.Width := 80;
+  Lbl.Text := IntToStr(TotalAgend);
+  Lbl.StyledSettings := [];
+  Lbl.TextSettings.Font.Size := 13;
+  Lbl.TextSettings.Font.Style := [TFontStyle.fsBold];
+  Lbl.TextSettings.FontColor := $FFFFFFFF; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 220; Lbl.Position.Y := 15;
+  Lbl.Width := 70;
+  Lbl.Text := IntToStr(TotalConc);
+  Lbl.StyledSettings := [];
+  Lbl.TextSettings.Font.Size := 13;
+  Lbl.TextSettings.Font.Style := [TFontStyle.fsBold];
+  Lbl.TextSettings.FontColor := $FF22C55E; Lbl.HitTest := False;
+
+  Lbl := TLabel.Create(Rect);
+  Lbl.Parent := Rect;
+  Lbl.Position.X := 300; Lbl.Position.Y := 15;
+  Lbl.Width := CardW - 310;
+  Lbl.Text := 'R$ ' + FormatFloat('#,##0.00', TotalFat);
+  Lbl.StyledSettings := [];
+  Lbl.TextSettings.Font.Size := 13;
+  Lbl.TextSettings.Font.Style := [TFontStyle.fsBold];
+  Lbl.TextSettings.FontColor := $FFF58A00; Lbl.HitTest := False;
+
+  scrollRelatorio.Content.Height := YPos + 60;
 end;
 
 end.

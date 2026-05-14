@@ -886,7 +886,6 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
             Size.Height = 45.000000000000000000
             Size.PlatformDefault = False
             TextSettings.FontColor = xFFF58A00
-            Text = ''
             TabOrder = 1
           end
           object imgIconeMenuAgendaDash: TImage
@@ -4160,6 +4159,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                     'oon--notification.png'
                 end>
               Align = Client
+              HitTest = False
               Margins.Left = 10.000000000000000000
               Margins.Top = 10.000000000000000000
               Margins.Right = 10.000000000000000000
@@ -4167,7 +4167,6 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
               Size.Width = 25.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
-              HitTest = False
             end
           end
           object rectBuscaAdmin: TRectangle
@@ -7030,6 +7029,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                 object lblLinkGrafico: TLabel
                   Align = Right
                   StyledSettings = [Family, Size, Style]
+                  HitTest = True
                   Position.X = 220.000000000000000000
                   Size.Width = 120.000000000000000000
                   Size.Height = 30.000000000000000000
@@ -7037,6 +7037,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   TextSettings.FontColor = xFFF58A00
                   Text = 'Ver Relatorio >'
                   TabOrder = 1
+                  OnClick = lblLinkGraficoClick
                 end
               end
               object lytAreaBarras: TLayout
@@ -7335,7 +7336,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   object lblSubLinhaTempo: TLabel
                     Align = Top
                     StyledSettings = [Family, Size, Style]
-                    Position.Y = 19.000000000000000000
+                    Position.Y = 55.000000000000000000
                     Size.Width = 200.000000000000000000
                     Size.Height = 17.000000000000000000
                     Size.PlatformDefault = False
@@ -7346,6 +7347,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   object lytNavData: TLayout
                     Align = Top
                     Margins.Top = 4.000000000000000000
+                    Position.Y = 23.000000000000000000
                     Size.Width = 200.000000000000000000
                     Size.Height = 32.000000000000000000
                     Size.PlatformDefault = False
@@ -7360,16 +7362,22 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       YRadius = 6.000000000000000000
                       OnClick = rectSetaAnteriorAgendaClick
                       object imgSetaAnteriorAgenda: TImage
+                        MultiResBitmap = <
+                          item
+                          end>
                         Align = Client
                         HitTest = False
-                        WrapMode = Fit
+                        Size.Width = 32.000000000000000000
+                        Size.Height = 32.000000000000000000
+                        Size.PlatformDefault = False
                       end
                     end
                     object lblDataAgenda: TLabel
                       Align = Client
-                      HitTest = False
                       StyledSettings = []
-                      TextSettings.Font.Size = 12.000000000000000000
+                      Size.Width = 136.000000000000000000
+                      Size.Height = 32.000000000000000000
+                      Size.PlatformDefault = False
                       TextSettings.FontColor = xFFF58A00
                       TextSettings.HorzAlign = Center
                       Text = 'Hoje'
@@ -7377,6 +7385,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                     object rectSetaProximaAgenda: TRectangle
                       Align = Right
                       Fill.Color = xFF1E293B
+                      Position.X = 168.000000000000000000
                       Size.Width = 32.000000000000000000
                       Size.Height = 32.000000000000000000
                       Size.PlatformDefault = False
@@ -7385,9 +7394,14 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       YRadius = 6.000000000000000000
                       OnClick = rectSetaProximaAgendaClick
                       object imgSetaProximaAgenda: TImage
+                        MultiResBitmap = <
+                          item
+                          end>
                         Align = Client
                         HitTest = False
-                        WrapMode = Fit
+                        Size.Width = 32.000000000000000000
+                        Size.Height = 32.000000000000000000
+                        Size.PlatformDefault = False
                       end
                     end
                   end
@@ -7397,13 +7411,13 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                   Position.X = 270.000000000000000000
                   Position.Y = 10.000000000000000000
                   Size.Width = 300.000000000000000000
-                  Size.Height = 40.000000000000000000
+                  Size.Height = 72.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 1
                   object lytLegConcluido: TLayout
                     Align = Left
                     Size.Width = 90.000000000000000000
-                    Size.Height = 40.000000000000000000
+                    Size.Height = 72.000000000000000000
                     Size.PlatformDefault = False
                     TabOrder = 0
                     object circleLegConcluido: TCircle
@@ -7414,7 +7428,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Margins.Bottom = 6.000000000000000000
                       Position.Y = 6.000000000000000000
                       Size.Width = 8.000000000000000000
-                      Size.Height = 28.000000000000000000
+                      Size.Height = 60.000000000000000000
                       Size.PlatformDefault = False
                       Stroke.Kind = None
                     end
@@ -7422,7 +7436,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Align = Client
                       StyledSettings = [Family, Style]
                       Size.Width = 77.000000000000000000
-                      Size.Height = 40.000000000000000000
+                      Size.Height = 72.000000000000000000
                       Size.PlatformDefault = False
                       TextSettings.Font.Size = 11.000000000000000000
                       TextSettings.FontColor = xFF94A3B8
@@ -7434,7 +7448,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                     Align = Left
                     Position.X = 90.000000000000000000
                     Size.Width = 110.000000000000000000
-                    Size.Height = 40.000000000000000000
+                    Size.Height = 72.000000000000000000
                     Size.PlatformDefault = False
                     TabOrder = 1
                     object circleLegAgendamento: TCircle
@@ -7448,7 +7462,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Margins.Bottom = 6.000000000000000000
                       Position.Y = 6.000000000000000000
                       Size.Width = 8.000000000000000000
-                      Size.Height = 28.000000000000000000
+                      Size.Height = 60.000000000000000000
                       Size.PlatformDefault = False
                       Stroke.Kind = None
                     end
@@ -7456,7 +7470,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Align = Client
                       StyledSettings = [Family, Style]
                       Size.Width = 97.000000000000000000
-                      Size.Height = 40.000000000000000000
+                      Size.Height = 72.000000000000000000
                       Size.PlatformDefault = False
                       TextSettings.Font.Size = 11.000000000000000000
                       TextSettings.FontColor = xFF94A3B8
@@ -7468,7 +7482,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                     Align = Left
                     Position.X = 200.000000000000000000
                     Size.Width = 100.000000000000000000
-                    Size.Height = 40.000000000000000000
+                    Size.Height = 72.000000000000000000
                     Size.PlatformDefault = False
                     TabOrder = 2
                     object circleLegPendente: TCircle
@@ -7482,7 +7496,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Margins.Bottom = 6.000000000000000000
                       Position.Y = 6.000000000000000000
                       Size.Width = 8.000000000000000000
-                      Size.Height = 28.000000000000000000
+                      Size.Height = 60.000000000000000000
                       Size.PlatformDefault = False
                       Stroke.Kind = None
                     end
@@ -7490,7 +7504,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
                       Align = Client
                       StyledSettings = [Family, Style]
                       Size.Width = 87.000000000000000000
-                      Size.Height = 40.000000000000000000
+                      Size.Height = 72.000000000000000000
                       Size.PlatformDefault = False
                       TextSettings.Font.Size = 11.000000000000000000
                       TextSettings.FontColor = xFF94A3B8
@@ -7508,11 +7522,11 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
               Margins.Right = 20.000000000000000000
               Margins.Bottom = 20.000000000000000000
               Size.Width = 540.000000000000000000
-              Size.Height = 770.000000000000000000
+              Size.Height = 730.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
               Viewport.Width = 540.000000000000000000
-              Viewport.Height = 770.000000000000000000
+              Viewport.Height = 730.000000000000000000
               object lytCardAgendamento1: TLayout
                 Align = Top
                 Margins.Bottom = 15.000000000000000000
@@ -8099,7 +8113,6 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
       Size.Width = 50.000000000000000000
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
-      HitTest = True
       Visible = False
       object rectPainelNotifDash: TRectangle
         Fill.Color = xFF141C2B
@@ -8122,7 +8135,6 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           TextSettings.Font.StyleExt = {00070000000000000004000000}
           TextSettings.FontColor = claWhite
           Text = 'Avalia'#231#245'es Recentes'
-          HitTest = False
           TabOrder = 0
         end
         object lblFecharNotifDash: TLabel
@@ -8141,7 +8153,6 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           OnClick = lblFecharNotifDashClick
         end
         object scrollNotifDash: TVertScrollBox
-          Position.X = 0.000000000000000000
           Position.Y = 60.000000000000000000
           Size.Width = 360.000000000000000000
           Size.Height = 340.000000000000000000
@@ -8150,6 +8161,72 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Viewport.Width = 360.000000000000000000
           Viewport.Height = 340.000000000000000000
         end
+      end
+    end
+    object rectOverlayRelatorio: TRectangle
+      Align = Contents
+      Fill.Color = xFF0B1220
+      Size.Width = 50.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+      Visible = False
+      object lytHeaderRelatorio: TLayout
+        Align = Top
+        Margins.Left = 30.000000000000000000
+        Margins.Top = 16.000000000000000000
+        Margins.Right = 30.000000000000000000
+        Margins.Bottom = 8.000000000000000000
+        Position.X = 30.000000000000000000
+        Position.Y = 16.000000000000000000
+        Size.Width = 0.000000000000000000
+        Size.Height = 70.000000000000000000
+        Size.PlatformDefault = False
+        object rectBtnVoltarRel: TRectangle
+          Align = Left
+          Fill.Color = xFF1E293B
+          Size.Width = 44.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          XRadius = 8.000000000000000000
+          YRadius = 8.000000000000000000
+          OnClick = rectBtnVoltarRelClick
+          object lblBtnVoltarRel: TLabel
+            Align = Client
+            StyledSettings = []
+            Size.Width = 44.000000000000000000
+            Size.Height = 70.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.FontColor = claWhite
+            TextSettings.HorzAlign = Center
+            Text = '<'
+          end
+        end
+        object lblTituloRelatorio: TLabel
+          Align = Client
+          StyledSettings = []
+          Margins.Left = 16.000000000000000000
+          Size.Width = 0.000000000000000000
+          Size.Height = 70.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claWhite
+          Text = 'Relat'#243'rio Semanal'
+        end
+      end
+      object scrollRelatorio: TVertScrollBox
+        Align = Client
+        Margins.Left = 30.000000000000000000
+        Margins.Top = 8.000000000000000000
+        Margins.Right = 30.000000000000000000
+        Margins.Bottom = 20.000000000000000000
+        Size.Width = 0.000000000000000000
+        Size.Height = 0.000000000000000000
+        Size.PlatformDefault = False
+        Viewport.Width = 50.000000000000000000
+        Viewport.Height = 50.000000000000000000
       end
     end
   end
