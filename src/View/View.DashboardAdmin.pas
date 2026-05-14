@@ -243,6 +243,11 @@ type
     lblDataAgenda: TLabel;
     rectSetaProximaAgenda: TRectangle;
     imgSetaProximaAgenda: TImage;
+    rectOverlayNotifDash: TRectangle;
+    rectPainelNotifDash: TRectangle;
+    lblTituloNotifDash: TLabel;
+    lblFecharNotifDash: TLabel;
+    scrollNotifDash: TVertScrollBox;
     procedure rectMenuServicosClick(Sender: TObject);
     procedure rectMenuInicioClick(Sender: TObject);
     procedure rectMenuSairClick(Sender: TObject);
@@ -250,6 +255,9 @@ type
     procedure FormShow(Sender: TObject);
     procedure rectSetaAnteriorAgendaClick(Sender: TObject);
     procedure rectSetaProximaAgendaClick(Sender: TObject);
+    procedure circleSinoClick(Sender: TObject);
+    procedure lblFecharNotifDashClick(Sender: TObject);
+    procedure edtBuscaAdminChange(Sender: TObject);
   private
     FDataAgenda: TDate;
     procedure AtualizarKPIs;
@@ -257,6 +265,7 @@ type
     procedure AtualizarMenuLateral(const ItemAtivo: string);
     procedure AtualizarDataAgenda;
     procedure CarregarIconesSetas;
+    procedure CarregarNotificacoesDash;
   public
     { Public declarations }
   end;
@@ -287,6 +296,11 @@ end;
 procedure TFrmDashboardAdmin.AtualizarKPIs;
 var
   Query: TFDQuery;
+  Concluidos: Integer;
+  TicketMedio: Currency;
+  QOntem: TFDQuery;
+  FatOntem, FatHoje, Meta: Currency;
+  Crescimento, PctMeta: Double;
 begin
   Query := TFDQuery.Create(nil);
   try
@@ -334,6 +348,82 @@ begin
     lblSubLinhaTempo.Text :=
       IntToStr(Query.FieldByName('TOTAL').AsInteger) +
       ' Agendamento(s) em ' + SubTexto;
+
+    Concluidos := Query.FieldByName('CONCLUIDOS').AsInteger;
+
+    lblValConcluidos.StyledSettings := [];
+    lblValConcluidos.Text := IntToStr(Concluidos);
+
+    lblValorPendentes.StyledSettings := [];
+    lblValorPendentes.Text := IntToStr(Query.FieldByName('PENDENTES').AsInteger);
+
+    lblValorCancelamentos.StyledSettings := [];
+    lblValorCancelamentos.Text := IntToStr(Query.FieldByName('CANCELADOS').AsInteger);
+
+    if Concluidos > 0 then
+      TicketMedio := Query.FieldByName('FATURAMENTO').AsCurrency / Concluidos
+    else
+      TicketMedio := 0;
+    lblValTickets.StyledSettings := [];
+    lblValTickets.Text := 'R$ ' + FormatFloat('#,##0.00', TicketMedio);
+
+    lblValFaturamentoPrincipal.StyledSettings := [];
+    lblValFaturamentoPrincipal.Text := 'R$ ' +
+      FormatFloat('#,##0.00', Query.FieldByName('FATURAMENTO').AsCurrency);
+
+    lblBtnHojeResumo.StyledSettings := [];
+    if Trunc(FDataAgenda) = Trunc(Date) then
+      lblBtnHojeResumo.Text := 'Hoje'
+    else if Trunc(FDataAgenda) = Trunc(Date - 1) then
+      lblBtnHojeResumo.Text := 'Ontem'
+    else
+      lblBtnHojeResumo.Text := FormatDateTime('dd/mm', FDataAgenda);
+
+    FatHoje := Query.FieldByName('FATURAMENTO').AsCurrency;
+
+    QOntem := TFDQuery.Create(nil);
+    try
+      QOntem.Connection := dmConexao.FDConnection1;
+      QOntem.SQL.Text :=
+        'SELECT SUM(CASE WHEN STATUS = ''CONCLUIDO'' ' +
+        'THEN VALOR_COBRADO ELSE 0 END) AS FAT_ONTEM ' +
+        'FROM TB_AGENDAMENTOS ' +
+        'WHERE DT_AGENDAMENTO = :DATA';
+      QOntem.ParamByName('DATA').AsDate := FDataAgenda - 1;
+      QOntem.Open;
+      FatOntem := QOntem.Fields[0].AsCurrency;
+    finally
+      QOntem.Free;
+    end;
+
+    lblBadgeCrescimento.StyledSettings := [];
+    if FatOntem > 0 then
+    begin
+      Crescimento := ((FatHoje - FatOntem) / FatOntem) * 100;
+      if Crescimento >= 0 then
+        lblBadgeCrescimento.Text :=
+          '+' + FormatFloat('0.0', Crescimento) + '% vs. Dia Ant.'
+      else
+        lblBadgeCrescimento.Text :=
+          FormatFloat('0.0', Crescimento) + '% vs. Dia Ant.';
+    end
+    else if FatHoje > 0 then
+      lblBadgeCrescimento.Text := 'Novo faturamento'
+    else
+      lblBadgeCrescimento.Text := 'Sem faturamento';
+
+    Meta := 430.00;
+    lblSubFaturamentoMeta.StyledSettings := [];
+    if Meta > 0 then
+    begin
+      PctMeta := (FatHoje / Meta) * 100;
+      lblSubFaturamentoMeta.Text :=
+        FormatFloat('0', PctMeta) +
+        '% da meta diária (R$' +
+        FormatFloat('#,##0.00', Meta) + ')';
+    end
+    else
+      lblSubFaturamentoMeta.Text := 'Meta não definida';
   finally
     Query.Free;
   end;
@@ -347,7 +437,7 @@ var
   RectCorpo, RectBadge: TRectangle;
   LblHrInicio, LblHrFim, LblCliente, LblBarbeiro,
   LblServico, LblPreco, LblBadge: TLabel;
-  Status, TextoBadge: string;
+  Status, TextoBadge, Busca: string;
   CorFundo, CorBadge: TAlphaColor;
   CardWidth: Single;
 begin
@@ -376,9 +466,16 @@ begin
       'INNER JOIN TB_BARBEIROS B ON B.ID = A.BARBEIRO_ID ' +
       'INNER JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
       'INNER JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID ' +
-      'WHERE A.DT_AGENDAMENTO = :DATA ' +
-      'ORDER BY A.HR_INICIO';
+      'WHERE A.DT_AGENDAMENTO = :DATA';
+    Busca := Trim(edtBuscaAdmin.Text);
+    if Busca <> '' then
+      Query.SQL.Text := Query.SQL.Text +
+        ' AND (UPPER(U.NOME_COMPLETO) CONTAINING UPPER(:BUSCA)' +
+        ' OR UPPER(S.NOME) CONTAINING UPPER(:BUSCA))';
+    Query.SQL.Text := Query.SQL.Text + ' ORDER BY A.HR_INICIO';
     Query.ParamByName('DATA').AsDate := FDataAgenda;
+    if Busca <> '' then
+      Query.ParamByName('BUSCA').AsString := Busca;
     Query.Open;
 
     CardWidth := scrollLinhaTempo.Width - 16;
@@ -685,6 +782,151 @@ begin
   AtualizarDataAgenda;
   AtualizarKPIs;
   CarregarLinhaTempo;
+end;
+
+procedure TFrmDashboardAdmin.edtBuscaAdminChange(Sender: TObject);
+begin
+  CarregarLinhaTempo;
+end;
+
+procedure TFrmDashboardAdmin.CarregarNotificacoesDash;
+var
+  Query: TFDQuery;
+  Card: TRectangle;
+  LblEstrelas, LblCliente, LblBarbeiro,
+  LblComentario, LblData: TLabel;
+  CardCount: Integer;
+  Nota: Integer;
+  Estrelas: string;
+  J: Integer;
+begin
+  for J := scrollNotifDash.Content.ControlsCount - 1 downto 0 do
+    if scrollNotifDash.Content.Controls[J].Tag = 84 then
+      scrollNotifDash.Content.Controls[J].Free;
+
+  CardCount := 0;
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
+      '       UC.NOME_COMPLETO AS CLIENTE, ' +
+      '       UB.NOME_COMPLETO AS BARBEIRO ' +
+      'FROM TB_AVALIACOES AV ' +
+      'JOIN TB_USUARIOS UC ON UC.ID = AV.CLIENTE_ID ' +
+      'JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
+      'JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
+      'ORDER BY AV.DT_AVALIACAO DESC ' +
+      'ROWS 20';
+    Query.Open;
+
+    while not Query.EOF do
+    begin
+      Nota := Query.FieldByName('NOTA').AsInteger;
+
+      Estrelas := '';
+      for J := 1 to Nota do
+        Estrelas := Estrelas + '★';
+      for J := Nota + 1 to 5 do
+        Estrelas := Estrelas + '☆';
+
+      Card := TRectangle.Create(scrollNotifDash);
+      Card.Parent := scrollNotifDash;
+      Card.Tag := 84;
+      Card.Fill.Color := $FF1E293B;
+      Card.Stroke.Kind := TBrushKind.None;
+      Card.XRadius := 12;
+      Card.YRadius := 12;
+      Card.Height := 110;
+      Card.Width := scrollNotifDash.Width - 20;
+      Card.Position.X := 10;
+      Card.Position.Y := 10 + CardCount * 120;
+      Card.HitTest := False;
+
+      LblEstrelas := TLabel.Create(Card);
+      LblEstrelas.Parent := Card;
+      LblEstrelas.Position.X := 12;
+      LblEstrelas.Position.Y := 8;
+      LblEstrelas.Width := Card.Width - 24;
+      LblEstrelas.Height := 20;
+      LblEstrelas.Text := Estrelas;
+      LblEstrelas.StyledSettings := [];
+      LblEstrelas.TextSettings.Font.Size := 14;
+      LblEstrelas.TextSettings.FontColor := $FFFBBF24;
+      LblEstrelas.HitTest := False;
+
+      LblCliente := TLabel.Create(Card);
+      LblCliente.Parent := Card;
+      LblCliente.Position.X := 12;
+      LblCliente.Position.Y := 30;
+      LblCliente.Width := Card.Width - 24;
+      LblCliente.Height := 18;
+      LblCliente.Text := Query.FieldByName('CLIENTE').AsString;
+      LblCliente.StyledSettings := [];
+      LblCliente.TextSettings.Font.Size := 13;
+      LblCliente.TextSettings.Font.Style := [TFontStyle.fsBold];
+      LblCliente.TextSettings.FontColor := $FFFFFFFF;
+      LblCliente.HitTest := False;
+
+      LblBarbeiro := TLabel.Create(Card);
+      LblBarbeiro.Parent := Card;
+      LblBarbeiro.Position.X := 12;
+      LblBarbeiro.Position.Y := 50;
+      LblBarbeiro.Width := Card.Width - 24;
+      LblBarbeiro.Height := 16;
+      LblBarbeiro.Text := 'para ' + Query.FieldByName('BARBEIRO').AsString;
+      LblBarbeiro.StyledSettings := [];
+      LblBarbeiro.TextSettings.Font.Size := 11;
+      LblBarbeiro.TextSettings.FontColor := $FF94A3B8;
+      LblBarbeiro.HitTest := False;
+
+      LblComentario := TLabel.Create(Card);
+      LblComentario.Parent := Card;
+      LblComentario.Position.X := 12;
+      LblComentario.Position.Y := 68;
+      LblComentario.Width := Card.Width - 100;
+      LblComentario.Height := 30;
+      LblComentario.Text := Query.FieldByName('COMENTARIO').AsString;
+      LblComentario.WordWrap := True;
+      LblComentario.StyledSettings := [];
+      LblComentario.TextSettings.Font.Size := 11;
+      LblComentario.TextSettings.FontColor := $FF94A3B8;
+      LblComentario.HitTest := False;
+
+      LblData := TLabel.Create(Card);
+      LblData.Parent := Card;
+      LblData.Position.X := Card.Width - 100;
+      LblData.Position.Y := 88;
+      LblData.Width := 88;
+      LblData.Height := 16;
+      LblData.Text := FormatDateTime('dd/mm/yyyy hh:nn',
+        Query.FieldByName('DT_AVALIACAO').AsDateTime);
+      LblData.StyledSettings := [];
+      LblData.TextSettings.Font.Size := 10;
+      LblData.TextSettings.FontColor := $FF64748B;
+      LblData.TextSettings.HorzAlign := TTextAlign.Trailing;
+      LblData.HitTest := False;
+
+      Inc(CardCount);
+      Query.Next;
+    end;
+
+    scrollNotifDash.Content.Height := 10 + CardCount * 120 + 10;
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrmDashboardAdmin.circleSinoClick(Sender: TObject);
+begin
+  CarregarNotificacoesDash;
+  rectOverlayNotifDash.Visible := True;
+  rectOverlayNotifDash.BringToFront;
+end;
+
+procedure TFrmDashboardAdmin.lblFecharNotifDashClick(Sender: TObject);
+begin
+  rectOverlayNotifDash.Visible := False;
 end;
 
 end.

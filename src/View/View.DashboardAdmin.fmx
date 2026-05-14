@@ -3818,6 +3818,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
             Size.Height = 90.000000000000000000
             Size.PlatformDefault = False
             Stroke.Color = xFF2E3B52
+            OnClick = circleSinoClick
             object imgIconeNotificacaoDash: TImage
               MultiResBitmap.Height = 512
               MultiResBitmap.Width = 512
@@ -4166,6 +4167,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
               Size.Width = 25.000000000000000000
               Size.Height = 70.000000000000000000
               Size.PlatformDefault = False
+              HitTest = False
             end
           end
           object rectBuscaAdmin: TRectangle
@@ -4197,6 +4199,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
               Size.PlatformDefault = False
               TextPrompt = 'Buscar Cliente...'
               StyledSettings = [Family, Size, Style]
+              OnChangeTracking = edtBuscaAdminChange
             end
             object imgIconeBuscaDash: TImage
               MultiResBitmap.Height = 512
@@ -8087,6 +8090,65 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
               end
             end
           end
+        end
+      end
+    end
+    object rectOverlayNotifDash: TRectangle
+      Align = Contents
+      Fill.Color = xCC000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      HitTest = True
+      Visible = False
+      object rectPainelNotifDash: TRectangle
+        Fill.Color = xFF141C2B
+        Position.X = 800.000000000000000000
+        Position.Y = 60.000000000000000000
+        Size.Width = 360.000000000000000000
+        Size.Height = 420.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Kind = None
+        XRadius = 16.000000000000000000
+        YRadius = 16.000000000000000000
+        object lblTituloNotifDash: TLabel
+          StyledSettings = []
+          Position.X = 20.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 280.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claWhite
+          Text = 'Avalia'#231#245'es Recentes'
+          HitTest = False
+          TabOrder = 0
+        end
+        object lblFecharNotifDash: TLabel
+          StyledSettings = []
+          HitTest = True
+          Position.X = 320.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 30.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.FontColor = claWhite
+          TextSettings.HorzAlign = Center
+          Text = 'X'
+          TabOrder = 1
+          OnClick = lblFecharNotifDashClick
+        end
+        object scrollNotifDash: TVertScrollBox
+          Position.X = 0.000000000000000000
+          Position.Y = 60.000000000000000000
+          Size.Width = 360.000000000000000000
+          Size.Height = 340.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Viewport.Width = 360.000000000000000000
+          Viewport.Height = 340.000000000000000000
         end
       end
     end

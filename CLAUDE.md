@@ -203,6 +203,26 @@ BarberManager/
 - `lblSubLinhaTempo` dinâmico: "N Agendamento(s) em Hoje/dd/mm"
 - `scrollLinhaTempo` `Margins.Top`: 60 → 100 (evita sobreposição com o header de navegação)
 
+**Resumo Financeiro — dados reais**
+- `lblValFaturamentoPrincipal`: FATURAMENTO da query principal, formato `#,##0.00`
+- `lblBtnHojeResumo`: "Hoje"/"Ontem"/dd/mm conforme `FDataAgenda`
+- `lblBadgeCrescimento`: comparação com dia anterior via segunda query (`QOntem`); mostra `±X.X% vs. Dia Ant.`
+- `lblSubFaturamentoMeta`: % da meta diária (meta fixa R$430); formato "X% da meta diária (R$430,00)"
+- `lblValConcluidos`, `lblValorPendentes`, `lblValTickets`, `lblValorCancelamentos`: preenchidos dinamicamente em `AtualizarKPIs` com dados reais da BD
+
+**Notificações do Admin**
+- `circleSino`: `OnClick = circleSinoClick` ligado no `.fmx`
+- `imgIconeNotificacaoDash`: `HitTest = False` (fix de cliques interceptados pelo filho)
+- `rectOverlayNotifDash`: overlay `Align=Contents` inserido como último filho de `rectFundoDashboard`
+- `CarregarNotificacoesDash`: query `TB_AVALIACOES JOIN TB_USUARIOS` (cliente) `JOIN TB_BARBEIROS JOIN TB_USUARIOS` (barbeiro) `ORDER BY DT_AVALIACAO DESC ROWS 20`
+- Cards `Tag=84` com estrelas ★☆, nome do cliente, "para " + barbeiro, comentário e data
+- `lblFecharNotifDashClick`: fecha overlay
+
+**Busca na Linha do Tempo**
+- `edtBuscaAdmin`: `OnChangeTracking = edtBuscaAdminChange` ligado no `.fmx`
+- `CarregarLinhaTempo`: SQL dinâmico — filtro `CONTAINING` por `NOME_COMPLETO` do cliente ou `NOME` do serviço inserido antes do `ORDER BY` quando `edtBuscaAdmin.Text <> ''`
+- Parâmetros `:DATA` e `:BUSCA` definidos após construção completa do SQL, antes de `Open`
+
 ### View.DashboardAdmin.pas — Dashboard do administrador:
 - Menu lateral com navegação: Início, Serviços, Sair
 - `FormShow`: define `lblDataDash` com data actual formatada em português
@@ -219,14 +239,15 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Tela Agenda do Dashboard** (próximo passo):
-   - Carregar agendamentos do dia em linha do tempo
-   - Filtros por barbeiro e status
-   - Acções: confirmar, cancelar agendamento
+1. **Frame Serviços — CRUD dinâmico completo**:
+   - Carregar TB_SERVICOS dinamicamente
+   - Filtros, toggle, busca, KPIs reais
+   - Botão Novo Serviço (INSERT)
+   - Editar (UPDATE), eliminar (DELETE), toggle ativo
 
 2. **Tela Clientes do Dashboard**:
    - Lista de clientes com busca
-   - Ver histórico de agendamentos por cliente
+   - Histórico de agendamentos por cliente
 
 3. **Tela Financeiro do Dashboard**:
    - KPIs financeiros detalhados
@@ -236,12 +257,7 @@ BarberManager/
    - Gestão de barbeiros
    - Configurações gerais
 
-5. **Frame Serviços — CRUD dinâmico completo**:
-   - Botão Novo Serviço funcional (INSERT)
-   - Editar (UPDATE), eliminar (DELETE)
-   - Toggle ativo/inativo
-
-6. **Deploy com D2Bridge**
+5. **Deploy com D2Bridge**
 
 ---
 
@@ -313,6 +329,7 @@ BarberManager/
 | 87  | Componentes do popup de perfil (reservado para futuro uso dinâmico) |
 | 86  | Cards de avaliação (reservado para tela de feedback) |
 | 85  | Cards de agendamento no Carrinho (TRectangle dentro de scrollCarrinho) |
+| 84  | Cards de avaliação no popup do Admin (TRectangle dentro de scrollNotifDash) |
 
 ---
 
