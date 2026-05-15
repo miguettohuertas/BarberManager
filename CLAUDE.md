@@ -252,31 +252,35 @@ BarberManager/
 - `rectMenuSairClick`: chama `FrmPrincipal.LimparSessao` + volta a `FrmPrincipal.TabLogin`
 
 ### View.Frame.Servicos.pas
-- Visual completo: KPIs de serviços, filtros, toggle Todos/Ativos/Inativos, tabela com 3 linhas estáticas
-- **Sem lógica implementada** — dados todos estáticos/hardcoded
+- Visual completo: KPIs de serviços, filtros, toggle Todos/Ativos/Inativos, tabela dinâmica
+
+**Frame Serviços — dinâmico (parcial)**
+- 3 rectRowServico* estáticos removidos do .fmx (2066 linhas eliminadas)
+- 63 declarações published removidas do .pas
+- AfterConstruction: inicializa filtros e chama AtualizarKPIs + CarregarServicos
+- AtualizarKPIs: Total, Ativos, Inativos, Receita Total preenchidos via query; subtítulo dinâmico
+- CarregarServicos: SQL dinâmico com filtros condicionais por categoria (CONTAINING), status (ATIVO/INATIVO) e busca; linhas Tag=82 com Align=Top; 11 elementos por linha
+- AtualizarFiltros / AtualizarToggle: helpers locais SetFiltro/SetToggle com visual laranja/neutro
+- 8 eventos ligados no .fmx: 4 filtros categoria, 3 toggles, 1 busca OnChangeTracking
+- PENDENTE: INSERT, UPDATE, DELETE, toggle por linha
 
 ---
 
 ## Próximos Passos Pendentes
 
-1. **Frame Serviços — CRUD dinâmico completo**
-   (PRÓXIMO — módulo Início do Dashboard concluído):
-   - Carregar TB_SERVICOS dinamicamente
-   - Filtros, toggle, busca, KPIs reais
-   - Botão Novo Serviço (INSERT)
-   - Editar (UPDATE), eliminar (DELETE), toggle ativo
+1. **Frame Serviços — CRUD completo** (em progresso):
+   - CarregarServicos, AtualizarKPIs implementados
+   - Filtros categoria e toggle Ativos/Inativos funcionais
+   - Busca com CONTAINING implementada
+   - PENDENTE: botão Novo Serviço (INSERT)
+   - PENDENTE: acções editar (UPDATE) e eliminar (DELETE)
+   - PENDENTE: toggle ativo/inativo por linha
 
-2. **Tela Clientes do Dashboard**:
-   - Lista de clientes com busca
-   - Histórico de agendamentos por cliente
+2. **Tela Clientes do Dashboard**
 
-3. **Tela Financeiro do Dashboard**:
-   - KPIs financeiros detalhados
-   - Gráfico de receita por período
+3. **Tela Financeiro do Dashboard**
 
-4. **Tela Configurações do Dashboard**:
-   - Gestão de barbeiros
-   - Configurações gerais
+4. **Tela Configurações do Dashboard**
 
 5. **Deploy com D2Bridge**
 
@@ -352,6 +356,7 @@ BarberManager/
 | 85  | Cards de agendamento no Carrinho (TRectangle dentro de scrollCarrinho) |
 | 84  | Cards de avaliação no popup do Admin (TRectangle dentro de scrollNotifDash) |
 | 83  | Linhas do Relatório Semanal (TRectangle dentro de scrollRelatorio) |
+| 82  | Linhas dinâmicas do Frame Serviços (TRectangle dentro de scrollListaServicos) |
 
 ---
 
