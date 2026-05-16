@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit, FMX.ListBox;
+  FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit, FMX.ListBox,
+  FMX.ScrollBox;
 
 type
   TFrameServicos = class(TFrame)
@@ -106,6 +107,9 @@ type
     FBusca: string;
     FEditServicoID: Integer;
     FOverlayEdicao: TRectangle;
+    FOverlayNotif: TRectangle;
+    FScrollNotif: TVertScrollBox;
+    FModalLblTitulo: TLabel;
     FEdtNome: TEdit;
     FEdtDescricao: TEdit;
     FEdtPreco: TEdit;
@@ -119,8 +123,13 @@ type
     function GetIDFromRow(Row: TFMXObject): Integer;
     procedure CriarModalEdicao;
     procedure AbrirModalEdicao(AID: Integer);
+    procedure NovoServicoClick(Sender: TObject);
     procedure FecharModalEdicaoClick(Sender: TObject);
     procedure SalvarEdicaoClick(Sender: TObject);
+    procedure CriarOverlayNotificacoes;
+    procedure CarregarNotificacoesAdmin;
+    procedure SinoServicosClick(Sender: TObject);
+    procedure FecharNotifServicoClick(Sender: TObject);
   public
     procedure AfterConstruction; override;
   end;
@@ -139,6 +148,8 @@ begin
   FFiltroCategoria := '';
   FFiltroStatus := '';
   FBusca := '';
+  rectBtnNovoServico.OnClick := NovoServicoClick;
+  circleSinoServicos.OnClick := SinoServicosClick;
   AtualizarKPIs;
   CarregarServicos;
 end;
@@ -689,7 +700,7 @@ procedure TFrameServicos.CriarModalEdicao;
 var
   LytCenter: TLayout;
   PainelEdicao: TRectangle;
-  LblTitulo, LblFechar: TLabel;
+  LblFechar: TLabel;
   Sep1, Sep2: TRectangle;
   LblNome, LblDesc, LblPreco, LblDur, LblBadge, LblCat: TLabel;
   BtnCancelar, BtnSalvar: TRectangle;
@@ -719,18 +730,18 @@ begin
   PainelEdicao.Stroke.Color := $FF2E3B52;
   PainelEdicao.HitTest := True;
 
-  LblTitulo := TLabel.Create(PainelEdicao);
-  LblTitulo.Parent := PainelEdicao;
-  LblTitulo.Position.X := 20;
-  LblTitulo.Position.Y := 18;
-  LblTitulo.Width := 380;
-  LblTitulo.Height := 28;
-  LblTitulo.StyledSettings := [];
-  LblTitulo.TextSettings.FontColor := $FFFFFFFF;
-  LblTitulo.TextSettings.Font.Size := 18;
-  LblTitulo.TextSettings.Font.Style := [TFontStyle.fsBold];
-  LblTitulo.Text := 'Editar Servi'#231'o';
-  LblTitulo.HitTest := False;
+  FModalLblTitulo := TLabel.Create(PainelEdicao);
+  FModalLblTitulo.Parent := PainelEdicao;
+  FModalLblTitulo.Position.X := 20;
+  FModalLblTitulo.Position.Y := 18;
+  FModalLblTitulo.Width := 380;
+  FModalLblTitulo.Height := 28;
+  FModalLblTitulo.StyledSettings := [];
+  FModalLblTitulo.TextSettings.FontColor := $FFFFFFFF;
+  FModalLblTitulo.TextSettings.Font.Size := 18;
+  FModalLblTitulo.TextSettings.Font.Style := [TFontStyle.fsBold];
+  FModalLblTitulo.Text := 'Editar Servi'#231'o';
+  FModalLblTitulo.HitTest := False;
 
   LblFechar := TLabel.Create(PainelEdicao);
   LblFechar.Parent := PainelEdicao;
@@ -984,6 +995,7 @@ begin
     Query.Free;
   end;
 
+  FModalLblTitulo.Text := 'Editar Servi'#231'o';
   FOverlayEdicao.Visible := True;
   FOverlayEdicao.BringToFront;
 end;
@@ -1060,22 +1072,30 @@ begin
   Q := TFDQuery.Create(nil);
   try
     Q.Connection := dmConexao.FDConnection1;
-    Q.SQL.Text :=
-      'UPDATE TB_SERVICOS SET' +
-      ' NOME        = :NOME,' +
-      ' DESCRICAO   = :DESCRICAO,' +
-      ' PRECO       = :PRECO,' +
-      ' DURACAO_MIN = :DURACAO,' +
-      ' CATEGORIA_ID = :CATEGORIA_ID,' +
-      ' BADGE       = :BADGE' +
-      ' WHERE ID = :ID';
-    Q.ParamByName('NOME').AsString        := Nome;
-    Q.ParamByName('DESCRICAO').AsString   := Desc;
-    Q.ParamByName('PRECO').AsFloat        := Preco;
-    Q.ParamByName('DURACAO').AsInteger    := Duracao;
+    if FEditServicoID = 0 then
+      Q.SQL.Text :=
+        'INSERT INTO TB_SERVICOS' +
+        ' (NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA_ID, BADGE, ATIVO)' +
+        ' VALUES (:NOME, :DESCRICAO, :PRECO, :DURACAO, :CATEGORIA_ID, :BADGE, 1)'
+    else
+    begin
+      Q.SQL.Text :=
+        'UPDATE TB_SERVICOS SET' +
+        ' NOME        = :NOME,' +
+        ' DESCRICAO   = :DESCRICAO,' +
+        ' PRECO       = :PRECO,' +
+        ' DURACAO_MIN = :DURACAO,' +
+        ' CATEGORIA_ID = :CATEGORIA_ID,' +
+        ' BADGE       = :BADGE' +
+        ' WHERE ID = :ID';
+      Q.ParamByName('ID').AsInteger := FEditServicoID;
+    end;
+    Q.ParamByName('NOME').AsString          := Nome;
+    Q.ParamByName('DESCRICAO').AsString     := Desc;
+    Q.ParamByName('PRECO').AsFloat          := Preco;
+    Q.ParamByName('DURACAO').AsInteger      := Duracao;
     Q.ParamByName('CATEGORIA_ID').AsInteger := CatID;
-    Q.ParamByName('BADGE').AsString       := Badge;
-    Q.ParamByName('ID').AsInteger         := FEditServicoID;
+    Q.ParamByName('BADGE').AsString         := Badge;
     Q.ExecSQL;
   finally
     Q.Free;
@@ -1084,6 +1104,254 @@ begin
   FOverlayEdicao.Visible := False;
   AtualizarKPIs;
   CarregarServicos;
+end;
+
+procedure TFrameServicos.NovoServicoClick(Sender: TObject);
+begin
+  if FOverlayEdicao = nil then
+    CriarModalEdicao;
+  FEditServicoID := 0;
+  FEdtNome.Text      := '';
+  FEdtDescricao.Text := '';
+  FEdtPreco.Text     := '';
+  FEdtDuracao.Text   := '';
+  FEdtBadge.Text     := '';
+  FCboCategoria.ItemIndex := 0;
+  FModalLblTitulo.Text := 'Novo Servi'#231'o';
+  FOverlayEdicao.Visible := True;
+  FOverlayEdicao.BringToFront;
+end;
+
+procedure TFrameServicos.CriarOverlayNotificacoes;
+var
+  Painel: TRectangle;
+  LblTitulo, LblFechar: TLabel;
+  Sep: TRectangle;
+begin
+  FOverlayNotif := TRectangle.Create(Self);
+  FOverlayNotif.Parent := Self;
+  FOverlayNotif.Align := TAlignLayout.Contents;
+  FOverlayNotif.Fill.Color := $CC000000;
+  FOverlayNotif.Stroke.Kind := TBrushKind.None;
+  FOverlayNotif.HitTest := True;
+  FOverlayNotif.Visible := False;
+
+  Painel := TRectangle.Create(FOverlayNotif);
+  Painel.Parent := FOverlayNotif;
+  Painel.Align := TAlignLayout.None;
+  Painel.Width := 380;
+  Painel.Height := 440;
+  Painel.Position.X := (Self.Width - 380) / 2;
+  Painel.Position.Y := 60;
+  Painel.Fill.Color := $FF141C2B;
+  Painel.XRadius := 16;
+  Painel.YRadius := 16;
+  Painel.Stroke.Kind := TBrushKind.Solid;
+  Painel.Stroke.Color := $FF2E3B52;
+  Painel.HitTest := True;
+
+  LblTitulo := TLabel.Create(Painel);
+  LblTitulo.Parent := Painel;
+  LblTitulo.Position.X := 20;
+  LblTitulo.Position.Y := 16;
+  LblTitulo.Width := 290;
+  LblTitulo.Height := 28;
+  LblTitulo.StyledSettings := [];
+  LblTitulo.TextSettings.FontColor := $FFFFFFFF;
+  LblTitulo.TextSettings.Font.Size := 16;
+  LblTitulo.TextSettings.Font.Style := [TFontStyle.fsBold];
+  LblTitulo.Text := 'Notifica'#231#245'es';
+  LblTitulo.HitTest := False;
+
+  LblFechar := TLabel.Create(Painel);
+  LblFechar.Parent := Painel;
+  LblFechar.Position.X := 336;
+  LblFechar.Position.Y := 12;
+  LblFechar.Width := 30;
+  LblFechar.Height := 30;
+  LblFechar.StyledSettings := [];
+  LblFechar.TextSettings.FontColor := $FF94A3B8;
+  LblFechar.TextSettings.Font.Size := 18;
+  LblFechar.TextSettings.HorzAlign := TTextAlign.Center;
+  LblFechar.TextSettings.VertAlign := TTextAlign.Center;
+  LblFechar.Text := #$2715;
+  LblFechar.HitTest := True;
+  LblFechar.OnClick := FecharNotifServicoClick;
+
+  Sep := TRectangle.Create(Painel);
+  Sep.Parent := Painel;
+  Sep.Position.X := 0;
+  Sep.Position.Y := 56;
+  Sep.Width := 380;
+  Sep.Height := 1;
+  Sep.Fill.Color := $FF1E293B;
+  Sep.Stroke.Kind := TBrushKind.None;
+  Sep.HitTest := False;
+
+  FScrollNotif := TVertScrollBox.Create(Painel);
+  FScrollNotif.Parent := Painel;
+  FScrollNotif.Align := TAlignLayout.Client;
+  FScrollNotif.Margins.Top := 57;
+  FScrollNotif.Margins.Left := 8;
+  FScrollNotif.Margins.Right := 8;
+  FScrollNotif.Margins.Bottom := 8;
+end;
+
+procedure TFrameServicos.CarregarNotificacoesAdmin;
+var
+  Query: TFDQuery;
+  I: Integer;
+  Card: TRectangle;
+  LblCliente, LblServico, LblDataHora: TLabel;
+  RectBadge: TRectangle;
+  LblStatus, LblVazio: TLabel;
+  Status, DataHora: string;
+  CorBadge: TAlphaColor;
+begin
+  for I := FScrollNotif.Content.ChildrenCount - 1 downto 0 do
+    if FScrollNotif.Content.Children[I].Tag = 88 then
+      FScrollNotif.Content.Children[I].Free;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT A.ID, A.STATUS, A.DT_AGENDAMENTO, A.HR_INICIO,' +
+      ' S.NOME AS SERVICO, U.NOME_COMPLETO AS CLIENTE' +
+      ' FROM TB_AGENDAMENTOS A' +
+      ' JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID' +
+      ' JOIN TB_USUARIOS U ON U.ID = A.CLIENTE_ID' +
+      ' ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO DESC' +
+      ' ROWS 15';
+    Query.Open;
+
+    if Query.EOF then
+    begin
+      LblVazio := TLabel.Create(FScrollNotif);
+      LblVazio.Parent := FScrollNotif;
+      LblVazio.Tag := 88;
+      LblVazio.Align := TAlignLayout.Client;
+      LblVazio.StyledSettings := [];
+      LblVazio.TextSettings.FontColor := $FF64748B;
+      LblVazio.TextSettings.Font.Size := 13;
+      LblVazio.TextSettings.HorzAlign := TTextAlign.Center;
+      LblVazio.TextSettings.VertAlign := TTextAlign.Center;
+      LblVazio.Text := 'Sem agendamentos recentes';
+      LblVazio.HitTest := False;
+      Exit;
+    end;
+
+    while not Query.EOF do
+    begin
+      Status := Query.FieldByName('STATUS').AsString;
+      DataHora :=
+        FormatDateTime('dd/mm/yyyy', Query.FieldByName('DT_AGENDAMENTO').AsDateTime) +
+        ' '#224's ' +
+        FormatDateTime('hh:nn', Query.FieldByName('HR_INICIO').AsDateTime);
+
+      if Status = 'CONCLUIDO' then
+        CorBadge := $FF22C55E
+      else if Status = 'CANCELADO' then
+        CorBadge := $FFEF4444
+      else if Status = 'EM_ANDAMENTO' then
+        CorBadge := $FF3B82F6
+      else
+        CorBadge := $FFF58A00;
+
+      Card := TRectangle.Create(FScrollNotif);
+      Card.Parent := FScrollNotif;
+      Card.Tag := 88;
+      Card.Align := TAlignLayout.Top;
+      Card.Height := 72;
+      Card.Margins.Bottom := 2;
+      Card.Fill.Color := $FF1E293B;
+      Card.Stroke.Kind := TBrushKind.None;
+      Card.HitTest := False;
+
+      LblCliente := TLabel.Create(Card);
+      LblCliente.Parent := Card;
+      LblCliente.Position.X := 12;
+      LblCliente.Position.Y := 8;
+      LblCliente.Width := 240;
+      LblCliente.Height := 20;
+      LblCliente.StyledSettings := [];
+      LblCliente.TextSettings.FontColor := $FFFFFFFF;
+      LblCliente.TextSettings.Font.Size := 13;
+      LblCliente.TextSettings.Font.Style := [TFontStyle.fsBold];
+      LblCliente.Text := Query.FieldByName('CLIENTE').AsString;
+      LblCliente.HitTest := False;
+
+      LblServico := TLabel.Create(Card);
+      LblServico.Parent := Card;
+      LblServico.Position.X := 12;
+      LblServico.Position.Y := 30;
+      LblServico.Width := 240;
+      LblServico.Height := 18;
+      LblServico.StyledSettings := [];
+      LblServico.TextSettings.FontColor := $FF94A3B8;
+      LblServico.TextSettings.Font.Size := 11;
+      LblServico.Text := Query.FieldByName('SERVICO').AsString;
+      LblServico.HitTest := False;
+
+      LblDataHora := TLabel.Create(Card);
+      LblDataHora.Parent := Card;
+      LblDataHora.Position.X := 12;
+      LblDataHora.Position.Y := 50;
+      LblDataHora.Width := 200;
+      LblDataHora.Height := 16;
+      LblDataHora.StyledSettings := [];
+      LblDataHora.TextSettings.FontColor := $FF64748B;
+      LblDataHora.TextSettings.Font.Size := 11;
+      LblDataHora.Text := DataHora;
+      LblDataHora.HitTest := False;
+
+      RectBadge := TRectangle.Create(Card);
+      RectBadge.Parent := Card;
+      RectBadge.Width := 100;
+      RectBadge.Height := 28;
+      RectBadge.Position.X := 260;
+      RectBadge.Position.Y := 22;
+      RectBadge.XRadius := 10;
+      RectBadge.YRadius := 10;
+      RectBadge.Fill.Color := CorBadge;
+      RectBadge.Stroke.Kind := TBrushKind.None;
+      RectBadge.HitTest := False;
+
+      LblStatus := TLabel.Create(RectBadge);
+      LblStatus.Parent := RectBadge;
+      LblStatus.Align := TAlignLayout.Client;
+      LblStatus.StyledSettings := [];
+      LblStatus.TextSettings.FontColor := $FF0B1220;
+      LblStatus.TextSettings.Font.Size := 10;
+      LblStatus.TextSettings.Font.Style := [TFontStyle.fsBold];
+      LblStatus.TextSettings.HorzAlign := TTextAlign.Center;
+      LblStatus.TextSettings.VertAlign := TTextAlign.Center;
+      if Status = 'EM_ANDAMENTO' then
+        LblStatus.Text := 'EM ANDAMENTO'
+      else
+        LblStatus.Text := Status;
+      LblStatus.HitTest := False;
+
+      Query.Next;
+    end;
+
+  finally
+    Query.Free;
+  end;
+end;
+
+procedure TFrameServicos.SinoServicosClick(Sender: TObject);
+begin
+  if FOverlayNotif = nil then
+    CriarOverlayNotificacoes;
+  CarregarNotificacoesAdmin;
+  FOverlayNotif.Visible := True;
+  FOverlayNotif.BringToFront;
+end;
+
+procedure TFrameServicos.FecharNotifServicoClick(Sender: TObject);
+begin
+  FOverlayNotif.Visible := False;
 end;
 
 end.
