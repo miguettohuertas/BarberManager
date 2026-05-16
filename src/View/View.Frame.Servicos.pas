@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit;
+  FMX.Controls.Presentation, FMX.Layouts, FMX.Objects, FMX.Edit, FMX.ListBox;
 
 type
   TFrameServicos = class(TFrame)
@@ -104,11 +104,23 @@ type
     FFiltroCategoria: string;
     FFiltroStatus: string;
     FBusca: string;
+    FEditServicoID: Integer;
+    FOverlayEdicao: TRectangle;
+    FEdtNome: TEdit;
+    FEdtDescricao: TEdit;
+    FEdtPreco: TEdit;
+    FEdtDuracao: TEdit;
+    FEdtBadge: TEdit;
+    FCboCategoria: TComboBox;
     procedure CarregarServicos;
     procedure AtualizarKPIs;
     procedure AtualizarFiltros(FiltroAtivo: TRectangle);
     procedure AtualizarToggle(Ativo: Integer);
     function GetIDFromRow(Row: TFMXObject): Integer;
+    procedure CriarModalEdicao;
+    procedure AbrirModalEdicao(AID: Integer);
+    procedure FecharModalEdicaoClick(Sender: TObject);
+    procedure SalvarEdicaoClick(Sender: TObject);
   public
     procedure AfterConstruction; override;
   end;
@@ -117,7 +129,7 @@ implementation
 
 uses
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
-  System.StrUtils;
+  System.StrUtils, FMX.DialogService;
 
 {$R *.fmx}
 
@@ -621,14 +633,15 @@ var
   ServicoID: Integer;
 begin
   ServicoID := GetIDFromRow(TFMXObject(Sender).Parent);
-  ShowMessage('Editar servi'#231'o ID: ' + IntToStr(ServicoID) +
-    ' (em desenvolvimento)');
+  if ServicoID = 0 then Exit;
+  if FOverlayEdicao = nil then
+    CriarModalEdicao;
+  AbrirModalEdicao(ServicoID);
 end;
 
 procedure TFrameServicos.EliminarServicoClick(Sender: TObject);
 var
   ServicoID: Integer;
-  Q: TFDQuery;
   NomeServico: string;
   P: TFMXObject;
   I: Integer;
@@ -647,21 +660,428 @@ begin
       Break;
     end;
 
-  if MessageDlg('Eliminar o servi'#231'o "' + NomeServico + '"?',
-     TMsgDlgType.mtConfirmation,
-     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) <> mrYes then
+  TDialogService.MessageDialog(
+    'Eliminar o servi'#231'o "' + NomeServico + '"?' + #13#10 +
+    'Esta ac'#231#227'o n'#227'o pode ser desfeita.',
+    TMsgDlgType.mtConfirmation,
+    [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo],
+    TMsgDlgBtn.mbNo, 0,
+    procedure(const AResult: TModalResult)
+    var
+      Q: TFDQuery;
+    begin
+      if AResult <> mrYes then Exit;
+      Q := TFDQuery.Create(nil);
+      try
+        Q.Connection := dmConexao.FDConnection1;
+        Q.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
+        Q.ParamByName('ID').AsInteger := ServicoID;
+        Q.ExecSQL;
+      finally
+        Q.Free;
+      end;
+      AtualizarKPIs;
+      CarregarServicos;
+    end);
+end;
+
+procedure TFrameServicos.CriarModalEdicao;
+var
+  LytCenter: TLayout;
+  PainelEdicao: TRectangle;
+  LblTitulo, LblFechar: TLabel;
+  Sep1, Sep2: TRectangle;
+  LblNome, LblDesc, LblPreco, LblDur, LblBadge, LblCat: TLabel;
+  BtnCancelar, BtnSalvar: TRectangle;
+  LblCancel, LblSalvar: TLabel;
+begin
+  FOverlayEdicao := TRectangle.Create(Self);
+  FOverlayEdicao.Parent := Self;
+  FOverlayEdicao.Align := TAlignLayout.Contents;
+  FOverlayEdicao.Fill.Color := $CC000000;
+  FOverlayEdicao.Stroke.Kind := TBrushKind.None;
+  FOverlayEdicao.Visible := False;
+  FOverlayEdicao.HitTest := True;
+
+  LytCenter := TLayout.Create(FOverlayEdicao);
+  LytCenter.Parent := FOverlayEdicao;
+  LytCenter.Align := TAlignLayout.Client;
+
+  PainelEdicao := TRectangle.Create(LytCenter);
+  PainelEdicao.Parent := LytCenter;
+  PainelEdicao.Align := TAlignLayout.Center;
+  PainelEdicao.Width := 480;
+  PainelEdicao.Height := 500;
+  PainelEdicao.Fill.Color := $FF141C2B;
+  PainelEdicao.XRadius := 16;
+  PainelEdicao.YRadius := 16;
+  PainelEdicao.Stroke.Kind := TBrushKind.Solid;
+  PainelEdicao.Stroke.Color := $FF2E3B52;
+  PainelEdicao.HitTest := True;
+
+  LblTitulo := TLabel.Create(PainelEdicao);
+  LblTitulo.Parent := PainelEdicao;
+  LblTitulo.Position.X := 20;
+  LblTitulo.Position.Y := 18;
+  LblTitulo.Width := 380;
+  LblTitulo.Height := 28;
+  LblTitulo.StyledSettings := [];
+  LblTitulo.TextSettings.FontColor := $FFFFFFFF;
+  LblTitulo.TextSettings.Font.Size := 18;
+  LblTitulo.TextSettings.Font.Style := [TFontStyle.fsBold];
+  LblTitulo.Text := 'Editar Servi'#231'o';
+  LblTitulo.HitTest := False;
+
+  LblFechar := TLabel.Create(PainelEdicao);
+  LblFechar.Parent := PainelEdicao;
+  LblFechar.Position.X := 436;
+  LblFechar.Position.Y := 14;
+  LblFechar.Width := 30;
+  LblFechar.Height := 30;
+  LblFechar.StyledSettings := [];
+  LblFechar.TextSettings.FontColor := $FF94A3B8;
+  LblFechar.TextSettings.Font.Size := 18;
+  LblFechar.TextSettings.HorzAlign := TTextAlign.Center;
+  LblFechar.TextSettings.VertAlign := TTextAlign.Center;
+  LblFechar.Text := #$2715;
+  LblFechar.HitTest := True;
+  LblFechar.OnClick := FecharModalEdicaoClick;
+
+  Sep1 := TRectangle.Create(PainelEdicao);
+  Sep1.Parent := PainelEdicao;
+  Sep1.Position.X := 0;
+  Sep1.Position.Y := 56;
+  Sep1.Width := 480;
+  Sep1.Height := 1;
+  Sep1.Fill.Color := $FF2E3B52;
+  Sep1.Stroke.Kind := TBrushKind.None;
+  Sep1.HitTest := False;
+
+  // --- Nome ---
+  LblNome := TLabel.Create(PainelEdicao);
+  LblNome.Parent := PainelEdicao;
+  LblNome.Position.X := 20;
+  LblNome.Position.Y := 68;
+  LblNome.StyledSettings := [];
+  LblNome.TextSettings.FontColor := $FF94A3B8;
+  LblNome.TextSettings.Font.Size := 11;
+  LblNome.Text := 'Nome';
+  LblNome.HitTest := False;
+
+  FEdtNome := TEdit.Create(PainelEdicao);
+  FEdtNome.Parent := PainelEdicao;
+  FEdtNome.Align := TAlignLayout.None;
+  FEdtNome.Position.X := 20;
+  FEdtNome.Position.Y := 88;
+  FEdtNome.Width := 440;
+  FEdtNome.Height := 40;
+  FEdtNome.TabOrder := 0;
+
+  // --- Descricao ---
+  LblDesc := TLabel.Create(PainelEdicao);
+  LblDesc.Parent := PainelEdicao;
+  LblDesc.Position.X := 20;
+  LblDesc.Position.Y := 140;
+  LblDesc.StyledSettings := [];
+  LblDesc.TextSettings.FontColor := $FF94A3B8;
+  LblDesc.TextSettings.Font.Size := 11;
+  LblDesc.Text := 'Descri'#231#227'o';
+  LblDesc.HitTest := False;
+
+  FEdtDescricao := TEdit.Create(PainelEdicao);
+  FEdtDescricao.Parent := PainelEdicao;
+  FEdtDescricao.Align := TAlignLayout.None;
+  FEdtDescricao.Position.X := 20;
+  FEdtDescricao.Position.Y := 160;
+  FEdtDescricao.Width := 440;
+  FEdtDescricao.Height := 40;
+  FEdtDescricao.TabOrder := 1;
+
+  // --- Preco ---
+  LblPreco := TLabel.Create(PainelEdicao);
+  LblPreco.Parent := PainelEdicao;
+  LblPreco.Position.X := 20;
+  LblPreco.Position.Y := 212;
+  LblPreco.StyledSettings := [];
+  LblPreco.TextSettings.FontColor := $FF94A3B8;
+  LblPreco.TextSettings.Font.Size := 11;
+  LblPreco.Text := 'Pre'#231'o (R$)';
+  LblPreco.HitTest := False;
+
+  FEdtPreco := TEdit.Create(PainelEdicao);
+  FEdtPreco.Parent := PainelEdicao;
+  FEdtPreco.Align := TAlignLayout.None;
+  FEdtPreco.Position.X := 20;
+  FEdtPreco.Position.Y := 232;
+  FEdtPreco.Width := 200;
+  FEdtPreco.Height := 40;
+  FEdtPreco.TabOrder := 2;
+
+  // --- Duracao ---
+  LblDur := TLabel.Create(PainelEdicao);
+  LblDur.Parent := PainelEdicao;
+  LblDur.Position.X := 240;
+  LblDur.Position.Y := 212;
+  LblDur.StyledSettings := [];
+  LblDur.TextSettings.FontColor := $FF94A3B8;
+  LblDur.TextSettings.Font.Size := 11;
+  LblDur.Text := 'Dura'#231#227'o (min)';
+  LblDur.HitTest := False;
+
+  FEdtDuracao := TEdit.Create(PainelEdicao);
+  FEdtDuracao.Parent := PainelEdicao;
+  FEdtDuracao.Align := TAlignLayout.None;
+  FEdtDuracao.Position.X := 240;
+  FEdtDuracao.Position.Y := 232;
+  FEdtDuracao.Width := 220;
+  FEdtDuracao.Height := 40;
+  FEdtDuracao.TabOrder := 3;
+
+  // --- Badge ---
+  LblBadge := TLabel.Create(PainelEdicao);
+  LblBadge.Parent := PainelEdicao;
+  LblBadge.Position.X := 20;
+  LblBadge.Position.Y := 284;
+  LblBadge.StyledSettings := [];
+  LblBadge.TextSettings.FontColor := $FF94A3B8;
+  LblBadge.TextSettings.Font.Size := 11;
+  LblBadge.Text := 'Badge (opcional)';
+  LblBadge.HitTest := False;
+
+  FEdtBadge := TEdit.Create(PainelEdicao);
+  FEdtBadge.Parent := PainelEdicao;
+  FEdtBadge.Align := TAlignLayout.None;
+  FEdtBadge.Position.X := 20;
+  FEdtBadge.Position.Y := 304;
+  FEdtBadge.Width := 440;
+  FEdtBadge.Height := 40;
+  FEdtBadge.TabOrder := 4;
+
+  // --- Categoria ---
+  LblCat := TLabel.Create(PainelEdicao);
+  LblCat.Parent := PainelEdicao;
+  LblCat.Position.X := 20;
+  LblCat.Position.Y := 356;
+  LblCat.StyledSettings := [];
+  LblCat.TextSettings.FontColor := $FF94A3B8;
+  LblCat.TextSettings.Font.Size := 11;
+  LblCat.Text := 'Categoria';
+  LblCat.HitTest := False;
+
+  FCboCategoria := TComboBox.Create(PainelEdicao);
+  FCboCategoria.Parent := PainelEdicao;
+  FCboCategoria.Position.X := 20;
+  FCboCategoria.Position.Y := 376;
+  FCboCategoria.Width := 440;
+  FCboCategoria.Height := 40;
+  FCboCategoria.Items.Add('Cabelo');
+  FCboCategoria.Items.Add('Barba');
+  FCboCategoria.Items.Add('Est'#233'tica');
+  FCboCategoria.Items.Add('Combo');
+  FCboCategoria.ItemIndex := 0;
+
+  Sep2 := TRectangle.Create(PainelEdicao);
+  Sep2.Parent := PainelEdicao;
+  Sep2.Position.X := 0;
+  Sep2.Position.Y := 428;
+  Sep2.Width := 480;
+  Sep2.Height := 1;
+  Sep2.Fill.Color := $FF2E3B52;
+  Sep2.Stroke.Kind := TBrushKind.None;
+  Sep2.HitTest := False;
+
+  BtnCancelar := TRectangle.Create(PainelEdicao);
+  BtnCancelar.Parent := PainelEdicao;
+  BtnCancelar.Position.X := 20;
+  BtnCancelar.Position.Y := 442;
+  BtnCancelar.Width := 195;
+  BtnCancelar.Height := 44;
+  BtnCancelar.Fill.Color := $FF1E293B;
+  BtnCancelar.Stroke.Kind := TBrushKind.Solid;
+  BtnCancelar.Stroke.Color := $FF2E3B52;
+  BtnCancelar.XRadius := 10;
+  BtnCancelar.YRadius := 10;
+  BtnCancelar.OnClick := FecharModalEdicaoClick;
+
+  LblCancel := TLabel.Create(BtnCancelar);
+  LblCancel.Parent := BtnCancelar;
+  LblCancel.Align := TAlignLayout.Client;
+  LblCancel.StyledSettings := [];
+  LblCancel.TextSettings.FontColor := $FF94A3B8;
+  LblCancel.TextSettings.Font.Size := 14;
+  LblCancel.TextSettings.HorzAlign := TTextAlign.Center;
+  LblCancel.TextSettings.VertAlign := TTextAlign.Center;
+  LblCancel.Text := 'Cancelar';
+  LblCancel.HitTest := False;
+
+  BtnSalvar := TRectangle.Create(PainelEdicao);
+  BtnSalvar.Parent := PainelEdicao;
+  BtnSalvar.Position.X := 225;
+  BtnSalvar.Position.Y := 442;
+  BtnSalvar.Width := 235;
+  BtnSalvar.Height := 44;
+  BtnSalvar.Fill.Color := $FFF58A00;
+  BtnSalvar.Stroke.Kind := TBrushKind.None;
+  BtnSalvar.XRadius := 10;
+  BtnSalvar.YRadius := 10;
+  BtnSalvar.OnClick := SalvarEdicaoClick;
+
+  LblSalvar := TLabel.Create(BtnSalvar);
+  LblSalvar.Parent := BtnSalvar;
+  LblSalvar.Align := TAlignLayout.Client;
+  LblSalvar.StyledSettings := [];
+  LblSalvar.TextSettings.FontColor := $FF0B1220;
+  LblSalvar.TextSettings.Font.Size := 14;
+  LblSalvar.TextSettings.Font.Style := [TFontStyle.fsBold];
+  LblSalvar.TextSettings.HorzAlign := TTextAlign.Center;
+  LblSalvar.TextSettings.VertAlign := TTextAlign.Center;
+  LblSalvar.Text := 'Guardar Altera'#231#245'es';
+  LblSalvar.HitTest := False;
+end;
+
+procedure TFrameServicos.AbrirModalEdicao(AID: Integer);
+var
+  Query: TFDQuery;
+  Categoria: string;
+  Idx: Integer;
+begin
+  FEditServicoID := AID;
+
+  Query := TFDQuery.Create(nil);
+  try
+    Query.Connection := dmConexao.FDConnection1;
+    Query.SQL.Text :=
+      'SELECT S.NOME, S.DESCRICAO, S.PRECO, S.DURACAO_MIN, S.BADGE,' +
+      ' C.NOME AS CATEGORIA' +
+      ' FROM TB_SERVICOS S' +
+      ' JOIN TB_CATEGORIAS C ON C.ID = S.CATEGORIA_ID' +
+      ' WHERE S.ID = :ID';
+    Query.ParamByName('ID').AsInteger := AID;
+    Query.Open;
+
+    if not Query.EOF then
+    begin
+      FEdtNome.Text      := Query.FieldByName('NOME').AsString;
+      FEdtDescricao.Text := Query.FieldByName('DESCRICAO').AsString;
+      FEdtPreco.Text     := FormatFloat('0.00', Query.FieldByName('PRECO').AsFloat);
+      FEdtDuracao.Text   := IntToStr(Query.FieldByName('DURACAO_MIN').AsInteger);
+      FEdtBadge.Text     := Query.FieldByName('BADGE').AsString;
+
+      Categoria := Query.FieldByName('CATEGORIA').AsString;
+      Idx := FCboCategoria.Items.IndexOf(Categoria);
+      if Idx < 0 then
+      begin
+        for Idx := 0 to FCboCategoria.Items.Count - 1 do
+          if Pos(UpperCase(Copy(Categoria, 1, 3)),
+                 UpperCase(FCboCategoria.Items[Idx])) > 0 then
+            Break;
+        if Idx >= FCboCategoria.Items.Count then
+          Idx := 0;
+      end;
+      FCboCategoria.ItemIndex := Idx;
+    end;
+  finally
+    Query.Free;
+  end;
+
+  FOverlayEdicao.Visible := True;
+  FOverlayEdicao.BringToFront;
+end;
+
+procedure TFrameServicos.FecharModalEdicaoClick(Sender: TObject);
+begin
+  FOverlayEdicao.Visible := False;
+end;
+
+procedure TFrameServicos.SalvarEdicaoClick(Sender: TObject);
+var
+  Nome, Desc, Badge, CatNome: string;
+  Preco: Double;
+  Duracao, CatID: Integer;
+  FS: TFormatSettings;
+  Q: TFDQuery;
+begin
+  Nome  := Trim(FEdtNome.Text);
+  Desc  := Trim(FEdtDescricao.Text);
+  Badge := Trim(FEdtBadge.Text);
+
+  if Nome = '' then
+  begin
+    ShowMessage('O nome do servi'#231'o '#233' obrigat'#243'rio.');
     Exit;
+  end;
+
+  FS := FormatSettings;
+  FS.DecimalSeparator  := '.';
+  FS.ThousandSeparator := #0;
+  Preco := 0;
+  if not TryStrToFloat(
+       StringReplace(FEdtPreco.Text, ',', '.', [rfReplaceAll]),
+       Preco, FS) or (Preco <= 0) then
+  begin
+    ShowMessage('Pre'#231'o inv'#225'lido. Use um valor maior que zero.');
+    Exit;
+  end;
+
+  Duracao := 0;
+  if not TryStrToInt(Trim(FEdtDuracao.Text), Duracao) or (Duracao <= 0) then
+  begin
+    ShowMessage('Dura'#231#227'o inv'#225'lida. Indique um valor inteiro maior que zero.');
+    Exit;
+  end;
+
+  if FCboCategoria.ItemIndex < 0 then
+  begin
+    ShowMessage('Seleccione uma categoria.');
+    Exit;
+  end;
+  CatNome := FCboCategoria.Items[FCboCategoria.ItemIndex];
+
+  CatID := 0;
+  Q := TFDQuery.Create(nil);
+  try
+    Q.Connection := dmConexao.FDConnection1;
+    Q.SQL.Text :=
+      'SELECT ID FROM TB_CATEGORIAS WHERE UPPER(NOME) = UPPER(:NOME)';
+    Q.ParamByName('NOME').AsString := CatNome;
+    Q.Open;
+    if not Q.EOF then
+      CatID := Q.FieldByName('ID').AsInteger;
+  finally
+    Q.Free;
+  end;
+
+  if CatID = 0 then
+  begin
+    ShowMessage('Categoria n'#227'o encontrada na base de dados.');
+    Exit;
+  end;
 
   Q := TFDQuery.Create(nil);
   try
     Q.Connection := dmConexao.FDConnection1;
-    Q.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
-    Q.ParamByName('ID').AsInteger := ServicoID;
+    Q.SQL.Text :=
+      'UPDATE TB_SERVICOS SET' +
+      ' NOME        = :NOME,' +
+      ' DESCRICAO   = :DESCRICAO,' +
+      ' PRECO       = :PRECO,' +
+      ' DURACAO_MIN = :DURACAO,' +
+      ' CATEGORIA_ID = :CATEGORIA_ID,' +
+      ' BADGE       = :BADGE' +
+      ' WHERE ID = :ID';
+    Q.ParamByName('NOME').AsString        := Nome;
+    Q.ParamByName('DESCRICAO').AsString   := Desc;
+    Q.ParamByName('PRECO').AsFloat        := Preco;
+    Q.ParamByName('DURACAO').AsInteger    := Duracao;
+    Q.ParamByName('CATEGORIA_ID').AsInteger := CatID;
+    Q.ParamByName('BADGE').AsString       := Badge;
+    Q.ParamByName('ID').AsInteger         := FEditServicoID;
     Q.ExecSQL;
   finally
     Q.Free;
   end;
 
+  FOverlayEdicao.Visible := False;
   AtualizarKPIs;
   CarregarServicos;
 end;
