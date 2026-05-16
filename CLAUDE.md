@@ -268,24 +268,28 @@ BarberManager/
 
 ## Próximos Passos Pendentes
 
-1. **Frame Serviços — CRUD completo** (em progresso):
-   - ✅ Lista dinâmica com dados reais da BD
-   - ✅ Filtros categoria (Todos/Cabelo/Barba/Estética)
-   - ✅ Toggles Ativos/Inativos com bordas arredondadas
-   - ✅ Busca com CONTAINING
-   - ✅ Eliminar serviço (DELETE com confirmação)
-   - ✅ KPIs dinâmicos (Total, Ativos, Inativos, Receita)
-   - PENDENTE: Novo Serviço (INSERT)
-   - PENDENTE: Editar serviço (UPDATE — formulário)
-   - PENDENTE: Toggle ativo/inativo por linha
+1. **Frame Serviços — CONCLUÍDO** (`View.Frame.Servicos.pas`):
+   - ✅ Lista dinâmica de TB_SERVICOS com filtros de categoria e toggle Ativos/Inativos
+   - ✅ Busca em tempo real via edtBuscaServicos (CONTAINING)
+   - ✅ KPIs reais: total, receita acumulada, preço médio, total agendamentos
+   - ✅ Toggle ativo/inativo por linha (UPDATE ATIVO)
+   - ✅ Deletar com confirmação (TDialogService)
+   - ✅ Editar serviço — modal com UPDATE (nome, descrição, preço, duração, categoria, badge)
+   - ✅ Novo Serviço — mesmo modal com INSERT, ATIVO=1
+   - ⚠️ Sino de notificações — implementado mas não funciona (overlay criado, query correcta, debug pendente)
 
-2. **Tela Clientes do Dashboard**
+2. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
+   - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
+   - Barra de meta: receita do dia vs meta configurável
+   - KPIs já funcionam — manter
 
-3. **Tela Financeiro do Dashboard**
+3. **Tela Clientes do Dashboard**
 
-4. **Tela Configurações do Dashboard**
+4. **Tela Financeiro do Dashboard**
 
-5. **Deploy com D2Bridge**
+5. **Tela Configurações do Dashboard**
+
+6. **Deploy com D2Bridge**
 
 ---
 
