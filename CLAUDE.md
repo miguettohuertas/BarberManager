@@ -269,12 +269,15 @@ BarberManager/
 ## Próximos Passos Pendentes
 
 1. **Frame Serviços — CRUD completo** (em progresso):
-   - CarregarServicos, AtualizarKPIs implementados
-   - Filtros categoria e toggle Ativos/Inativos funcionais
-   - Busca com CONTAINING implementada
-   - PENDENTE: botão Novo Serviço (INSERT)
-   - PENDENTE: acções editar (UPDATE) e eliminar (DELETE)
-   - PENDENTE: toggle ativo/inativo por linha
+   - ✅ Lista dinâmica com dados reais da BD
+   - ✅ Filtros categoria (Todos/Cabelo/Barba/Estética)
+   - ✅ Toggles Ativos/Inativos com bordas arredondadas
+   - ✅ Busca com CONTAINING
+   - ✅ Eliminar serviço (DELETE com confirmação)
+   - ✅ KPIs dinâmicos (Total, Ativos, Inativos, Receita)
+   - PENDENTE: Novo Serviço (INSERT)
+   - PENDENTE: Editar serviço (UPDATE — formulário)
+   - PENDENTE: Toggle ativo/inativo por linha
 
 2. **Tela Clientes do Dashboard**
 
