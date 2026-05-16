@@ -98,6 +98,8 @@ type
     procedure ToggleAtivosClick(Sender: TObject);
     procedure ToggleInativosClick(Sender: TObject);
     procedure BuscaServicoChange(Sender: TObject);
+    procedure EditarServicoClick(Sender: TObject);
+    procedure EliminarServicoClick(Sender: TObject);
   private
     FFiltroCategoria: string;
     FFiltroStatus: string;
@@ -106,6 +108,7 @@ type
     procedure AtualizarKPIs;
     procedure AtualizarFiltros(FiltroAtivo: TRectangle);
     procedure AtualizarToggle(Ativo: Integer);
+    function GetIDFromRow(Row: TFMXObject): Integer;
   public
     procedure AfterConstruction; override;
   end;
@@ -172,7 +175,7 @@ begin
   lblTitKpi1.TextSettings.FontColor := $FF94A3B8;
   lblTitKpi1.Text := 'Total de Servi'#231'os';
   lblValKpi1.StyledSettings := [];
-  lblValKpi1.TextSettings.FontColor := claWhite;
+  lblValKpi1.TextSettings.FontColor := $FFFFFFFF;
   lblValKpi1.Text := IntToStr(Total);
   lblSubKpi1.StyledSettings := [];
   lblSubKpi1.TextSettings.FontColor := $FF64748B;
@@ -223,7 +226,7 @@ var
   Row: TRectangle;
   RectIcone, RectCat, RectToggle: TRectangle;
   LblNome, LblDesc, LblCat, LblPreco, LblDur: TLabel;
-  LblAgend, LblReceita, LblToggle, LblEdit, LblDel: TLabel;
+  LblAgend, LblReceita, LblToggle, LblEdit, LblDel, LblID: TLabel;
   I, Count: Integer;
   IsAtivo: Boolean;
   CorFundo: TAlphaColor;
@@ -287,6 +290,12 @@ begin
       Row.Fill.Color := CorFundo;
       Row.Stroke.Kind := TBrushKind.None;
 
+      LblID := TLabel.Create(Row);
+      LblID.Parent := Row;
+      LblID.Visible := False;
+      LblID.Text := IntToStr(Query.FieldByName('ID').AsInteger);
+      LblID.Tag := 82;
+
       RectIcone := TRectangle.Create(Row);
       RectIcone.Parent := Row;
       RectIcone.Fill.Color := $FF2E3B52;
@@ -304,7 +313,7 @@ begin
       LblNome.StyledSettings := [];
       LblNome.TextSettings.Font.Size := 13;
       LblNome.TextSettings.Font.Style := [TFontStyle.fsBold];
-      LblNome.TextSettings.FontColor := claWhite;
+      LblNome.TextSettings.FontColor := $FFFFFFFF;
       LblNome.Width := 275;
       LblNome.Height := 22;
       LblNome.Position.X := 58;
@@ -376,7 +385,7 @@ begin
       LblAgend.StyledSettings := [];
       LblAgend.TextSettings.Font.Size := 13;
       LblAgend.TextSettings.Font.Style := [TFontStyle.fsBold];
-      LblAgend.TextSettings.FontColor := claWhite;
+      LblAgend.TextSettings.FontColor := $FFFFFFFF;
       LblAgend.Width := 135;
       LblAgend.Height := 22;
       LblAgend.Position.X := 715;
@@ -411,10 +420,11 @@ begin
       LblEdit.TextSettings.VertAlign := TTextAlign.Center;
       LblEdit.Width := 30;
       LblEdit.Height := 70;
-      LblEdit.Position.X := 870;
+      LblEdit.Position.X := 860;
       LblEdit.Position.Y := 0;
       LblEdit.Text := #$270E;
-      LblEdit.HitTest := False;
+      LblEdit.HitTest := True;
+      LblEdit.OnClick := EditarServicoClick;
 
       LblDel := TLabel.Create(Row);
       LblDel.Parent := Row;
@@ -425,16 +435,17 @@ begin
       LblDel.TextSettings.VertAlign := TTextAlign.Center;
       LblDel.Width := 30;
       LblDel.Height := 70;
-      LblDel.Position.X := 910;
+      LblDel.Position.X := 900;
       LblDel.Position.Y := 0;
       LblDel.Text := #$2715;
-      LblDel.HitTest := False;
+      LblDel.HitTest := True;
+      LblDel.OnClick := EliminarServicoClick;
 
       RectToggle := TRectangle.Create(Row);
       RectToggle.Parent := Row;
-      RectToggle.Width := 46;
+      RectToggle.Width := 60;
       RectToggle.Height := 24;
-      RectToggle.Position.X := 928;
+      RectToggle.Position.X := 940;
       RectToggle.Position.Y := 23;
       RectToggle.XRadius := 12;
       RectToggle.YRadius := 12;
@@ -448,7 +459,7 @@ begin
       LblToggle.Parent := RectToggle;
       LblToggle.Align := TAlignLayout.Client;
       LblToggle.StyledSettings := [];
-      LblToggle.TextSettings.FontColor := claWhite;
+      LblToggle.TextSettings.FontColor := $FFFFFFFF;
       LblToggle.TextSettings.Font.Size := 11;
       LblToggle.TextSettings.HorzAlign := TTextAlign.Center;
       LblToggle.HitTest := False;
@@ -520,7 +531,7 @@ procedure TFrameServicos.AtualizarToggle(Ativo: Integer);
       R.Fill.Kind := TBrushKind.Solid;
       R.Fill.Color := $FF2E3B52;
       L.StyledSettings := [];
-      L.TextSettings.FontColor := claWhite;
+      L.TextSettings.FontColor := $FFFFFFFF;
     end
     else
     begin
@@ -588,6 +599,70 @@ end;
 procedure TFrameServicos.BuscaServicoChange(Sender: TObject);
 begin
   FBusca := Trim(edtBuscaServicos.Text);
+  CarregarServicos;
+end;
+
+function TFrameServicos.GetIDFromRow(Row: TFMXObject): Integer;
+var
+  I: Integer;
+begin
+  Result := 0;
+  for I := 0 to Row.ChildrenCount - 1 do
+    if (Row.Children[I] is TLabel) and
+       (not TLabel(Row.Children[I]).Visible) then
+    begin
+      Result := StrToIntDef(TLabel(Row.Children[I]).Text, 0);
+      Break;
+    end;
+end;
+
+procedure TFrameServicos.EditarServicoClick(Sender: TObject);
+var
+  ServicoID: Integer;
+begin
+  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent);
+  ShowMessage('Editar servi'#231'o ID: ' + IntToStr(ServicoID) +
+    ' (em desenvolvimento)');
+end;
+
+procedure TFrameServicos.EliminarServicoClick(Sender: TObject);
+var
+  ServicoID: Integer;
+  Q: TFDQuery;
+  NomeServico: string;
+  P: TFMXObject;
+  I: Integer;
+begin
+  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent);
+  if ServicoID = 0 then Exit;
+
+  NomeServico := '';
+  P := TFMXObject(Sender).Parent;
+  for I := 0 to P.ChildrenCount - 1 do
+    if (P.Children[I] is TLabel) and
+       TLabel(P.Children[I]).Visible and
+       (TLabel(P.Children[I]).TextSettings.Font.Style = [TFontStyle.fsBold]) then
+    begin
+      NomeServico := TLabel(P.Children[I]).Text;
+      Break;
+    end;
+
+  if MessageDlg('Eliminar o servi'#231'o "' + NomeServico + '"?',
+     TMsgDlgType.mtConfirmation,
+     [TMsgDlgBtn.mbYes, TMsgDlgBtn.mbNo], 0) <> mrYes then
+    Exit;
+
+  Q := TFDQuery.Create(nil);
+  try
+    Q.Connection := dmConexao.FDConnection1;
+    Q.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
+    Q.ParamByName('ID').AsInteger := ServicoID;
+    Q.ExecSQL;
+  finally
+    Q.Free;
+  end;
+
+  AtualizarKPIs;
   CarregarServicos;
 end;
 

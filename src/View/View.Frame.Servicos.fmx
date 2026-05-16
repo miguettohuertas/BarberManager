@@ -3506,6 +3506,8 @@
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
+            XRadius = 15.000000000000000000
+            YRadius = 15.000000000000000000
             OnClick = ToggleAtivosClick
             object lblToggleAtivos: TLabel
               Align = Client
@@ -3530,6 +3532,8 @@
             Size.Height = 30.000000000000000000
             Size.PlatformDefault = False
             Stroke.Kind = None
+            XRadius = 15.000000000000000000
+            YRadius = 15.000000000000000000
             OnClick = ToggleInativosClick
             object lblToggleInativos: TLabel
               Align = Client
