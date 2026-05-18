@@ -278,18 +278,27 @@ BarberManager/
    - ✅ Novo Serviço — mesmo modal com INSERT, ATIVO=1
    - ⚠️ Sino de notificações — implementado mas não funciona (overlay criado, query correcta, debug pendente)
 
-2. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
+2. **Frame Agenda — CONCLUÍDO** (`View.Frame.Agenda.pas`):
+   - ✅ Criado do zero — todo o UI por código em AfterConstruction (sem designer)
+   - ✅ Lista de agendamentos com JOIN a TB_USUARIOS, TB_SERVICOS, TB_BARBEIROS
+   - ✅ Filtros de status: Todos / Pendente / Em Andamento / Concluído / Cancelado
+   - ✅ KPIs reais: Total Geral, Pendentes, Em Andamento, Concluídos (subqueries em RDB$DATABASE)
+   - ✅ Badge colorido por status por linha
+   - ✅ ComboBox por linha para alterar status (UPDATE TB_AGENDAMENTOS)
+   - ✅ Injectado em lytAreaPrincipal via rectMenuAgendaClick (mesmo padrão de TFrameServicos)
+
+3. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
    - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
    - Barra de meta: receita do dia vs meta configurável
    - KPIs já funcionam — manter
 
-3. **Tela Clientes do Dashboard**
+4. **Tela Clientes do Dashboard**
 
-4. **Tela Financeiro do Dashboard**
+5. **Tela Financeiro do Dashboard**
 
-5. **Tela Configurações do Dashboard**
+6. **Tela Configurações do Dashboard**
 
-6. **Deploy com D2Bridge**
+7. **Deploy com D2Bridge**
 
 ---
 
