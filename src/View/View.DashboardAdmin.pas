@@ -287,7 +287,7 @@ implementation
 
 {$R *.fmx}
 
-uses View.Frame.Servicos, View.Principal,
+uses View.Frame.Servicos, View.Frame.Agenda, View.Principal,
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
   System.DateUtils, System.IOUtils;
 
@@ -742,8 +742,22 @@ begin
 end;
 
 procedure TFrmDashboardAdmin.rectMenuAgendaClick(Sender: TObject);
+var
+  Frame: TFrameAgenda;
+  I: Integer;
 begin
   AtualizarMenuLateral('agenda');
+
+  for I := lytAreaPrincipal.ControlsCount - 1 downto 0 do
+    if lytAreaPrincipal.Controls[I] is TFrame then
+      lytAreaPrincipal.Controls[I].Free;
+
+  scrollDashboard.Visible := False;
+  lytHeaderDashboard.Visible := False;
+
+  Frame := TFrameAgenda.Create(Self);
+  Frame.Parent := lytAreaPrincipal;
+  Frame.Align := TAlignLayout.Client;
 end;
 
 procedure TFrmDashboardAdmin.CarregarIconesSetas;

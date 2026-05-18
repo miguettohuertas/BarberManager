@@ -130,6 +130,7 @@ type
     procedure CarregarNotificacoesAdmin;
     procedure SinoServicosClick(Sender: TObject);
     procedure FecharNotifServicoClick(Sender: TObject);
+    procedure AcaoToggleClick(Sender: TObject);
   public
     procedure AfterConstruction; override;
   end;
@@ -150,6 +151,7 @@ begin
   FBusca := '';
   rectBtnNovoServico.OnClick := NovoServicoClick;
   circleSinoServicos.OnClick := SinoServicosClick;
+  imgIconeNotificacaoServ.HitTest := False;
   AtualizarKPIs;
   CarregarServicos;
 end;
@@ -250,10 +252,13 @@ var
   RectIcone, RectCat, RectToggle: TRectangle;
   LblNome, LblDesc, LblCat, LblPreco, LblDur: TLabel;
   LblAgend, LblReceita, LblToggle, LblEdit, LblDel, LblID: TLabel;
-  I, Count: Integer;
+  lytCol6: TLayout;
+  ImgToggle: TImage;
+  I, Count, ID: Integer;
   IsAtivo: Boolean;
   CorFundo: TAlphaColor;
   ReceitaServ, TotalReceita: Double;
+  CaminhoBase: string;
 begin
   for I := scrollListaServicos.Content.ChildrenCount - 1 downto 0 do
     if scrollListaServicos.Content.Children[I].Tag = 82 then
@@ -294,9 +299,11 @@ begin
 
     Count := 0;
     TotalReceita := 0;
+    CaminhoBase := ExtractFilePath(ParamStr(0)) + '..\..\..\docs\images\';
 
     while not Query.EOF do
     begin
+      ID := Query.FieldByName('ID').AsInteger;
       IsAtivo := Query.FieldByName('ATIVO').AsInteger = 1;
 
       if Count mod 2 = 0 then
@@ -434,8 +441,39 @@ begin
       LblReceita.Text := Format('R$ %.2f', [ReceitaServ]);
       LblReceita.HitTest := False;
 
-      LblEdit := TLabel.Create(Row);
-      LblEdit.Parent := Row;
+      lytCol6 := TLayout.Create(Row);
+      lytCol6.Parent := Row;
+      lytCol6.Align := TAlignLayout.None;
+      lytCol6.Position.X := 820;
+      lytCol6.Position.Y := 0;
+      lytCol6.Width := 110;
+      lytCol6.Height := 70;
+
+      ImgToggle := TImage.Create(lytCol6);
+      ImgToggle.Parent := lytCol6;
+      ImgToggle.Align := TAlignLayout.None;
+      ImgToggle.Position.X := 4;
+      ImgToggle.Position.Y := 18;
+      ImgToggle.Width := 28;
+      ImgToggle.Height := 28;
+      ImgToggle.WrapMode := TImageWrapMode.Fit;
+      ImgToggle.HitTest := True;
+      ImgToggle.Cursor := crHandPoint;
+      ImgToggle.Tag := ID;
+      ImgToggle.OnClick := AcaoToggleClick;
+      if IsAtivo then
+      begin
+        if FileExists(CaminhoBase + 'ion--toggle-sharp.png') then
+          ImgToggle.Bitmap.LoadFromFile(CaminhoBase + 'ion--toggle-sharp.png');
+      end
+      else
+      begin
+        if FileExists(CaminhoBase + 'ri--toggle-line.png') then
+          ImgToggle.Bitmap.LoadFromFile(CaminhoBase + 'ri--toggle-line.png');
+      end;
+
+      LblEdit := TLabel.Create(lytCol6);
+      LblEdit.Parent := lytCol6;
       LblEdit.StyledSettings := [];
       LblEdit.TextSettings.Font.Size := 18;
       LblEdit.TextSettings.FontColor := $FF60A5FA;
@@ -443,14 +481,14 @@ begin
       LblEdit.TextSettings.VertAlign := TTextAlign.Center;
       LblEdit.Width := 30;
       LblEdit.Height := 70;
-      LblEdit.Position.X := 860;
+      LblEdit.Position.X := 40;
       LblEdit.Position.Y := 0;
       LblEdit.Text := #$270E;
       LblEdit.HitTest := True;
       LblEdit.OnClick := EditarServicoClick;
 
-      LblDel := TLabel.Create(Row);
-      LblDel.Parent := Row;
+      LblDel := TLabel.Create(lytCol6);
+      LblDel.Parent := lytCol6;
       LblDel.StyledSettings := [];
       LblDel.TextSettings.Font.Size := 18;
       LblDel.TextSettings.FontColor := $FFEF4444;
@@ -458,7 +496,7 @@ begin
       LblDel.TextSettings.VertAlign := TTextAlign.Center;
       LblDel.Width := 30;
       LblDel.Height := 70;
-      LblDel.Position.X := 900;
+      LblDel.Position.X := 72;
       LblDel.Position.Y := 0;
       LblDel.Text := #$2715;
       LblDel.HitTest := True;
@@ -643,7 +681,7 @@ procedure TFrameServicos.EditarServicoClick(Sender: TObject);
 var
   ServicoID: Integer;
 begin
-  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent);
+  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent.Parent);
   if ServicoID = 0 then Exit;
   if FOverlayEdicao = nil then
     CriarModalEdicao;
@@ -657,11 +695,11 @@ var
   P: TFMXObject;
   I: Integer;
 begin
-  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent);
+  ServicoID := GetIDFromRow(TFMXObject(Sender).Parent.Parent);
   if ServicoID = 0 then Exit;
 
   NomeServico := '';
-  P := TFMXObject(Sender).Parent;
+  P := TFMXObject(Sender).Parent.Parent;
   for I := 0 to P.ChildrenCount - 1 do
     if (P.Children[I] is TLabel) and
        TLabel(P.Children[I]).Visible and
@@ -1352,6 +1390,43 @@ end;
 procedure TFrameServicos.FecharNotifServicoClick(Sender: TObject);
 begin
   FOverlayNotif.Visible := False;
+end;
+
+procedure TFrameServicos.AcaoToggleClick(Sender: TObject);
+var
+  ServicoID, AtivoAtual, NovoAtivo: Integer;
+  Q: TFDQuery;
+begin
+  ServicoID := TImage(Sender).Tag;
+  if ServicoID = 0 then Exit;
+
+  Q := TFDQuery.Create(nil);
+  try
+    Q.Connection := dmConexao.FDConnection1;
+    Q.SQL.Text := 'SELECT ATIVO FROM TB_SERVICOS WHERE ID = :ID';
+    Q.ParamByName('ID').AsInteger := ServicoID;
+    Q.Open;
+    if Q.EOF then Exit;
+    AtivoAtual := Q.FieldByName('ATIVO').AsInteger;
+  finally
+    Q.Free;
+  end;
+
+  if AtivoAtual = 1 then NovoAtivo := 0 else NovoAtivo := 1;
+
+  Q := TFDQuery.Create(nil);
+  try
+    Q.Connection := dmConexao.FDConnection1;
+    Q.SQL.Text := 'UPDATE TB_SERVICOS SET ATIVO = :ATIVO WHERE ID = :ID';
+    Q.ParamByName('ATIVO').AsInteger := NovoAtivo;
+    Q.ParamByName('ID').AsInteger := ServicoID;
+    Q.ExecSQL;
+  finally
+    Q.Free;
+  end;
+
+  AtualizarKPIs;
+  CarregarServicos;
 end;
 
 end.
