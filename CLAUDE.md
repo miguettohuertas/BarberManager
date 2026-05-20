@@ -287,14 +287,25 @@ BarberManager/
    - ✅ ComboBox por linha para alterar status (UPDATE TB_AGENDAMENTOS)
    - ✅ Injectado em lytAreaPrincipal via rectMenuAgendaClick (mesmo padrão de TFrameServicos)
 
-3. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
+3. **Frame Clientes — CONCLUÍDO** (`View.Frame.Clientes.pas`):
+   - ✅ Lista de clientes de TB_USUARIOS WHERE PERFIL='CLIENTE'
+   - ✅ KPIs reais: Total, Ativos, Novos este mês (DT_CADASTRO)
+   - ✅ Busca em tempo real por nome e email (CONTAINING)
+   - ✅ Badge de status por linha (Ativo/Inativo)
+   - ✅ Toggle ativo/inativo por linha (UPDATE TB_USUARIOS)
+   - ✅ Migration: DT_CADASTRO adicionado à TB_USUARIOS
+
+4. **Frame Financeiro — CONCLUÍDO** (`View.Frame.Financeiro.pas`):
+   - ✅ Relatório de transações com JOIN a 4 tabelas
+   - ✅ KPIs reais: Faturamento Total, Concluídos, Ticket Médio, Cancelamentos
+   - ✅ Filtros por mês e ano (ComboBox reactivos)
+   - ✅ Lista com badges coloridos por status
+   - ✅ COALESCE para evitar NULL em queries agregadas
+
+5. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
    - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
    - Barra de meta: receita do dia vs meta configurável
    - KPIs já funcionam — manter
-
-4. **Tela Clientes do Dashboard**
-
-5. **Tela Financeiro do Dashboard**
 
 6. **Tela Configurações do Dashboard**
 
