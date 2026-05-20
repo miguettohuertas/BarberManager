@@ -66,6 +66,7 @@ BarberManager/
 | `TB_BARBEIROS`    | Barbeiros. Colunas: ID, USUARIO_ID (FK → TB_USUARIOS), CARGO, AVALIACAO_MEDIA, ATIVO |
 | `TB_AGENDAMENTOS` | Agendamentos. Colunas: ID, CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, HR_INICIO, HR_FIM, STATUS ('PENDENTE'/'EM_ANDAMENTO'/'CONCLUIDO'/'CANCELADO'), VALOR_COBRADO |
 | `TB_AVALIACOES`   | Avaliações de serviço. Colunas: ID, AGENDAMENTO_ID (FK TB_AGENDAMENTOS), CLIENTE_ID (FK TB_USUARIOS), BARBEIRO_ID (FK TB_BARBEIROS), NOTA INTEGER (1-5), COMENTARIO VARCHAR(500), DT_AVALIACAO TIMESTAMP DEFAULT CURRENT_TIMESTAMP |
+| `TB_CONFIGURACOES` | Configurações da barbearia. Colunas: ID, CHAVE VARCHAR(50) UNIQUE, VALOR VARCHAR(255), DESCRICAO VARCHAR(255) |
 
 ---
 
@@ -302,12 +303,18 @@ BarberManager/
    - ✅ Lista com badges coloridos por status
    - ✅ COALESCE para evitar NULL em queries agregadas
 
-5. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
+5. **Frame Configurações — CONCLUÍDO** (`View.Frame.Configuracoes.pas`):
+   - ✅ Criado do zero — todo o UI por código em AfterConstruction
+   - ✅ Tabela TB_CONFIGURACOES criada (migration 002)
+   - ✅ Campos: Nome da Barbearia, Meta Diária, Horário Abertura/Fechamento, Telefone, Endereço
+   - ✅ CarregarConfiguracoes — SELECT CHAVE/VALOR e preenche campos
+   - ✅ SalvarConfiguracoes — UPDATE por CHAVE para cada campo
+   - ✅ Injectado via rectMenuConfigClick (mesmo padrão dos outros frames)
+
+6. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
    - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
    - Barra de meta: receita do dia vs meta configurável
    - KPIs já funcionam — manter
-
-6. **Tela Configurações do Dashboard**
 
 7. **Deploy com D2Bridge**
 
