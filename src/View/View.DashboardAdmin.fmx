@@ -2837,6 +2837,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuConfigClick
           object lblMenuConfig: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]

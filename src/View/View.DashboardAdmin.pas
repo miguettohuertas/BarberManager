@@ -260,6 +260,7 @@ type
     procedure rectMenuAgendaClick(Sender: TObject);
     procedure rectMenuClientesClick(Sender: TObject);
     procedure rectMenuFinanceiroClick(Sender: TObject);
+    procedure rectMenuConfigClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure rectSetaAnteriorAgendaClick(Sender: TObject);
     procedure rectSetaProximaAgendaClick(Sender: TObject);
@@ -290,7 +291,7 @@ implementation
 {$R *.fmx}
 
 uses View.Frame.Servicos, View.Frame.Agenda, View.Frame.Clientes,
-  View.Frame.Financeiro, View.Principal,
+  View.Frame.Financeiro, View.Frame.Configuracoes, View.Principal,
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
   System.DateUtils, System.IOUtils;
 
@@ -797,6 +798,25 @@ begin
   lytHeaderDashboard.Visible := False;
 
   Frame := TFrameFinanceiro.Create(Self);
+  Frame.Parent := lytAreaPrincipal;
+  Frame.Align := TAlignLayout.Client;
+end;
+
+procedure TFrmDashboardAdmin.rectMenuConfigClick(Sender: TObject);
+var
+  Frame: TFrameConfiguracoes;
+  I: Integer;
+begin
+  AtualizarMenuLateral('configuracoes');
+
+  for I := lytAreaPrincipal.ControlsCount - 1 downto 0 do
+    if lytAreaPrincipal.Controls[I] is TFrame then
+      lytAreaPrincipal.Controls[I].Free;
+
+  scrollDashboard.Visible := False;
+  lytHeaderDashboard.Visible := False;
+
+  Frame := TFrameConfiguracoes.Create(Self);
   Frame.Parent := lytAreaPrincipal;
   Frame.Align := TAlignLayout.Client;
 end;

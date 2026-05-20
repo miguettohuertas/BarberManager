@@ -9,7 +9,8 @@ uses
   View.Frame.Servicos in 'View\View.Frame.Servicos.pas' {FrameServicos: TFrame},
   View.Frame.Agenda in 'View\View.Frame.Agenda.pas' {FrameAgenda: TFrame},
   View.Frame.Clientes in 'View\View.Frame.Clientes.pas' {FrameClientes: TFrame},
-  View.Frame.Financeiro in 'View\View.Frame.Financeiro.pas' {FrameFinanceiro: TFrame};
+  View.Frame.Financeiro in 'View\View.Frame.Financeiro.pas' {FrameFinanceiro: TFrame},
+  View.Frame.Configuracoes in 'View\View.Frame.Configuracoes.pas' {FrameConfiguracoes: TFrame};
 
 {$R *.res}
 
