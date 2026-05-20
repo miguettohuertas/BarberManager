@@ -60,7 +60,7 @@ BarberManager/
 
 | Tabela            | Descrição                                          |
 |-------------------|----------------------------------------------------|
-| `TB_USUARIOS`     | Clientes e utilizadores do sistema. Colunas: ID, NOME_COMPLETO, EMAIL, SENHA_HASH (SHA-256 uppercase), PERFIL ('ADMIN'/'CLIENTE'), ATIVO |
+| `TB_USUARIOS`     | Clientes e utilizadores do sistema. Colunas: ID, NOME_COMPLETO, EMAIL, SENHA_HASH (SHA-256 uppercase), PERFIL ('ADMIN'/'CLIENTE'), ATIVO, DT_CADASTRO TIMESTAMP DEFAULT CURRENT_TIMESTAMP |
 | `TB_SERVICOS`     | Catálogo de serviços. Colunas: ID, NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA_ID (FK → TB_CATEGORIAS), BADGE, ATIVO |
 | `TB_CATEGORIAS`   | Categorias de serviços. Colunas: ID, NOME (ex: 'Cabelo', 'Barba', 'Estética') |
 | `TB_BARBEIROS`    | Barbeiros. Colunas: ID, USUARIO_ID (FK → TB_USUARIOS), CARGO, AVALIACAO_MEDIA, ATIVO |

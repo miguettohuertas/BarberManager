@@ -7,7 +7,9 @@ uses
   Model.Conexao in 'Model\Model.Conexao.pas' {dmConexao: TDataModule},
   View.DashboardAdmin in 'View\View.DashboardAdmin.pas' {FrmDashboardAdmin},
   View.Frame.Servicos in 'View\View.Frame.Servicos.pas' {FrameServicos: TFrame},
-  View.Frame.Agenda in 'View\View.Frame.Agenda.pas' {FrameAgenda: TFrame};
+  View.Frame.Agenda in 'View\View.Frame.Agenda.pas' {FrameAgenda: TFrame},
+  View.Frame.Clientes in 'View\View.Frame.Clientes.pas' {FrameClientes: TFrame},
+  View.Frame.Financeiro in 'View\View.Frame.Financeiro.pas' {FrameFinanceiro: TFrame};
 
 {$R *.res}
 

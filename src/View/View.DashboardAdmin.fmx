@@ -1730,6 +1730,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuClientesClick
           object lblMenuClientes: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]
@@ -2369,6 +2370,7 @@ object FrmDashboardAdmin: TFrmDashboardAdmin
           Size.Height = 45.000000000000000000
           Size.PlatformDefault = False
           Stroke.Kind = None
+          OnClick = rectMenuFinanceiroClick
           object lblMenuFinanceiro: TLabel
             Align = Client
             StyledSettings = [Family, Size, Style]
