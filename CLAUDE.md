@@ -311,12 +311,19 @@ BarberManager/
    - ✅ SalvarConfiguracoes — UPDATE por CHAVE para cada campo
    - ✅ Injectado via rectMenuConfigClick (mesmo padrão dos outros frames)
 
-6. **Dashboard Admin — dados reais** (`View.DashboardAdmin.pas`):
-   - Gráfico de barras semanal com receita por dia (TB_AGENDAMENTOS por DT_AGENDAMENTO)
-   - Barra de meta: receita do dia vs meta configurável
-   - KPIs já funcionam — manter
+6. **Dashboard Admin — melhorias implementadas** (`View.DashboardAdmin.pas`):
+   - ✅ Timer automático de status (TTimer 60s): PENDENTE→EM_ANDAMENTO→CONCLUIDO baseado em CURRENT_DATE/CURRENT_TIME
+   - ✅ AtualizarStatusAutomatico executado no FormShow e a cada minuto
+   - ✅ ForceQueue em todos os toggles/deletes (Serviços e Agenda) — fix Access Violation
+   - ✅ Ícone cadeado (login) alinhado com ícone email — Margins e Height corrigidos no .fmx
+   - ✅ Ícone calendário real (proicons--calendar.png) na tela Clientes — substituiu emoji
+   - ✅ Campo busca Clientes: StyleLookup transparente, fonte branca, largura reduzida
+   - ✅ Colunas tabela Clientes alinhadas com os dados (4 colunas reais)
 
-7. **Deploy com D2Bridge**
+7. **Deploy com D2Bridge** — PRÓXIMO PASSO:
+   - Configurar D2Bridge para servir FrmDashboardAdmin como aplicação Web
+   - Adaptar layouts para responsividade Web
+   - Configurar servidor/hospedagem
 
 ---
 
