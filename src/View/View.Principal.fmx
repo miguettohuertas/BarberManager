@@ -1270,7 +1270,7 @@ object FrmPrincipal: TFrmPrincipal
                 Margins.Top = 10.000000000000000000
                 Margins.Right = 10.000000000000000000
                 Margins.Bottom = 10.000000000000000000
-                Size.Width = 302.000000000000000000
+                Size.Width = 287.000000000000000000
                 Size.Height = 28.000000000000000000
                 Size.PlatformDefault = False
                 TextPrompt = '"Sua senha"'
@@ -1512,8 +1512,11 @@ object FrmPrincipal: TFrmPrincipal
                       'r--lock.png'
                   end>
                 Align = Left
+                Margins.Left = 15.000000000000000000
+                Margins.Top = 12.000000000000000000
+                Margins.Bottom = 12.000000000000000000
                 Size.Width = 30.000000000000000000
-                Size.Height = 48.000000000000000000
+                Size.Height = 24.000000000000000000
                 Size.PlatformDefault = False
               end
             end

@@ -206,14 +206,18 @@ begin
   LytBusca := TLayout.Create(RectFundo);
   LytBusca.Parent := RectFundo;
   LytBusca.Align := TAlignLayout.Top;
-  LytBusca.Height := 52;
+  LytBusca.Height := 44;
   LytBusca.Margins.Left   := 16;
   LytBusca.Margins.Right  := 16;
   LytBusca.Margins.Bottom := 8;
 
   RectBg := TRectangle.Create(LytBusca);
   RectBg.Parent := LytBusca;
-  RectBg.Align := TAlignLayout.Client;
+  RectBg.Align := TAlignLayout.None;
+  RectBg.Position.X := 0;
+  RectBg.Position.Y := 4;
+  RectBg.Width := 400;
+  RectBg.Height := 36;
   RectBg.Fill.Color := $FF141C2B;
   RectBg.Stroke.Kind := TBrushKind.None;
   RectBg.XRadius := 8;
@@ -222,10 +226,13 @@ begin
   FEdtBusca := TEdit.Create(RectBg);
   FEdtBusca.Parent := RectBg;
   FEdtBusca.Align := TAlignLayout.Client;
+  FEdtBusca.StyleLookup := 'transparentedit';
+  FEdtBusca.StyledSettings := [];
+  FEdtBusca.TextSettings.FontColor := $FFFFFFFF;
   FEdtBusca.Margins.Left   := 12;
   FEdtBusca.Margins.Right  := 12;
-  FEdtBusca.Margins.Top    := 6;
-  FEdtBusca.Margins.Bottom := 6;
+  FEdtBusca.Margins.Top    := 4;
+  FEdtBusca.Margins.Bottom := 4;
   FEdtBusca.TextPrompt := 'Buscar cliente por nome ou e-mail...';
   FEdtBusca.OnChangeTracking := BuscaChange;
 
@@ -246,11 +253,10 @@ begin
   RectHeaderTab.YRadius := 8;
   RectHeaderTab.HitTest := False;
 
-  CriarColHeader('CLIENTE',       8,   280);
-  CriarColHeader('E-MAIL',        288, 240);
-  CriarColHeader('CADASTRO',      528, 130);
-  CriarColHeader('STATUS',        658, 100);
-  CriarColHeader('A'#199#213'ES', 758, 120);
+  CriarColHeader('CLIENTE',       8,   270);
+  CriarColHeader('CADASTRO',      288, 230);
+  CriarColHeader('STATUS',        528, 120);
+  CriarColHeader('A'#199#213'ES', 658, 120);
 
   // === SCROLL DA LISTA (Client — ap'#243's Bottom e Top) ===
   FScrollLista := TVertScrollBox.Create(RectFundo);
@@ -313,7 +319,9 @@ var
   RectBadge: TRectangle;
   LblStatus: TLabel;
   LytAcoes: TLayout;
-  LblAgend, LblToggle: TLabel;
+  ImgAgend: TImage;
+  CaminhoIcone: string;
+  LblToggle: TLabel;
   Ativo: Integer;
   Nome: string;
   CorFundo: TAlphaColor;
@@ -469,20 +477,22 @@ begin
       LytAcoes.Width := 160;
       LytAcoes.Height := 60;
 
-      LblAgend := TLabel.Create(LytAcoes);
-      LblAgend.Parent := LytAcoes;
-      LblAgend.Position.X := 4;
-      LblAgend.Position.Y := 18;
-      LblAgend.Width := 60;
-      LblAgend.Height := 24;
-      LblAgend.Text := #$D83D#$DCC5; // emoji calendario
-      LblAgend.StyledSettings := [];
-      LblAgend.TextSettings.Font.Size := 18;
-      LblAgend.TextSettings.HorzAlign := TTextAlign.Center;
-      LblAgend.HitTest := True;
-      LblAgend.Cursor := crHandPoint;
-      LblAgend.Tag := Q.FieldByName('ID').AsInteger;
-      LblAgend.OnClick := AcaoVerAgendamentosClick;
+      ImgAgend := TImage.Create(LytAcoes);
+      ImgAgend.Parent := LytAcoes;
+      ImgAgend.Align := TAlignLayout.None;
+      ImgAgend.Position.X := 4;
+      ImgAgend.Position.Y := 16;
+      ImgAgend.Width := 28;
+      ImgAgend.Height := 28;
+      ImgAgend.WrapMode := TImageWrapMode.Fit;
+      ImgAgend.HitTest := True;
+      ImgAgend.Cursor := crHandPoint;
+      ImgAgend.Tag := Q.FieldByName('ID').AsInteger;
+      ImgAgend.OnClick := AcaoVerAgendamentosClick;
+      CaminhoIcone := ExtractFilePath(ParamStr(0)) +
+        '..\..\..\docs\images\proicons--calendar.png';
+      if FileExists(CaminhoIcone) then
+        ImgAgend.Bitmap.LoadFromFile(CaminhoIcone);
 
       LblToggle := TLabel.Create(LytAcoes);
       LblToggle.Parent := LytAcoes;
@@ -533,7 +543,7 @@ end;
 procedure TFrameClientes.AcaoVerAgendamentosClick(Sender: TObject);
 begin
   TDialogService.ShowMessage(
-    'Agendamentos do cliente ID: ' + IntToStr(TLabel(Sender).Tag));
+    'Agendamentos do cliente ID: ' + IntToStr(TComponent(Sender).Tag));
 end;
 
 procedure TFrameClientes.AcaoToggleAtivoClick(Sender: TObject);

@@ -139,7 +139,7 @@ implementation
 
 uses
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
-  System.StrUtils, FMX.DialogService;
+  System.StrUtils, FMX.DialogService, System.Threading;
 
 {$R *.fmx}
 
@@ -730,7 +730,7 @@ begin
         Q.Free;
       end;
       AtualizarKPIs;
-      CarregarServicos;
+      TThread.ForceQueue(nil, procedure begin CarregarServicos; end);
     end);
 end;
 
@@ -1426,7 +1426,7 @@ begin
   end;
 
   AtualizarKPIs;
-  CarregarServicos;
+  TThread.ForceQueue(nil, procedure begin CarregarServicos; end);
 end;
 
 end.

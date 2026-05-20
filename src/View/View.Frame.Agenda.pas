@@ -49,7 +49,7 @@ implementation
 
 uses
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
-  System.StrUtils, FMX.DialogService;
+  System.StrUtils, FMX.DialogService, System.Threading;
 
 procedure TFrameAgenda.AfterConstruction;
 var
@@ -723,7 +723,7 @@ begin
   end;
 
   AtualizarKPIs;
-  CarregarAgendamentos;
+  TThread.ForceQueue(nil, procedure begin CarregarAgendamentos; end);
 end;
 
 procedure TFrameAgenda.AplicarFiltroStatus(const Status: string);

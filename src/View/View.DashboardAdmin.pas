@@ -271,6 +271,9 @@ type
     procedure lblLinkGraficoClick(Sender: TObject);
   private
     FDataAgenda: TDate;
+    FTimerStatus: TTimer;
+    procedure TimerStatusTick(Sender: TObject);
+    procedure AtualizarStatusAutomatico;
     procedure AtualizarKPIs;
     procedure CarregarLinhaTempo;
     procedure AtualizarMenuLateral(const ItemAtivo: string);
@@ -303,9 +306,17 @@ begin
   FDataAgenda := Date;
   CarregarIconesSetas;
   AtualizarDataAgenda;
+  AtualizarStatusAutomatico;
   AtualizarKPIs;
   CarregarLinhaTempo;
   AtualizarGraficoSemanal;
+  if FTimerStatus = nil then
+  begin
+    FTimerStatus := TTimer.Create(Self);
+    FTimerStatus.Interval := 60000;
+    FTimerStatus.OnTimer := TimerStatusTick;
+    FTimerStatus.Enabled := True;
+  end;
 end;
 
 procedure TFrmDashboardAdmin.AtualizarKPIs;
@@ -1333,6 +1344,48 @@ begin
   Lbl.TextSettings.FontColor := $FFF58A00; Lbl.HitTest := False;
 
   scrollRelatorio.Content.Height := YPos + 60;
+end;
+
+procedure TFrmDashboardAdmin.AtualizarStatusAutomatico;
+var
+  Q: TFDQuery;
+begin
+  Q := TFDQuery.Create(nil);
+  try
+    Q.Connection := dmConexao.FDConnection1;
+
+    // PENDENTE → EM_ANDAMENTO: today, start time has arrived
+    Q.SQL.Text :=
+      'UPDATE TB_AGENDAMENTOS SET STATUS = ''EM_ANDAMENTO'' ' +
+      'WHERE STATUS = ''PENDENTE'' ' +
+      'AND DT_AGENDAMENTO = CURRENT_DATE ' +
+      'AND HR_INICIO <= CURRENT_TIME';
+    Q.ExecSQL;
+
+    // EM_ANDAMENTO → CONCLUIDO: end time passed today, or any past date
+    Q.SQL.Text :=
+      'UPDATE TB_AGENDAMENTOS SET STATUS = ''CONCLUIDO'' ' +
+      'WHERE STATUS = ''EM_ANDAMENTO'' ' +
+      'AND (DT_AGENDAMENTO < CURRENT_DATE ' +
+      '  OR (DT_AGENDAMENTO = CURRENT_DATE AND HR_FIM <= CURRENT_TIME))';
+    Q.ExecSQL;
+
+    // PENDENTE → CONCLUIDO: past dates that were never started (missed)
+    Q.SQL.Text :=
+      'UPDATE TB_AGENDAMENTOS SET STATUS = ''CONCLUIDO'' ' +
+      'WHERE STATUS = ''PENDENTE'' ' +
+      'AND DT_AGENDAMENTO < CURRENT_DATE';
+    Q.ExecSQL;
+
+  finally
+    Q.Free;
+  end;
+end;
+
+procedure TFrmDashboardAdmin.TimerStatusTick(Sender: TObject);
+begin
+  AtualizarStatusAutomatico;
+  AtualizarKPIs;
 end;
 
 end.
