@@ -190,4 +190,10 @@
     </ProjectExtensions>
     <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+    <Target Name="CopyFrontend" AfterTargets="Build">
+        <Copy SourceFiles="$(MSBuildProjectDirectory)\src\Web\index.html"
+              DestinationFiles="$(MSBuildProjectDirectory)\$(Platform)\$(Config)\index.html"
+              SkipUnchangedFiles="true"/>
+        <Message Text="Copied index.html → $(Platform)\$(Config)\index.html"/>
+    </Target>
 </Project>
