@@ -1,0 +1,213 @@
+unit API.Agendamentos;
+
+interface
+
+procedure RegistrarRotas;
+
+implementation
+
+uses
+  System.SysUtils, System.JSON, System.DateUtils,
+  FireDAC.Comp.Client, FireDAC.Stan.Param, Data.DB,
+  Horse,
+  API.Conexao;
+
+procedure RotaListar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  Query: TFDQuery;
+  StatusParam, DataParam, SQL: string;
+  Lista: TJSONArray;
+  Item: TJSONObject;
+begin
+  try
+    StatusParam := Req.Query.Field('status').AsString;
+    DataParam   := Req.Query.Field('data').AsString;
+
+    SQL :=
+      'SELECT A.ID, A.DT_AGENDAMENTO, A.HR_INICIO, A.HR_FIM, A.STATUS, A.VALOR_COBRADO, ' +
+      '  U.NOME_COMPLETO AS NOME_CLIENTE, U.EMAIL AS EMAIL_CLIENTE, ' +
+      '  S.NOME AS NOME_SERVICO, S.PRECO, S.DURACAO_MIN, ' +
+      '  B_U.NOME_COMPLETO AS NOME_BARBEIRO ' +
+      'FROM TB_AGENDAMENTOS A ' +
+      'JOIN TB_USUARIOS U ON U.ID = A.CLIENTE_ID ' +
+      'JOIN TB_SERVICOS S ON S.ID = A.SERVICO_ID ' +
+      'JOIN TB_BARBEIROS B ON B.ID = A.BARBEIRO_ID ' +
+      'JOIN TB_USUARIOS B_U ON B_U.ID = B.USUARIO_ID ' +
+      'WHERE 1=1';
+
+    if StatusParam <> '' then
+      SQL := SQL + ' AND A.STATUS = :STATUS';
+    if DataParam <> '' then
+      SQL := SQL + ' AND A.DT_AGENDAMENTO = :DATA';
+
+    SQL := SQL + ' ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO';
+
+    Query := TFDQuery.Create(nil);
+    try
+      Query.Connection := FDConnection;
+      Query.SQL.Text := SQL;
+      if StatusParam <> '' then
+        Query.ParamByName('STATUS').AsString := StatusParam;
+      if DataParam <> '' then
+        Query.ParamByName('DATA').AsString := DataParam;
+      Query.Open;
+
+      Lista := TJSONArray.Create;
+      try
+        while not Query.EOF do
+        begin
+          Item := TJSONObject.Create;
+          Item.AddPair('id',           TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+          Item.AddPair('data',         Query.FieldByName('DT_AGENDAMENTO').AsString);
+          Item.AddPair('horaInicio',   Query.FieldByName('HR_INICIO').AsString);
+          Item.AddPair('horaFim',      Query.FieldByName('HR_FIM').AsString);
+          Item.AddPair('status',       Query.FieldByName('STATUS').AsString);
+          Item.AddPair('valor',        TJSONNumber.Create(Query.FieldByName('VALOR_COBRADO').AsFloat));
+          Item.AddPair('cliente',      Query.FieldByName('NOME_CLIENTE').AsString);
+          Item.AddPair('emailCliente', Query.FieldByName('EMAIL_CLIENTE').AsString);
+          Item.AddPair('servico',      Query.FieldByName('NOME_SERVICO').AsString);
+          Item.AddPair('preco',        TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
+          Item.AddPair('duracaoMin',   TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
+          Item.AddPair('barbeiro',     Query.FieldByName('NOME_BARBEIRO').AsString);
+          Lista.AddElement(Item);
+          Query.Next;
+        end;
+        Res.ContentType('application/json').Status(200).Send(Lista.ToString);
+      finally
+        Lista.Free;
+      end;
+    finally
+      Query.Free;
+    end;
+  except
+    on E: Exception do
+      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+  end;
+end;
+
+procedure RotaCriar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  Body: TJSONObject;
+  Query: TFDQuery;
+  HoraInicio: TTime;
+  HoraFim: TTime;
+  DuracaoMin: Integer;
+begin
+  try
+    Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
+    if not Assigned(Body) then
+    begin
+      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Exit;
+    end;
+    try
+      if Body.GetValue<Integer>('clienteId', 0) = 0 then
+      begin
+        Res.Status(400).Send('{"erro":"clienteId obrigatório"}');
+        Exit;
+      end;
+      if Body.GetValue<Integer>('barbeiroId', 0) = 0 then
+      begin
+        Res.Status(400).Send('{"erro":"barbeiroId obrigatório"}');
+        Exit;
+      end;
+      if Body.GetValue<Integer>('servicoId', 0) = 0 then
+      begin
+        Res.Status(400).Send('{"erro":"servicoId obrigatório"}');
+        Exit;
+      end;
+
+      HoraInicio := StrToTimeDef(Body.GetValue<string>('horaInicio', ''), 0);
+      DuracaoMin := Body.GetValue<Integer>('duracaoMin', 60);
+      HoraFim    := IncMinute(HoraInicio, DuracaoMin);
+
+      Query := TFDQuery.Create(nil);
+      try
+        Query.Connection := FDConnection;
+        Query.SQL.Text :=
+          'INSERT INTO TB_AGENDAMENTOS ' +
+          '  (CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, HR_INICIO, HR_FIM, STATUS, VALOR_COBRADO) ' +
+          'VALUES ' +
+          '  (:CLI, :BAR, :SVC, :DATA, :INICIO, :FIM, ''PENDENTE'', :VALOR)';
+        Query.ParamByName('CLI').AsInteger   := Body.GetValue<Integer>('clienteId', 0);
+        Query.ParamByName('BAR').AsInteger   := Body.GetValue<Integer>('barbeiroId', 0);
+        Query.ParamByName('SVC').AsInteger   := Body.GetValue<Integer>('servicoId', 0);
+        Query.ParamByName('DATA').AsString   := Body.GetValue<string>('data', '');
+        Query.ParamByName('INICIO').AsString := TimeToStr(HoraInicio);
+        Query.ParamByName('FIM').AsString    := TimeToStr(HoraFim);
+        Query.ParamByName('VALOR').AsFloat   := Body.GetValue<Double>('valor', 0);
+        Query.ExecSQL;
+        Res.ContentType('application/json').Status(201)
+          .Send('{"mensagem":"Agendamento criado"}');
+      finally
+        Query.Free;
+      end;
+    finally
+      Body.Free;
+    end;
+  except
+    on E: Exception do
+      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+  end;
+end;
+
+procedure RotaAtualizarStatus(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  Body: TJSONObject;
+  Query: TFDQuery;
+  ID: Integer;
+  NovoStatus: string;
+begin
+  try
+    ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
+    if ID = 0 then
+    begin
+      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Exit;
+    end;
+
+    Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
+    if not Assigned(Body) then
+    begin
+      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Exit;
+    end;
+    try
+      NovoStatus := UpperCase(Body.GetValue<string>('status', ''));
+      if not (NovoStatus = 'PENDENTE') and not (NovoStatus = 'EM_ANDAMENTO') and
+         not (NovoStatus = 'CONCLUIDO') and not (NovoStatus = 'CANCELADO') then
+      begin
+        Res.Status(400).Send('{"erro":"Status inválido"}');
+        Exit;
+      end;
+
+      Query := TFDQuery.Create(nil);
+      try
+        Query.Connection := FDConnection;
+        Query.SQL.Text :=
+          'UPDATE TB_AGENDAMENTOS SET STATUS = :STATUS WHERE ID = :ID';
+        Query.ParamByName('STATUS').AsString := NovoStatus;
+        Query.ParamByName('ID').AsInteger    := ID;
+        Query.ExecSQL;
+        Res.ContentType('application/json').Status(200)
+          .Send('{"mensagem":"Status atualizado"}');
+      finally
+        Query.Free;
+      end;
+    finally
+      Body.Free;
+    end;
+  except
+    on E: Exception do
+      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+  end;
+end;
+
+procedure RegistrarRotas;
+begin
+  THorse.Get('/api/agendamentos',                RotaListar);
+  THorse.Post('/api/agendamentos',               RotaCriar);
+  THorse.Put('/api/agendamentos/:id/status',     RotaAtualizarStatus);
+end;
+
+end.
