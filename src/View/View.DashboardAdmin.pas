@@ -678,10 +678,20 @@ end;
 
 procedure TFrmDashboardAdmin.rectMenuSairClick(Sender: TObject);
 begin
-  FrmPrincipal.LimparSessao;
-  Self.Hide;
-  FrmPrincipal.TabControlPrincipal.ActiveTab := FrmPrincipal.TabLogin;
-  FrmPrincipal.Show;
+  AtualizarMenuLateral('sair');
+  try
+    if Assigned(FrmPrincipal) then
+    begin
+      FrmPrincipal.LimparSessao;
+      Hide;
+      FrmPrincipal.TabControlPrincipal.ActiveTab := FrmPrincipal.TabLogin;
+      FrmPrincipal.Show;
+    end
+    else
+      Close;
+  except
+    Close;
+  end;
 end;
 
 procedure TFrmDashboardAdmin.rectMenuServicosClick(Sender: TObject);
