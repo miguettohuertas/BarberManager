@@ -29,6 +29,9 @@ Inclui painel de cliente (agendamento de serviços) e painel de administrador (d
 | Password DB      | `masterkey`                                                                      |
 | CharacterSet     | `UTF8`                                                                           |
 | Protocol         | `Local`                                                                          |
+| D2Bridge Framework | `C:\D2Bridge\d2bridgeframework-main\Stable\D2Bridge Framework`               |
+| BarberManagerWeb.dpr | `C:\ProjetosDelphi\BarberManager\BarberManager\BarberManagerWeb.dpr`       |
+| Web assets (HTML) | `src\Web\HTML\`                                                                 |
 
 ---
 
@@ -320,10 +323,17 @@ BarberManager/
    - ✅ Campo busca Clientes: StyleLookup transparente, fonte branca, largura reduzida
    - ✅ Colunas tabela Clientes alinhadas com os dados (4 colunas reais)
 
-7. **Deploy com D2Bridge** — PRÓXIMO PASSO:
-   - Configurar D2Bridge para servir FrmDashboardAdmin como aplicação Web
-   - Adaptar layouts para responsividade Web
-   - Configurar servidor/hospedagem
+7. **Deploy D2Bridge — EM PROGRESSO** (`BarberManagerWeb.dpr`):
+   - ✅ D2Bridge framework instalado (open source, github.com/d2bridge/d2bridgeframework)
+   - ✅ BarberManagerWeb.dpr criado — compila sem erros (0 errors, 0 warnings)
+   - ✅ TFrmDashboardAdmin herda de TD2BridgeForm em modo web ({$IFDEF D2Bridge})
+   - ✅ Servidor HTTP a correr em localhost:8080
+   - ✅ Assets carregados no browser (Bootstrap, jQuery, D2Bridge JS/CSS)
+   - ✅ Console do browser sem erros
+   - ✅ View.Principal excluída do build web ({$IFNDEF D2Bridge})
+   - ✅ rectMenuSairClick adaptado para web (Close em vez de FrmPrincipal)
+   - ⏳ ExportD2Bridge — pendente: mapear controlos FMX para renderização HTML no browser
+   - ⏳ Deploy em servidor público (após ExportD2Bridge funcional)
 
 ---
 
@@ -375,6 +385,15 @@ BarberManager/
 ### TFlowLayout
 - Não tem propriedade `.Content` — usar `flowHorarios.Height` com valor fixo calculado
 - Valor actual: `flowHorarios.Height = 220` (20 slots × 80px wide, ~4 por linha = 5 linhas × 40px + margens)
+
+### D2Bridge — Regras Web
+- `TFrmDashboardAdmin` herda de `TD2BridgeForm` apenas em modo web: `{$IFDEF D2Bridge}`
+- A unit `D2Bridge.Forms` só é incluída em modo web: `{$IFDEF D2Bridge}, D2Bridge.Forms{$ENDIF}`
+- `View.Principal` excluída do build web: `{$IFNDEF D2Bridge}View.Principal,{$ENDIF}`
+- `FrmDashboardAdmin` é uma função (não var) em modo web — retorna `TD2BridgeForm.GetInstance`
+- `ExportD2Bridge`: usar `VCLObj(ctrl)` para expor controlos FMX ao browser
+- Build web usa defines: `FMX;D2Bridge` (configurados no `BarberManagerWeb.dproj`)
+- Assets `wwwroot` devem estar na mesma pasta que o `.exe`
 
 ### SHA-256 para passwords
 - `System.Hash.THashSHA2.GetHashString(senha, THashSHA2.TSHA2Version.SHA256)`
