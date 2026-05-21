@@ -1,4 +1,4 @@
-unit View.Launcher;
+﻿unit View.Launcher;
 
 interface
 
@@ -32,7 +32,7 @@ procedure TFrmLauncher.FormCreate(Sender: TObject);
 var
   LblPorta: TLabel;
 begin
-  Caption  := 'BarberManager — Servidor Web';
+  Caption  := 'BarberManager - Servidor Web';
   Width    := 440;
   Height   := 180;
   Position := TFormPosition.ScreenCenter;

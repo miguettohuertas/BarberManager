@@ -1,0 +1,14 @@
+D2Bridge Framework
+by Talis Jonatas Gomes
+https://www.d2bridge.com.br
+
+LOG Started in 20/05/2026 21:56:39
+
+20/05/2026 21:56:45 | Component = FrmDashboardAdmin | Event = SetupD2Bridge | Error = Access violation at address 6C0D0001 in module 'BarberManagerWeb.exe'. Execution of address 6C0D0001
+20/05/2026 21:56:45 | Component = FrmDashboardAdmin | Event = ExportD2Bridge | Error = Access violation at address 6E754674 in module 'BarberManagerWeb.exe'. Execution of address 6E754674
+20/05/2026 21:56:45 | Component = FrmDashboardAdmin | Event = CreateFrameworkForm | Error = Access violation at address 016636A8 in module 'BarberManagerWeb.exe'. Read of address 00000000
+20/05/2026 21:56:45 | Component = FrmDashboardAdmin | Event = ExportD2Bridge | Error = Access violation at address 01678DA7 in module 'BarberManagerWeb.exe'. Read of address 00000000
+20/05/2026 21:56:47 | Component = FrmDashboardAdmin_1 | Event = SetupD2Bridge | Error = Access violation at address 6C0D0001 in module 'BarberManagerWeb.exe'. Execution of address 6C0D0001
+20/05/2026 21:56:47 | Component = FrmDashboardAdmin_1 | Event = ExportD2Bridge | Error = Access violation at address 6E754674 in module 'BarberManagerWeb.exe'. Execution of address 6E754674
+20/05/2026 21:56:47 | Component = FrmDashboardAdmin_1 | Event = CreateFrameworkForm | Error = Access violation at address 016636A8 in module 'BarberManagerWeb.exe'. Read of address 00000000
+20/05/2026 21:56:47 | Component = FrmDashboardAdmin_1 | Event = ExportD2Bridge | Error = Access violation at address 01678DA7 in module 'BarberManagerWeb.exe'. Read of address 00000000

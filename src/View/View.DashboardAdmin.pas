@@ -5,10 +5,15 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts,
-  FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls;
+  FMX.Edit, FMX.Objects, FMX.Controls.Presentation, FMX.StdCtrls
+  {$IFDEF D2Bridge}, D2Bridge.Forms{$ENDIF};
 
 type
+  {$IFDEF D2Bridge}
+  TFrmDashboardAdmin = class(TD2BridgeForm)
+  {$ELSE}
   TFrmDashboardAdmin = class(TForm)
+  {$ENDIF}
     rectFundoDashboard: TRectangle;
     rectMenuLateral: TRectangle;
     lytLogoAdmin: TLayout;
@@ -284,19 +289,39 @@ type
     procedure CarregarRelatorioSemanal;
   public
     { Public declarations }
+    {$IFDEF D2Bridge}
+    procedure ExportD2Bridge; override;
+    {$ENDIF}
   end;
 
+{$IFDEF D2Bridge}
+function FrmDashboardAdmin: TFrmDashboardAdmin;
+{$ELSE}
 var
   FrmDashboardAdmin: TFrmDashboardAdmin;
+{$ENDIF}
 
 implementation
 
 {$R *.fmx}
 
 uses View.Frame.Servicos, View.Frame.Agenda, View.Frame.Clientes,
-  View.Frame.Financeiro, View.Frame.Configuracoes, View.Principal,
+  View.Frame.Financeiro, View.Frame.Configuracoes,
+  {$IFNDEF D2Bridge}View.Principal,{$ENDIF}
   Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param,
   System.DateUtils, System.IOUtils;
+
+{$IFDEF D2Bridge}
+function FrmDashboardAdmin: TFrmDashboardAdmin;
+begin
+  Result := TFrmDashboardAdmin(TD2BridgeForm.GetInstance);
+end;
+
+procedure TFrmDashboardAdmin.ExportD2Bridge;
+begin
+  inherited;
+end;
+{$ENDIF}
 
 procedure TFrmDashboardAdmin.FormShow(Sender: TObject);
 begin
@@ -680,6 +705,7 @@ procedure TFrmDashboardAdmin.rectMenuSairClick(Sender: TObject);
 begin
   AtualizarMenuLateral('sair');
   try
+    {$IFNDEF D2Bridge}
     if Assigned(FrmPrincipal) then
     begin
       FrmPrincipal.LimparSessao;
@@ -688,6 +714,7 @@ begin
       FrmPrincipal.Show;
     end
     else
+    {$ENDIF}
       Close;
   except
     Close;
