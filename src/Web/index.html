@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberManager — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0B1220;
+      --card:      #141C2B;
+      --card2:     #1E293B;
+      --border:    #1E293B;
+      --accent:    #F58A00;
+      --accent-bg: rgba(245,138,0,.12);
+      --txt:       #FFFFFF;
+      --txt2:      #94A3B8;
+      --green:     #22C55E;
+      --blue:      #3B82F6;
+      --red:       #EF4444;
+      --orange:    #F58A00;
+      --sidebar-w: 240px;
+      --topbar-h:  72px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .app { display: flex; height: 100vh; }
+
+    /* ── Sidebar ──────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 40px; height: 40px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+
+    .logo-title { font-weight: 700; font-size: 14px; color: var(--txt); }
+    .logo-sub   { font-size: 11px; color: var(--txt2); margin-top: 1px; }
+
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      color: var(--txt2);
+      padding: 8px 20px 6px;
+      text-transform: uppercase;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      margin: 2px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--txt2);
+      font-size: 14px;
+      font-weight: 500;
+      transition: background .15s, color .15s;
+      user-select: none;
+    }
+
+    .nav-item:hover { background: var(--card2); color: var(--txt); }
+
+    .nav-item.active {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .nav-item svg { flex-shrink: 0; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 20px 20px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .admin-chip {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; flex-shrink: 0;
+    }
+
+    .admin-name  { font-size: 13px; font-weight: 600; }
+    .admin-role  { font-size: 11px; color: var(--txt2); }
+
+    /* ── Main ─────────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: var(--topbar-h);
+      min-height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    #page-title { font-size: 20px; font-weight: 700; }
+    #page-date  { font-size: 12px; color: var(--txt2); margin-top: 2px; }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+    }
+
+    .search-box input {
+      background: none; border: none; outline: none;
+      color: var(--txt); font-size: 13px; font-family: inherit;
+      width: 180px;
+    }
+
+    .search-box input::placeholder { color: var(--txt2); }
+
+    .badge-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ── Content ──────────────────────────────────────────── */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── KPI Grid ─────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 700px)  { .kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .kpi-card.kpi-green::before  { background: var(--green); }
+    .kpi-card.kpi-blue::before   { background: var(--blue); }
+    .kpi-card.kpi-orange::before { background: var(--orange); }
+    .kpi-card.kpi-red::before    { background: var(--red); }
+
+    .kpi-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card.kpi-green  .kpi-icon { background: rgba(34,197,94,.15); }
+    .kpi-card.kpi-blue   .kpi-icon { background: rgba(59,130,246,.15); }
+    .kpi-card.kpi-orange .kpi-icon { background: rgba(245,138,0,.15); }
+    .kpi-card.kpi-red    .kpi-icon { background: rgba(239,68,68,.15); }
+
+    .kpi-label { font-size: 12px; color: var(--txt2); font-weight: 500; margin-bottom: 6px; }
+
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--txt);
+      line-height: 1;
+    }
+
+    .kpi-sub { font-size: 11px; color: var(--txt2); margin-top: 6px; }
+
+    /* ── Cards ────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title { font-size: 15px; font-weight: 600; }
+    .card-sub   { font-size: 12px; color: var(--txt2); margin-top: 2px; }
+
+    /* ── Tables ───────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--txt2);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: rgba(255,255,255,.02);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.025); }
+
+    tbody td {
+      padding: 13px 16px;
+      color: var(--txt);
+      vertical-align: middle;
+    }
+
+    .td-secondary { color: var(--txt2); font-size: 12px; }
+
+    .empty-cell, .loading-cell, .error-cell {
+      text-align: center;
+      padding: 40px 16px !important;
+      color: var(--txt2);
+      font-size: 13px;
+    }
+
+    .error-cell { color: var(--red); }
+
+    .loading-cell::after {
+      content: '';
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Badges ───────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-sm {
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    /* ── Filter bar ───────────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--card2);
+      color: var(--txt2);
+      transition: all .15s;
+    }
+
+    .filter-btn:hover { border-color: var(--accent); color: var(--txt); }
+
+    .filter-btn.active {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Status select ────────────────────────────────────── */
+    .status-select {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--txt);
+      font-family: inherit;
+      font-size: 12px;
+      padding: 5px 8px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .status-select:focus { border-color: var(--accent); }
+    .status-select:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Toggle switch ────────────────────────────────────── */
+    .toggle-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .toggle-track {
+      width: 40px; height: 22px;
+      border-radius: 11px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      position: relative;
+      transition: background .2s, border-color .2s;
+    }
+
+    .toggle-track.on {
+      background: rgba(34,197,94,.2);
+      border-color: var(--green);
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--txt2);
+      transition: transform .2s, background .2s;
+    }
+
+    .toggle-track.on .toggle-thumb {
+      transform: translateX(18px);
+      background: var(--green);
+    }
+
+    .toggle-text {
+      font-size: 12px;
+      color: var(--txt2);
+      min-width: 36px;
+    }
+
+    .toggle-track.on + .toggle-text { color: var(--green); }
+
+    .toggle-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: none; border: none; cursor: pointer; padding: 0;
+    }
+
+    .toggle-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ── Client row ───────────────────────────────────────── */
+    .client-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .avatar-sm {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Section header ───────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 { font-size: 18px; font-weight: 700; }
+    .section-header p  { font-size: 12px; color: var(--txt2); margin-top: 3px; }
+
+    /* ── Financeiro placeholder ───────────────────────────── */
+    .placeholder-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
+    .placeholder-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .placeholder-sub { font-size: 13px; color: var(--txt2); }
+
+    /* ── Scrollbar ────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--txt2); }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══════════════════ SIDEBAR ═══════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">✂</div>
+      <div>
+        <div class="logo-title">BarberManager</div>
+        <div class="logo-sub">Painel Admin</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Principal</div>
+
+    <div class="nav-item active" data-s="inicio" onclick="showSection('inicio')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Início
+    </div>
+
+    <div class="nav-item" data-s="agenda" onclick="showSection('agenda')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      Agenda
+    </div>
+
+    <div class="nav-label" style="margin-top:8px">Gestão</div>
+
+    <div class="nav-item" data-s="servicos" onclick="showSection('servicos')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+      </svg>
+      Serviços
+    </div>
+
+    <div class="nav-item" data-s="clientes" onclick="showSection('clientes')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+      </svg>
+      Clientes
+    </div>
+
+    <div class="nav-item" data-s="financeiro" onclick="showSection('financeiro')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+      </svg>
+      Financeiro
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="admin-chip">
+        <div class="avatar">A</div>
+        <div>
+          <div class="admin-name">Administrador</div>
+          <div class="admin-role">Admin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════ MAIN ══════════════════════════ -->
+  <main class="main">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div>
+        <div id="page-title">Dashboard</div>
+        <div id="page-date"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" placeholder="Pesquisar...">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 12px">
+          <div class="badge-dot"></div>
+          <span style="font-size:12px;color:var(--txt2)">Online</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <div class="content">
+
+      <!-- ══ INÍCIO ══════════════════════════════════════ -->
+      <div id="section-inicio" class="section active">
+
+        <div class="section-header">
+          <div>
+            <h2>Dashboard</h2>
+            <p id="dash-sub">Resumo do dia</p>
+          </div>
+          <button onclick="loadDashboard()" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--txt2);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+
+        <!-- KPI cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-green">
+            <div class="kpi-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#22C55E" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+              </svg>
+            </div>
+            <div class="kpi-label">Faturamento</div>
+            <div class="kpi-value" id="kpi-faturamento">—</div>
+            <div class="kpi-sub">Concluídos hoje</div>
+          </div>
+
+          <div class="kpi-card kpi-blue">
+            <div class="kpi-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#3B82F6" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="kpi-label">Total Agendamentos</div>
+            <div class="kpi-value" id="kpi-total">—</div>
+            <div class="kpi-sub">Registados hoje</div>
+          </div>
+
+          <div class="kpi-card kpi-orange">
+            <div class="kpi-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#F58A00" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div class="kpi-label">Pendentes</div>
+            <div class="kpi-value" id="kpi-pendentes">—</div>
+            <div class="kpi-sub">Aguardando atendimento</div>
+          </div>
+
+          <div class="kpi-card kpi-red">
+            <div class="kpi-icon">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#EF4444" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <div class="kpi-label">Cancelamentos</div>
+            <div class="kpi-value" id="kpi-cancelamentos">—</div>
+            <div class="kpi-sub">Cancelados hoje</div>
+          </div>
+        </div>
+
+        <!-- Timeline table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Linha do Tempo</div>
+              <div class="card-sub">Últimos agendamentos do dia</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Serviço</th>
+                  <th>Barbeiro</th>
+                  <th>Data</th>
+                  <th>Hora</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-timeline">
+                <tr><td colspan="7" class="loading-cell">Carregando</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-inicio -->
+
+      <!-- ══ AGENDA ════════════════════════════════════════ -->
+      <div id="section-agenda" class="section">
+
+        <div class="section-header">
+          <div>
+            <h2>Agenda</h2>
+            <p>Gestão de agendamentos</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="filter-bar">
+            <button class="filter-btn active" data-filter="TODOS"       onclick="loadAgenda('TODOS')">Todos</button>
+            <button class="filter-btn"        data-filter="PENDENTE"    onclick="loadAgenda('PENDENTE')">Pendente</button>
+            <button class="filter-btn"        data-filter="EM_ANDAMENTO" onclick="loadAgenda('EM_ANDAMENTO')">Em Andamento</button>
+            <button class="filter-btn"        data-filter="CONCLUIDO"   onclick="loadAgenda('CONCLUIDO')">Concluído</button>
+            <button class="filter-btn"        data-filter="CANCELADO"   onclick="loadAgenda('CANCELADO')">Cancelado</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Cliente</th>
+                  <th>Serviço</th>
+                  <th>Barbeiro</th>
+                  <th>Data / Hora</th>
+                  <th>Valor</th>
+                  <th>Status</th>
+                  <th>Alterar Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-agenda">
+                <tr><td colspan="7" class="loading-cell">Carregando</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-agenda -->
+
+      <!-- ══ SERVIÇOS ══════════════════════════════════════ -->
+      <div id="section-servicos" class="section">
+
+        <div class="section-header">
+          <div>
+            <h2>Serviços</h2>
+            <p>Catálogo de serviços da barbearia</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Todos os Serviços</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Categoria</th>
+                  <th>Badge</th>
+                  <th>Preço</th>
+                  <th>Duração</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-servicos">
+                <tr><td colspan="6" class="loading-cell">Carregando</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-servicos -->
+
+      <!-- ══ CLIENTES ══════════════════════════════════════ -->
+      <div id="section-clientes" class="section">
+
+        <div class="section-header">
+          <div>
+            <h2>Clientes</h2>
+            <p>Base de clientes cadastrados</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Todos os Clientes</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Cadastro</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-clientes">
+                <tr><td colspan="4" class="loading-cell">Carregando</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /section-clientes -->
+
+      <!-- ══ FINANCEIRO ════════════════════════════════════ -->
+      <div id="section-financeiro" class="section">
+        <div class="section-header">
+          <div><h2>Financeiro</h2><p>Relatórios financeiros</p></div>
+        </div>
+        <div class="placeholder-box">
+          <div class="placeholder-icon">📊</div>
+          <div class="placeholder-title">Em desenvolvimento</div>
+          <div class="placeholder-sub">Use GET /api/dashboard/kpis com parâmetro ?data= para dados financeiros por data.</div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main><!-- /main -->
+
+</div><!-- /app -->
+
+<script>
+  'use strict';
+
+  const API = 'http://localhost:9000';
+  let agendaFilter = 'TODOS';
+
+  // ── Helpers ──────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+
+  const fCurrency = v =>
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+      .format(v || 0);
+
+  function fDate(s) {
+    if (!s) return '—';
+    let d;
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      d = new Date(s.substring(0,10) + 'T12:00:00');
+    } else if (/^\d{2}\/\d{2}\/\d{4}/.test(s)) {
+      const [day, mon, yr] = s.split('/');
+      d = new Date(+yr, +mon - 1, +day);
+    } else {
+      return s;
+    }
+    return isNaN(d) ? s : d.toLocaleDateString('pt-BR');
+  }
+
+  const fTime = s => (s && s.length >= 5) ? s.substring(0, 5) : (s || '—');
+
+  function badge(status) {
+    const map = {
+      PENDENTE:     ['#F58A00', 'Pendente'],
+      EM_ANDAMENTO: ['#3B82F6', 'Em Andamento'],
+      CONCLUIDO:    ['#22C55E', 'Concluído'],
+      CANCELADO:    ['#EF4444', 'Cancelado'],
+    };
+    const [c, l] = map[status] || ['#94A3B8', status];
+    return `<span class="badge" style="background:${c}20;color:${c};border:1px solid ${c}40">${l}</span>`;
+  }
+
+  function tableMsg(tbodyId, cols, msg, isError, isLoading) {
+    const cls = isError ? 'error-cell' : isLoading ? 'loading-cell' : 'empty-cell';
+    $(tbodyId).innerHTML =
+      `<tr><td colspan="${cols}" class="${cls}">${msg}</td></tr>`;
+  }
+
+  async function apiFetch(method, path, body) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const r = await fetch(API + path, opts);
+    let data;
+    try { data = await r.json(); } catch { data = {}; }
+    if (!r.ok) throw new Error(data.erro || `HTTP ${r.status}`);
+    return data;
+  }
+
+  // ── Navigation ───────────────────────────────────────────
+  const titles = {
+    inicio: 'Dashboard', agenda: 'Agenda',
+    servicos: 'Serviços', clientes: 'Clientes', financeiro: 'Financeiro'
+  };
+
+  function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    $(`section-${name}`).classList.add('active');
+    document.querySelector(`[data-s="${name}"]`).classList.add('active');
+    $('page-title').textContent = titles[name] || name;
+
+    if (name === 'inicio')     loadDashboard();
+    else if (name === 'agenda')    loadAgenda();
+    else if (name === 'servicos')  loadServicos();
+    else if (name === 'clientes')  loadClientes();
+  }
+
+  // ── Dashboard ────────────────────────────────────────────
+  async function loadDashboard() {
+    const today = new Date().toISOString().slice(0, 10);
+    $('dash-sub').textContent = `Hoje — ${new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'})}`;
+
+    // KPIs
+    for (const id of ['kpi-faturamento','kpi-total','kpi-pendentes','kpi-cancelamentos'])
+      $(id).textContent = '…';
+
+    try {
+      const d = await apiFetch('GET', `/api/dashboard/kpis?data=${today}`);
+      $('kpi-faturamento').textContent   = fCurrency(d.faturamento);
+      $('kpi-total').textContent         = d.total ?? '0';
+      $('kpi-pendentes').textContent     = d.pendentes ?? '0';
+      $('kpi-cancelamentos').textContent = d.cancelamentos ?? '0';
+    } catch (e) {
+      for (const id of ['kpi-faturamento','kpi-total','kpi-pendentes','kpi-cancelamentos'])
+        $(id).textContent = '—';
+    }
+
+    // Timeline
+    tableMsg('tbody-timeline', 7, 'Carregando', false, true);
+    try {
+      const rows = await apiFetch('GET', `/api/dashboard/timeline?data=${today}`);
+      renderTimeline(rows);
+    } catch (e) {
+      tableMsg('tbody-timeline', 7, e.message, true);
+    }
+  }
+
+  function renderTimeline(rows) {
+    if (!rows.length) {
+      tableMsg('tbody-timeline', 7, 'Nenhum agendamento hoje');
+      return;
+    }
+    $('tbody-timeline').innerHTML = rows.map(r => `
+      <tr>
+        <td>${esc(r.cliente)}</td>
+        <td>${esc(r.servico)}</td>
+        <td>${esc(r.barbeiro)}</td>
+        <td class="td-secondary">${fDate(r.data)}</td>
+        <td class="td-secondary">${fTime(r.horaInicio)}</td>
+        <td style="color:var(--green)">${fCurrency(r.valor)}</td>
+        <td>${badge(r.status)}</td>
+      </tr>`).join('');
+  }
+
+  // ── Agenda ───────────────────────────────────────────────
+  async function loadAgenda(filter) {
+    if (filter !== undefined) agendaFilter = filter;
+
+    document.querySelectorAll('.filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.filter === agendaFilter));
+
+    tableMsg('tbody-agenda', 7, 'Carregando', false, true);
+    try {
+      const qs = agendaFilter !== 'TODOS' ? `?status=${agendaFilter}` : '';
+      const rows = await apiFetch('GET', `/api/agendamentos${qs}`);
+      renderAgenda(rows);
+    } catch (e) {
+      tableMsg('tbody-agenda', 7, e.message, true);
+    }
+  }
+
+  function renderAgenda(rows) {
+    if (!rows.length) {
+      tableMsg('tbody-agenda', 7, 'Nenhum agendamento encontrado');
+      return;
+    }
+    $('tbody-agenda').innerHTML = rows.map(r => `
+      <tr>
+        <td>${esc(r.cliente)}</td>
+        <td>${esc(r.servico)}</td>
+        <td>${esc(r.barbeiro)}</td>
+        <td class="td-secondary">${fDate(r.data)} ${fTime(r.horaInicio)}</td>
+        <td style="color:var(--green)">${fCurrency(r.valor)}</td>
+        <td>${badge(r.status)}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus(${r.id}, this.value, this)">
+            <option value="PENDENTE"     ${r.status==='PENDENTE'?'selected':''}>Pendente</option>
+            <option value="EM_ANDAMENTO" ${r.status==='EM_ANDAMENTO'?'selected':''}>Em Andamento</option>
+            <option value="CONCLUIDO"    ${r.status==='CONCLUIDO'?'selected':''}>Concluído</option>
+            <option value="CANCELADO"    ${r.status==='CANCELADO'?'selected':''}>Cancelado</option>
+          </select>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function updateStatus(id, status, sel) {
+    sel.disabled = true;
+    try {
+      await apiFetch('PUT', `/api/agendamentos/${id}/status`, { status });
+      loadAgenda();
+    } catch (e) {
+      sel.disabled = false;
+      showToast(e.message, true);
+    }
+  }
+
+  // ── Serviços ─────────────────────────────────────────────
+  async function loadServicos() {
+    tableMsg('tbody-servicos', 6, 'Carregando', false, true);
+    try {
+      const rows = await apiFetch('GET', '/api/servicos');
+      renderServicos(rows);
+    } catch (e) {
+      tableMsg('tbody-servicos', 6, e.message, true);
+    }
+  }
+
+  function renderServicos(rows) {
+    if (!rows.length) {
+      tableMsg('tbody-servicos', 6, 'Nenhum serviço cadastrado');
+      return;
+    }
+    $('tbody-servicos').innerHTML = rows.map(r => `
+      <tr>
+        <td style="font-weight:500">${esc(r.nome)}</td>
+        <td class="td-secondary">${esc(r.categoria || '—')}</td>
+        <td>${r.badge ? `<span class="badge-sm">${esc(r.badge)}</span>` : '<span class="td-secondary">—</span>'}</td>
+        <td style="color:var(--green)">${fCurrency(r.preco)}</td>
+        <td class="td-secondary">${r.duracaoMin} min</td>
+        <td>
+          <button class="toggle-btn" onclick="toggleServico(${r.id}, this)" title="${r.ativo ? 'Desativar' : 'Ativar'}">
+            <div class="toggle-track ${r.ativo ? 'on' : ''}">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-text">${r.ativo ? 'Ativo' : 'Inativo'}</span>
+          </button>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function toggleServico(id, btn) {
+    btn.disabled = true;
+    try {
+      await apiFetch('PUT', `/api/servicos/${id}/toggle`);
+      loadServicos();
+    } catch (e) {
+      btn.disabled = false;
+      showToast(e.message, true);
+    }
+  }
+
+  // ── Clientes ─────────────────────────────────────────────
+  async function loadClientes() {
+    tableMsg('tbody-clientes', 4, 'Carregando', false, true);
+    try {
+      const rows = await apiFetch('GET', '/api/clientes');
+      renderClientes(rows);
+    } catch (e) {
+      tableMsg('tbody-clientes', 4, e.message, true);
+    }
+  }
+
+  function renderClientes(rows) {
+    if (!rows.length) {
+      tableMsg('tbody-clientes', 4, 'Nenhum cliente cadastrado');
+      return;
+    }
+    $('tbody-clientes').innerHTML = rows.map(r => {
+      const initial = (r.nome || '?').charAt(0).toUpperCase();
+      const ativoBadge = r.ativo
+        ? `<span class="badge" style="background:#22C55E20;color:#22C55E;border:1px solid #22C55E40">Ativo</span>`
+        : `<span class="badge" style="background:#EF444420;color:#EF4444;border:1px solid #EF444440">Inativo</span>`;
+      return `
+        <tr>
+          <td>
+            <div class="client-row">
+              <div class="avatar-sm">${initial}</div>
+              <span style="font-weight:500">${esc(r.nome)}</span>
+            </div>
+          </td>
+          <td class="td-secondary">${esc(r.email)}</td>
+          <td class="td-secondary">${fDate(r.dtCadastro)}</td>
+          <td>${ativoBadge}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── Toast ─────────────────────────────────────────────────
+  function showToast(msg, isError) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    Object.assign(t.style, {
+      position:'fixed', bottom:'24px', right:'24px', zIndex:'9999',
+      background: isError ? '#7F1D1D' : '#14532D',
+      color: isError ? '#FCA5A5' : '#86EFAC',
+      border: `1px solid ${isError ? '#EF444460' : '#22C55E60'}`,
+      borderRadius:'8px', padding:'12px 18px',
+      fontSize:'13px', fontFamily:'inherit',
+      boxShadow:'0 4px 20px rgba(0,0,0,.4)',
+      animation:'fadeIn .2s ease'
+    });
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  // ── XSS guard ─────────────────────────────────────────────
+  function esc(s) {
+    if (s == null) return '—';
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+
+  // ── Init ──────────────────────────────────────────────────
+  (function init() {
+    const now = new Date();
+    $('page-date').textContent = now.toLocaleDateString('pt-BR', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    loadDashboard();
+  })();
+</script>
+</body>
+</html>
