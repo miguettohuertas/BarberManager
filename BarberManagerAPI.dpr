@@ -21,7 +21,7 @@ begin
       Res.AddHeader('Access-Control-Allow-Origin', '*');
       Res.AddHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
       Res.AddHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      if Req.MethodType = mtAny then
+      if Req.Method = 'OPTIONS' then
       begin
         Res.Status(200).Send('');
         Exit;
@@ -36,11 +36,7 @@ begin
   API.Agendamentos.RegistrarRotas;
   API.Clientes.RegistrarRotas;
 
-  THorse.Listen(9000,
-    procedure
-    begin
-      Writeln('BarberManager API running on http://localhost:9000');
-      Writeln('Press Enter to stop...');
-    end
-  );
+  Writeln('BarberManager API running on http://localhost:9000');
+  Writeln('Press Enter to stop...');
+  THorse.Listen(9000);
 end.
