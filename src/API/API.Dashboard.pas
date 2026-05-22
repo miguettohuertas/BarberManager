@@ -1,4 +1,4 @@
-unit API.Dashboard;
+﻿unit API.Dashboard;
 
 interface
 
@@ -140,7 +140,7 @@ end;
 procedure RotaFinanceiro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 const
   MESES: array[1..12] of string = (
-    'Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho',
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
 var
   Q1, Q2: TFDQuery;

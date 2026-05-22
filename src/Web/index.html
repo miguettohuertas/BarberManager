@@ -1644,9 +1644,8 @@
       const barH   = d.valor > 0 ? Math.max(6, Math.round((d.valor / maxVal) * 100)) : 3;
       const op     = d.valor > 0 ? '1' : '0.18';
       const tip    = `${d.dia}/${String(finMes).padStart(2,'0')}: ${fCurrency(d.valor)}`;
-      const showLbl = day === 1 || day % 5 === 0 || day === daysInMonth;
       bars   += `<div style="flex:1;min-width:10px;height:${barH}px;background:var(--accent);border-radius:3px 3px 0 0;opacity:${op};cursor:default" title="${tip}"></div>`;
-      labels += `<div style="flex:1;min-width:10px;text-align:center;font-size:9px;color:var(--txt2)">${showLbl ? d.dia : ''}</div>`;
+      labels += `<div style="flex:1;min-width:10px;text-align:center;font-size:9px;color:var(--txt2)">${d.dia}</div>`;
     });
 
     $('fin-chart').innerHTML = bars + '</div>' + labels + '</div>';
