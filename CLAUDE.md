@@ -342,9 +342,13 @@ BarberManager/
    - ✅ `GET /` serve `index.html` directamente (sem CORS, URLs relativas)
    - ✅ `src/Web/index.html` — dashboard web dark mode completo (HTML/CSS/JS puro)
    - ✅ Post-build MSBuild copia `src/Web/index.html` → `Win32\Debug\` automaticamente
-   - ⏳ Testar `http://localhost:9000` com API a correr
-   - ⏳ Fix acentos corrompidos no JSON (charset UTF-8 no FireDAC)
+   - ✅ Testado e funcional — login, dashboard admin, área cliente
+   - ✅ Acentos corrigidos — FixDB.pas corrigiu dados na BD, CharacterSet=UTF8 na conexão
    - ⏳ Deploy em servidor público
+   - ⏳ Agendamento online — fluxo completo (calendário, horários, barbeiro)
+   - ⏳ Financeiro — relatórios e KPIs financeiros
+   - ⏳ Gráfico semanal no dashboard admin
+   - ⏳ README actualizado com nova arquitectura web
 
 ---
 
@@ -355,9 +359,10 @@ BarberManager/
 - `Req.Method = 'OPTIONS'` para CORS preflight — `TMethodType.mtAny` colapsa OPTIONS/TRACE/CONNECT, não usar
 - `Res.AddHeader(name, value)` é a forma correcta de definir headers no Horse (não `RawWebResponse.CustomHeaders`)
 - `API_BASE = ''` (URLs relativas) no `index.html` — evita CORS quando servido pelo mesmo servidor
-- `index.html` deve estar na mesma pasta que o `.exe` (`Win32\Debug\` em debug)
+- `index.html` deve estar na raiz do projecto (onde o `.exe` corre) — copiar manualmente ou via post-build
 - Post-build MSBuild no `BarberManagerAPI.dproj` copia `src/Web/index.html` → `Win32\$(Config)\` automaticamente após cada build
 - `TStringList.LoadFromFile` + `Res.Send(HTML.Text)` para servir ficheiros HTML estáticos
+- UTF-8 no Firebird: dados devem ser inseridos com `CharacterSet=UTF8` na ligação. Usar `FixDB.pas` (`src/Tools/`) para corrigir dados corrompidos. IBExpert deve ter Charset=UTF8 + Font Characters Set=DEFAULT_CHARSET
 
 ### FireDAC / Ligação
 - Usar sempre `FireDAC.FMXUI.Wait` (NÃO `FireDAC.VCLUI.Wait`) — este é um projecto FMX
