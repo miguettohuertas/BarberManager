@@ -711,12 +711,17 @@
             <h2>Dashboard</h2>
             <p id="dash-sub">Resumo do dia</p>
           </div>
-          <button onclick="loadDashboard()" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--txt2);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px">
-            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
-            </svg>
-            Atualizar
-          </button>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onclick="prevDiaDash()" style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--txt2);font-family:inherit;font-size:13px;cursor:pointer">←</button>
+            <span id="dash-date-lbl" style="color:var(--accent);font-size:13px;font-weight:600;min-width:70px;text-align:center">Hoje</span>
+            <button id="dash-next-btn" onclick="nextDiaDash()" style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--txt2);font-family:inherit;font-size:13px;cursor:pointer;opacity:.35">→</button>
+            <button onclick="loadDashboard()" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--txt2);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px">
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+              </svg>
+              Atualizar
+            </button>
+          </div>
         </div>
 
         <div class="kpi-grid">
@@ -1307,9 +1312,44 @@
   }
 
   // ── Dashboard ─────────────────────────────────────────────
+  let dashData = new Date();
+
+  function fmtDashDate(d) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const t = new Date(d); t.setHours(0,0,0,0);
+    const diff = Math.round((today - t) / 86400000);
+    if (diff === 0) return 'Hoje';
+    if (diff === 1) return 'Ontem';
+    return t.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function prevDiaDash() {
+    dashData = new Date(dashData);
+    dashData.setDate(dashData.getDate() - 1);
+    loadDashboard();
+  }
+
+  function nextDiaDash() {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d0 = new Date(dashData); d0.setHours(0,0,0,0);
+    if (d0 >= today) return;
+    dashData = new Date(dashData);
+    dashData.setDate(dashData.getDate() + 1);
+    loadDashboard();
+  }
+
   async function loadDashboard() {
-    const today = new Date().toISOString().slice(0, 10);
-    $('dash-sub').textContent = `Hoje — ${new Date().toLocaleDateString('pt-BR', {
+    const dateStr = dashData.toISOString().slice(0, 10);
+    const lbl = fmtDashDate(dashData);
+    const elLbl = $('dash-date-lbl');
+    if (elLbl) elLbl.textContent = lbl;
+    const btnNext = $('dash-next-btn');
+    if (btnNext) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const d0 = new Date(dashData); d0.setHours(0,0,0,0);
+      btnNext.style.opacity = d0 >= today ? '.35' : '1';
+    }
+    $('dash-sub').textContent = `${lbl} — ${dashData.toLocaleDateString('pt-BR', {
       weekday: 'long', day: 'numeric', month: 'long'
     })}`;
 
@@ -1317,7 +1357,7 @@
       $(id).textContent = '…';
 
     try {
-      const d = await apiFetch('GET', `/api/dashboard/kpis?data=${today}`);
+      const d = await apiFetch('GET', `/api/dashboard/kpis?data=${dateStr}`);
       $('kpi-faturamento').textContent   = fCurrency(d.faturamento);
       $('kpi-total').textContent         = d.total ?? '0';
       $('kpi-pendentes').textContent     = d.pendentes ?? '0';
@@ -1329,15 +1369,15 @@
 
     tableMsg('tbody-timeline', 7, 'Carregando', false, true);
     try {
-      const rows = await apiFetch('GET', `/api/dashboard/timeline?data=${today}`);
-      renderTimeline(rows);
+      const rows = await apiFetch('GET', `/api/dashboard/timeline?data=${dateStr}`);
+      renderTimeline(rows, lbl);
     } catch (e) {
       tableMsg('tbody-timeline', 7, e.message, true);
     }
   }
 
-  function renderTimeline(rows) {
-    if (!rows.length) { tableMsg('tbody-timeline', 7, 'Nenhum agendamento hoje'); return; }
+  function renderTimeline(rows, lbl) {
+    if (!rows.length) { tableMsg('tbody-timeline', 7, `Nenhum agendamento ${lbl || 'hoje'}`); return; }
     $('tbody-timeline').innerHTML = rows.map(r => `
       <tr>
         <td>${esc(r.cliente)}</td>
