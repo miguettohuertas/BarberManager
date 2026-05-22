@@ -23,7 +23,7 @@ begin
     try
       Query.Connection := FDConnection;
       Query.SQL.Text :=
-        'SELECT u.ID, u.NOME_COMPLETO AS NOME, b.CARGO, b.AVALIACAO_MEDIA ' +
+        'SELECT b.ID AS ID_BARBEIRO, u.NOME_COMPLETO AS NOME, b.CARGO, b.AVALIACAO_MEDIA ' +
         'FROM TB_BARBEIROS b ' +
         'JOIN TB_USUARIOS u ON b.USUARIO_ID = u.ID ' +
         'WHERE b.ATIVO = 1 ' +
@@ -34,7 +34,7 @@ begin
         while not Query.EOF do
         begin
           Item := TJSONObject.Create;
-          Item.AddPair('id',             TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+          Item.AddPair('id',             TJSONNumber.Create(Query.FieldByName('ID_BARBEIRO').AsInteger));
           Item.AddPair('nome',           Query.FieldByName('NOME').AsString);
           Item.AddPair('cargo',          Query.FieldByName('CARGO').AsString);
           Item.AddPair('avaliacaoMedia', TJSONNumber.Create(Query.FieldByName('AVALIACAO_MEDIA').AsFloat));
