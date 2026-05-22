@@ -548,6 +548,49 @@
       padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px;
     }
     .bk-summary-row:last-child { border-bottom: none; }
+
+    /* ── Avaliação modal ──────────────────────────────── */
+    #aval-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.75); z-index: 1100;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    #aval-overlay.open { display: flex; }
+    #aval-modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; width: 100%; max-width: 420px;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .aval-star {
+      background: none; border: none; cursor: pointer;
+      font-size: 28px; color: #64748B; padding: 2px 4px;
+      transition: color .1s; line-height: 1;
+    }
+    .aval-star.on { color: #FBBF24; }
+
+    /* ── Notification panel ───────────────────────────── */
+    #notif-panel {
+      display: none; position: fixed; top: 76px; right: 16px;
+      width: 360px; max-height: 480px; background: var(--card);
+      border: 1px solid var(--border); border-radius: 12px;
+      z-index: 900; box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      flex-direction: column; overflow: hidden;
+    }
+    #notif-panel.open { display: flex; }
+    .bell-btn {
+      position: relative; background: var(--card2);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 7px 10px; cursor: pointer; color: var(--txt2);
+      display: flex; align-items: center; transition: border-color .15s;
+    }
+    .bell-btn:hover { border-color: var(--accent); }
+    .bell-badge {
+      position: absolute; top: -5px; right: -5px;
+      background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 700; min-width: 16px; height: 16px;
+      border-radius: 8px; display: none; align-items: center; justify-content: center;
+      padding: 0 3px;
+    }
   </style>
 </head>
 <body>
@@ -695,6 +738,13 @@
           </svg>
           <input type="text" placeholder="Pesquisar...">
         </div>
+        <button class="bell-btn" onclick="toggleNotificacoes()" title="Avaliações recentes">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="bell-badge" id="bell-badge"></span>
+        </button>
         <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 12px">
           <div class="badge-dot"></div>
           <span style="font-size:12px;color:var(--txt2)">Online</span>
@@ -947,6 +997,16 @@
 
     </div><!-- /content admin -->
   </main>
+
+  <!-- ── Notification panel ───────────────────────────────── -->
+  <div id="notif-panel">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <span style="font-size:14px;font-weight:600">Avaliações Recentes</span>
+      <button onclick="toggleNotificacoes()" style="background:none;border:none;color:var(--txt2);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px">✕</button>
+    </div>
+    <div id="notif-list" style="overflow-y:auto;flex:1;padding:8px"></div>
+  </div>
+
 </div><!-- /screen-admin -->
 
 <!-- ═══════════════════ CLIENTE ════════════════════════════ -->
@@ -1057,11 +1117,11 @@
               <thead>
                 <tr>
                   <th>Serviço</th><th>Barbeiro</th>
-                  <th>Data / Hora</th><th>Valor</th><th>Status</th>
+                  <th>Data / Hora</th><th>Valor</th><th>Status</th><th>Avaliação</th>
                 </tr>
               </thead>
               <tbody id="tbody-meus-agendamentos">
-                <tr><td colspan="5" class="loading-cell">Carregando</td></tr>
+                <tr><td colspan="6" class="loading-cell">Carregando</td></tr>
               </tbody>
             </table>
           </div>
@@ -1202,6 +1262,7 @@
       $('admin-role').textContent   = currentUser.perfil;
       $('page-date').textContent    = dateStr;
       loadDashboard();
+      loadNotificacoes();
     } else {
       $('screen-admin').style.display   = 'none';
       $('screen-cliente').style.display = 'flex';
@@ -1575,32 +1636,50 @@
 
   // ── Cliente — meus agendamentos ───────────────────────────
   async function loadMeusAgendamentos() {
-    tableMsg('tbody-meus-agendamentos', 5, 'Carregando', false, true);
+    tableMsg('tbody-meus-agendamentos', 6, 'Carregando', false, true);
     try {
-      const rows = await apiFetch('GET', '/api/agendamentos');
-      // Filter client-side by email
+      const reviewsPromise = currentUser
+        ? apiFetch('GET', `/api/avaliacoes/cliente/${currentUser.id}`).catch(() => [])
+        : Promise.resolve([]);
+      const [rows, reviews] = await Promise.all([
+        apiFetch('GET', '/api/agendamentos'),
+        reviewsPromise
+      ]);
       const meus = currentUser
         ? rows.filter(r => r.emailCliente === currentUser.email)
         : rows;
-      renderMeusAgendamentos(meus);
+      const reviewed = new Set(reviews.map(r => r.agendamentoId));
+      renderMeusAgendamentos(meus, reviewed);
     } catch (e) {
-      tableMsg('tbody-meus-agendamentos', 5, e.message, true);
+      tableMsg('tbody-meus-agendamentos', 6, e.message, true);
     }
   }
 
-  function renderMeusAgendamentos(rows) {
+  function renderMeusAgendamentos(rows, reviewed = new Set()) {
     if (!rows.length) {
-      tableMsg('tbody-meus-agendamentos', 5, 'Nenhum agendamento encontrado');
+      tableMsg('tbody-meus-agendamentos', 6, 'Nenhum agendamento encontrado');
       return;
     }
-    $('tbody-meus-agendamentos').innerHTML = rows.map(r => `
-      <tr>
+    $('tbody-meus-agendamentos').innerHTML = rows.map(r => {
+      let avalCell = '';
+      if (r.status === 'CONCLUIDO') {
+        if (reviewed.has(r.id)) {
+          avalCell = '<span style="color:#22C55E;font-size:12px;font-weight:600">✓ Avaliado</span>';
+        } else {
+          avalCell = `<button data-aid="${r.id}" data-bid="${r.barbeiroId || 0}" data-bname="${esc(r.barbeiro)}"
+            onclick="openAvaliacaoModal(+this.dataset.aid, +this.dataset.bid, this.dataset.bname)"
+            style="background:rgba(245,138,0,.12);border:1px solid var(--accent);border-radius:6px;padding:4px 10px;color:var(--accent);font-family:inherit;font-size:12px;cursor:pointer;white-space:nowrap">⭐ Avaliar</button>`;
+        }
+      }
+      return `<tr>
         <td style="font-weight:500">${esc(r.servico)}</td>
         <td class="td-secondary">${esc(r.barbeiro)}</td>
         <td class="td-secondary">${fDate(r.data)} ${fTime(r.horaInicio)}</td>
         <td style="color:var(--green)">${fCurrency(r.valor)}</td>
         <td>${badge(r.status)}</td>
-      </tr>`).join('');
+        <td>${avalCell}</td>
+      </tr>`;
+    }).join('');
   }
 
   // ── Cliente — perfil ──────────────────────────────────────
@@ -1609,6 +1688,103 @@
     $('perfil-avatar').textContent = (currentUser.nome || '?').charAt(0).toUpperCase();
     $('perfil-nome').textContent   = currentUser.nome;
     $('perfil-email').textContent  = currentUser.email;
+  }
+
+  // ── Admin — notificações (sino) ───────────────────────────
+  async function loadNotificacoes() {
+    try {
+      const data = await apiFetch('GET', '/api/avaliacoes/recentes');
+      const badge = $('bell-badge');
+      if (badge) {
+        if (data.length > 0) {
+          badge.textContent  = data.length;
+          badge.style.display = 'flex';
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+      const list = $('notif-list');
+      if (!list) return;
+      if (!data.length) {
+        list.innerHTML = '<p style="color:var(--txt2);font-size:13px;text-align:center;padding:24px 0">Nenhuma avaliação recente</p>';
+        return;
+      }
+      list.innerHTML = data.map(a => `
+        <div style="padding:12px 14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:600">${esc(a.cliente)}</span>
+            <span style="color:#FBBF24;font-size:15px;letter-spacing:1px">${'★'.repeat(a.nota)}${'☆'.repeat(5 - a.nota)}</span>
+          </div>
+          <div style="font-size:12px;color:var(--txt2);margin-bottom:4px">
+            para <strong style="color:var(--txt)">${esc(a.barbeiro)}</strong> · ${esc(a.servico)}
+          </div>
+          ${a.comentario ? `<div style="font-size:12px;color:var(--txt);font-style:italic">"${esc(a.comentario)}"</div>` : ''}
+          <div style="font-size:11px;color:var(--txt2);margin-top:6px">${fDate(a.dtAvaliacao)}</div>
+        </div>`).join('');
+    } catch { /* silent — bell just stays without badge */ }
+  }
+
+  function toggleNotificacoes() {
+    const p = $('notif-panel');
+    if (!p) return;
+    p.classList.toggle('open');
+  }
+
+  // ── Avaliação modal ───────────────────────────────────────
+  let avalState = { agendamentoId: 0, barbeiroId: 0, nota: 0 };
+
+  function openAvaliacaoModal(agendId, barbId, barbNome) {
+    avalState = { agendamentoId: agendId, barbeiroId: barbId, nota: 0 };
+    $('aval-barb-nome').textContent  = barbNome;
+    $('aval-error').style.display    = 'none';
+    $('aval-comentario').value       = '';
+    setAvalStar(0);
+    $('aval-overlay').classList.add('open');
+  }
+
+  function closeAvaliacaoModal() {
+    $('aval-overlay').classList.remove('open');
+  }
+
+  function setAvalStar(n) {
+    avalState.nota = n;
+    for (let i = 1; i <= 5; i++) {
+      const s = $(`aval-star-${i}`);
+      if (!s) continue;
+      s.textContent = i <= n ? '★' : '☆';
+      s.classList.toggle('on', i <= n);
+    }
+    const lbl = $('aval-nota-lbl');
+    if (lbl) lbl.textContent = n > 0 ? ['','Ruim','Regular','Bom','Ótimo','Excelente'][n] : '';
+  }
+
+  async function submitAvaliacao() {
+    if (avalState.nota === 0) {
+      $('aval-error').textContent   = 'Selecione uma nota de 1 a 5 estrelas.';
+      $('aval-error').style.display = 'block';
+      return;
+    }
+    const btn = $('btn-aval-submit');
+    btn.disabled    = true;
+    btn.textContent = 'Enviando…';
+    try {
+      await apiFetch('POST', '/api/avaliacoes', {
+        agendamentoId: avalState.agendamentoId,
+        clienteId:     currentUser.id,
+        barbeiroId:    avalState.barbeiroId,
+        nota:          avalState.nota,
+        comentario:    $('aval-comentario').value.trim()
+      });
+      closeAvaliacaoModal();
+      showToast('Avaliação enviada! Obrigado.', false);
+      loadMeusAgendamentos();
+    } catch (e) {
+      $('aval-error').textContent   = e.message;
+      $('aval-error').style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Enviar Avaliação';
+    }
   }
 
   // ── Financeiro ────────────────────────────────────────────
@@ -1969,6 +2145,43 @@
     </div>
     <div id="bk-steps"></div>
     <div id="bk-body"></div>
+  </div>
+</div>
+
+<!-- ════════════════ AVALIAÇÃO MODAL ══════════════════════ -->
+<div id="aval-overlay" onclick="if(event.target===this)closeAvaliacaoModal()">
+  <div id="aval-modal">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border)">
+      <span style="font-size:15px;font-weight:600">Avaliar Atendimento</span>
+      <button onclick="closeAvaliacaoModal()" style="background:none;border:none;color:var(--txt2);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px">✕</button>
+    </div>
+    <div style="padding:24px;display:flex;flex-direction:column;gap:20px">
+      <div>
+        <div style="font-size:13px;color:var(--txt2);margin-bottom:4px">Barbeiro</div>
+        <div id="aval-barb-nome" style="font-size:15px;font-weight:600"></div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--txt2);margin-bottom:10px">Sua avaliação</div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button class="aval-star" id="aval-star-1" onclick="setAvalStar(1)">☆</button>
+          <button class="aval-star" id="aval-star-2" onclick="setAvalStar(2)">☆</button>
+          <button class="aval-star" id="aval-star-3" onclick="setAvalStar(3)">☆</button>
+          <button class="aval-star" id="aval-star-4" onclick="setAvalStar(4)">☆</button>
+          <button class="aval-star" id="aval-star-5" onclick="setAvalStar(5)">☆</button>
+          <span id="aval-nota-lbl" style="margin-left:10px;font-size:13px;color:var(--accent);font-weight:600;min-width:60px"></span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;color:var(--txt2);margin-bottom:8px">Comentário <span style="color:var(--txt2);font-size:11px">(opcional)</span></div>
+        <textarea id="aval-comentario" rows="3" placeholder="Conte como foi o atendimento..."
+          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--txt);font-family:inherit;font-size:13px;resize:none;box-sizing:border-box"></textarea>
+      </div>
+      <div id="aval-error" style="display:none;color:#EF4444;font-size:13px;padding:8px 12px;background:rgba(239,68,68,.1);border-radius:6px"></div>
+      <button id="btn-aval-submit" onclick="submitAvaliacao()"
+        style="background:var(--accent);border:none;border-radius:10px;padding:13px;color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">
+        Enviar Avaliação
+      </button>
+    </div>
   </div>
 </div>
 

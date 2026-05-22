@@ -25,6 +25,7 @@ begin
 
     SQL :=
       'SELECT A.ID, A.DT_AGENDAMENTO, A.HR_INICIO, A.HR_FIM, A.STATUS, A.VALOR_COBRADO, ' +
+      '  A.BARBEIRO_ID, ' +
       '  U.NOME_COMPLETO AS NOME_CLIENTE, U.EMAIL AS EMAIL_CLIENTE, ' +
       '  S.NOME AS NOME_SERVICO, S.PRECO, S.DURACAO_MIN, ' +
       '  B_U.NOME_COMPLETO AS NOME_BARBEIRO ' +
@@ -68,7 +69,8 @@ begin
           Item.AddPair('servico',      Query.FieldByName('NOME_SERVICO').AsString);
           Item.AddPair('preco',        TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
           Item.AddPair('duracaoMin',   TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
-          Item.AddPair('barbeiro',     Query.FieldByName('NOME_BARBEIRO').AsString);
+          Item.AddPair('barbeiro',    Query.FieldByName('NOME_BARBEIRO').AsString);
+          Item.AddPair('barbeiroId', TJSONNumber.Create(Query.FieldByName('BARBEIRO_ID').AsInteger));
           Lista.AddElement(Item);
           Query.Next;
         end;
