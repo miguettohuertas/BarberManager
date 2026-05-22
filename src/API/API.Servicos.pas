@@ -55,8 +55,6 @@ begin
         Query.ParamByName('CATEGORIA').AsString := CategoriaParam;
       if BuscaParam <> '' then
         Query.ParamByName('BUSCA').AsString := BuscaParam;
-      Query.FetchOptions.AutoFetchAll := True;
-      Query.ResourceOptions.SilentMode := True;
       Query.Open;
 
       Lista := TJSONArray.Create;
