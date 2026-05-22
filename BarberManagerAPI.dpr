@@ -42,7 +42,8 @@ begin
       HTML: TStringList;
       FilePath: string;
     begin
-      FilePath := ExtractFilePath(ParamStr(0)) + 'index.html';
+      FilePath := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + 'index.html';
+      Writeln('Looking for: ' + FilePath);
       if FileExists(FilePath) then
       begin
         HTML := TStringList.Create;
