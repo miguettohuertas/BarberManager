@@ -34,7 +34,6 @@ begin
     'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
   FDConnection.Params.UserName := 'SYSDBA';
   FDConnection.Params.Password := 'masterkey';
-  FDConnection.Params.Add('CharacterSet=UTF8');
   FDConnection.Params.Add('Protocol=Local');
   FDConnection.Params.Add('OpenMode=OpenOrCreate');
   FDConnection.FormatOptions.StrsTrim := False;
