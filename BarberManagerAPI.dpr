@@ -48,7 +48,7 @@ begin
       begin
         HTML := TStringList.Create;
         try
-          HTML.LoadFromFile(FilePath);
+          HTML.LoadFromFile(FilePath, TEncoding.UTF8);
           Res.ContentType('text/html; charset=utf-8');
           Res.Send(HTML.Text);
         finally
