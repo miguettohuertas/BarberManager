@@ -52,7 +52,7 @@ begin
         Resp.AddPair('ticketMedio',        TJSONNumber.Create(Query.FieldByName('TICKET_MEDIO').AsFloat));
         Resp.AddPair('valorCancelamentos', TJSONNumber.Create(Query.FieldByName('VALOR_CANCELAMENTOS').AsFloat));
         Resp.AddPair('data', DataParam);
-        Res.ContentType('application/json').Status(200).Send(Resp.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
       finally
         Resp.Free;
       end;
@@ -61,7 +61,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -124,7 +124,7 @@ begin
           Lista.AddElement(Item);
           Query.Next;
         end;
-        Res.ContentType('application/json').Status(200).Send(Lista.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
         Lista.Free;
       end;
@@ -133,7 +133,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 

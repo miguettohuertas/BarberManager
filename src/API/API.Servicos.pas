@@ -68,7 +68,7 @@ begin
           Lista.AddElement(Item);
           Query.Next;
         end;
-        Res.ContentType('application/json').Status(200).Send(Lista.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
         Lista.Free;
       end;
@@ -77,7 +77,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -90,13 +90,13 @@ begin
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
       if Body.GetValue<string>('nome', '') = '' then
       begin
-        Res.Status(400).Send('{"erro":"Nome obrigatório"}');
+        Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Nome obrigatório"}');
         Exit;
       end;
 
@@ -113,7 +113,7 @@ begin
         Query.ParamByName('CAT').AsInteger  := Body.GetValue<Integer>('categoriaId', 0);
         Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
         Query.ExecSQL;
-        Res.ContentType('application/json').Status(201)
+        Res.ContentType('application/json; charset=utf-8').Status(201)
           .Send('{"mensagem":"Serviço criado com sucesso"}');
       finally
         Query.Free;
@@ -123,7 +123,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -137,14 +137,14 @@ begin
     ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
     if ID = 0 then
     begin
-      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID inválido"}');
       Exit;
     end;
 
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
@@ -164,7 +164,7 @@ begin
         Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
         Query.ParamByName('ID').AsInteger   := ID;
         Query.ExecSQL;
-        Res.ContentType('application/json').Status(200)
+        Res.ContentType('application/json; charset=utf-8').Status(200)
           .Send('{"mensagem":"Serviço atualizado"}');
       finally
         Query.Free;
@@ -174,7 +174,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -187,7 +187,7 @@ begin
     ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
     if ID = 0 then
     begin
-      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID inválido"}');
       Exit;
     end;
 
@@ -197,14 +197,14 @@ begin
       Query.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
       Query.ParamByName('ID').AsInteger := ID;
       Query.ExecSQL;
-      Res.ContentType('application/json').Status(200)
+      Res.ContentType('application/json; charset=utf-8').Status(200)
         .Send('{"mensagem":"Serviço removido"}');
     finally
       Query.Free;
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -217,7 +217,7 @@ begin
     ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
     if ID = 0 then
     begin
-      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID inválido"}');
       Exit;
     end;
 
@@ -229,14 +229,14 @@ begin
         'WHERE ID = :ID';
       Query.ParamByName('ID').AsInteger := ID;
       Query.ExecSQL;
-      Res.ContentType('application/json').Status(200)
+      Res.ContentType('application/json; charset=utf-8').Status(200)
         .Send('{"mensagem":"Status atualizado"}');
     finally
       Query.Free;
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 

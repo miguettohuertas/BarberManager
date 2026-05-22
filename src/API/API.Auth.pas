@@ -33,7 +33,7 @@ begin
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
@@ -45,7 +45,7 @@ begin
 
     if (Email = '') or (Senha = '') then
     begin
-      Res.Status(400).Send('{"erro":"Email e senha obrigatórios"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Email e senha obrigatórios"}');
       Exit;
     end;
 
@@ -61,7 +61,7 @@ begin
 
       if Query.IsEmpty then
       begin
-        Res.Status(401).Send('{"erro":"Email ou senha inválidos"}');
+        Res.ContentType('application/json; charset=utf-8').Status(401).Send('{"erro":"Email ou senha inválidos"}');
         Exit;
       end;
 
@@ -71,7 +71,7 @@ begin
         Resp.AddPair('nome', Query.FieldByName('NOME_COMPLETO').AsString);
         Resp.AddPair('email', Query.FieldByName('EMAIL').AsString);
         Resp.AddPair('perfil', Query.FieldByName('PERFIL').AsString);
-        Res.ContentType('application/json').Status(200).Send(Resp.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
       finally
         Resp.Free;
       end;
@@ -80,7 +80,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -94,7 +94,7 @@ begin
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
@@ -107,17 +107,17 @@ begin
 
     if Nome = '' then
     begin
-      Res.Status(400).Send('{"erro":"Nome obrigatório"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Nome obrigatório"}');
       Exit;
     end;
     if not ValidarEmail(Email) then
     begin
-      Res.Status(400).Send('{"erro":"Email inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Email inválido"}');
       Exit;
     end;
     if Length(Senha) < 6 then
     begin
-      Res.Status(400).Send('{"erro":"Senha deve ter no mínimo 6 caracteres"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Senha deve ter no mínimo 6 caracteres"}');
       Exit;
     end;
 
@@ -131,7 +131,7 @@ begin
       Query.Open;
       if Query.Fields[0].AsInteger > 0 then
       begin
-        Res.Status(409).Send('{"erro":"Email já cadastrado"}');
+        Res.ContentType('application/json; charset=utf-8').Status(409).Send('{"erro":"Email já cadastrado"}');
         Exit;
       end;
       Query.Close;
@@ -144,14 +144,14 @@ begin
       Query.ParamByName('HASH').AsString  := HashSenha(Senha);
       Query.ExecSQL;
 
-      Res.ContentType('application/json').Status(201)
+      Res.ContentType('application/json; charset=utf-8').Status(201)
         .Send('{"mensagem":"Cadastro realizado com sucesso"}');
     finally
       Query.Free;
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 

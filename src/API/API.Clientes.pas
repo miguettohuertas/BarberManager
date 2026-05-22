@@ -55,7 +55,7 @@ begin
           Lista.AddElement(Item);
           Query.Next;
         end;
-        Res.ContentType('application/json').Status(200).Send(Lista.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
         Lista.Free;
       end;
@@ -64,7 +64,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -77,7 +77,7 @@ begin
     ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
     if ID = 0 then
     begin
-      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID inválido"}');
       Exit;
     end;
 
@@ -90,14 +90,14 @@ begin
         'WHERE ID = :ID AND PERFIL = ''CLIENTE''';
       Query.ParamByName('ID').AsInteger := ID;
       Query.ExecSQL;
-      Res.ContentType('application/json').Status(200)
+      Res.ContentType('application/json; charset=utf-8').Status(200)
         .Send('{"mensagem":"Status do cliente atualizado"}');
     finally
       Query.Free;
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 

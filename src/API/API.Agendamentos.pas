@@ -72,7 +72,7 @@ begin
           Lista.AddElement(Item);
           Query.Next;
         end;
-        Res.ContentType('application/json').Status(200).Send(Lista.ToString);
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
         Lista.Free;
       end;
@@ -81,7 +81,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -97,23 +97,23 @@ begin
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
       if Body.GetValue<Integer>('clienteId', 0) = 0 then
       begin
-        Res.Status(400).Send('{"erro":"clienteId obrigatório"}');
+        Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"clienteId obrigatório"}');
         Exit;
       end;
       if Body.GetValue<Integer>('barbeiroId', 0) = 0 then
       begin
-        Res.Status(400).Send('{"erro":"barbeiroId obrigatório"}');
+        Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"barbeiroId obrigatório"}');
         Exit;
       end;
       if Body.GetValue<Integer>('servicoId', 0) = 0 then
       begin
-        Res.Status(400).Send('{"erro":"servicoId obrigatório"}');
+        Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"servicoId obrigatório"}');
         Exit;
       end;
 
@@ -137,7 +137,7 @@ begin
         Query.ParamByName('FIM').AsString    := TimeToStr(HoraFim);
         Query.ParamByName('VALOR').AsFloat   := Body.GetValue<Double>('valor', 0);
         Query.ExecSQL;
-        Res.ContentType('application/json').Status(201)
+        Res.ContentType('application/json; charset=utf-8').Status(201)
           .Send('{"mensagem":"Agendamento criado"}');
       finally
         Query.Free;
@@ -147,7 +147,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
@@ -162,14 +162,14 @@ begin
     ID := StrToIntDef(Req.Params.Field('id').AsString, 0);
     if ID = 0 then
     begin
-      Res.Status(400).Send('{"erro":"ID inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID inválido"}');
       Exit;
     end;
 
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
     if not Assigned(Body) then
     begin
-      Res.Status(400).Send('{"erro":"JSON inválido"}');
+      Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"JSON inválido"}');
       Exit;
     end;
     try
@@ -177,7 +177,7 @@ begin
       if not (NovoStatus = 'PENDENTE') and not (NovoStatus = 'EM_ANDAMENTO') and
          not (NovoStatus = 'CONCLUIDO') and not (NovoStatus = 'CANCELADO') then
       begin
-        Res.Status(400).Send('{"erro":"Status inválido"}');
+        Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"Status inválido"}');
         Exit;
       end;
 
@@ -189,7 +189,7 @@ begin
         Query.ParamByName('STATUS').AsString := NovoStatus;
         Query.ParamByName('ID').AsInteger    := ID;
         Query.ExecSQL;
-        Res.ContentType('application/json').Status(200)
+        Res.ContentType('application/json; charset=utf-8').Status(200)
           .Send('{"mensagem":"Status atualizado"}');
       finally
         Query.Free;
@@ -199,7 +199,7 @@ begin
     end;
   except
     on E: Exception do
-      Res.Status(500).Send('{"erro":"' + E.Message + '"}');
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
   end;
 end;
 
