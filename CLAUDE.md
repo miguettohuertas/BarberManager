@@ -335,9 +335,29 @@ BarberManager/
    - ⏳ ExportD2Bridge — pendente: mapear controlos FMX para renderização HTML no browser
    - ⏳ Deploy em servidor público (após ExportD2Bridge funcional)
 
+8. **Frontend Web — Horse REST + HTML/CSS/JS** (NOVA ABORDAGEM):
+   - ✅ Horse framework instalado em `C:\Horse\horse-master\src`
+   - ✅ `BarberManagerAPI.dpr` — servidor REST porta 9000, compila e corre
+   - ✅ Endpoints funcionais: `/api/dashboard/kpis`, `/api/dashboard/timeline`, `/api/agendamentos`, `/api/servicos`, `/api/clientes`, `/api/auth/login`
+   - ✅ `GET /` serve `index.html` directamente (sem CORS, URLs relativas)
+   - ✅ `src/Web/index.html` — dashboard web dark mode completo (HTML/CSS/JS puro)
+   - ✅ Post-build MSBuild copia `src/Web/index.html` → `Win32\Debug\` automaticamente
+   - ⏳ Testar `http://localhost:9000` com API a correr
+   - ⏳ Fix acentos corrompidos no JSON (charset UTF-8 no FireDAC)
+   - ⏳ Deploy em servidor público
+
 ---
 
 ## Regras Críticas — Nunca Quebrar
+
+### Horse API — Regras
+- `FireDAC.ConsoleUI.Wait` (não `FireDAC.FMXUI.Wait`) nos projectos console (`BarberManagerAPI`)
+- `Req.Method = 'OPTIONS'` para CORS preflight — `TMethodType.mtAny` colapsa OPTIONS/TRACE/CONNECT, não usar
+- `Res.AddHeader(name, value)` é a forma correcta de definir headers no Horse (não `RawWebResponse.CustomHeaders`)
+- `API_BASE = ''` (URLs relativas) no `index.html` — evita CORS quando servido pelo mesmo servidor
+- `index.html` deve estar na mesma pasta que o `.exe` (`Win32\Debug\` em debug)
+- Post-build MSBuild no `BarberManagerAPI.dproj` copia `src/Web/index.html` → `Win32\$(Config)\` automaticamente após cada build
+- `TStringList.LoadFromFile` + `Res.Send(HTML.Text)` para servir ficheiros HTML estáticos
 
 ### FireDAC / Ligação
 - Usar sempre `FireDAC.FMXUI.Wait` (NÃO `FireDAC.VCLUI.Wait`) — este é um projecto FMX
