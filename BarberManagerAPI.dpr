@@ -10,7 +10,8 @@ uses
   API.Dashboard in 'src\API\API.Dashboard.pas',
   API.Servicos in 'src\API\API.Servicos.pas',
   API.Agendamentos in 'src\API\API.Agendamentos.pas',
-  API.Clientes in 'src\API\API.Clientes.pas';
+  API.Clientes in 'src\API\API.Clientes.pas',
+  API.Barbeiros in 'src\API\API.Barbeiros.pas';
 
 begin
   API.Conexao.IniciarConexao;
@@ -35,6 +36,7 @@ begin
   API.Servicos.RegistrarRotas;
   API.Agendamentos.RegistrarRotas;
   API.Clientes.RegistrarRotas;
+  API.Barbeiros.RegistrarRotas;
 
   THorse.Get('/',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
