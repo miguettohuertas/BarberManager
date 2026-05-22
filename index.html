@@ -477,6 +477,77 @@
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--txt2); }
+
+    /* ── Booking modal ────────────────────────────────── */
+    #booking-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.75); z-index: 1000;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    #booking-overlay.open { display: flex; }
+    #booking-modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; width: 100%; max-width: 520px;
+      max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+    #bk-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    #bk-steps {
+      padding: 14px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    #bk-body { flex: 1; overflow-y: auto; padding: 24px; }
+    .bk-back-btn {
+      background: none; border: none; color: var(--txt2); cursor: pointer;
+      font-family: inherit; font-size: 13px; display: flex; align-items: center; gap: 5px;
+      padding: 4px 0; transition: color .15s; min-width: 64px;
+    }
+    .bk-back-btn:hover { color: var(--txt); }
+    .bk-close-btn {
+      background: none; border: none; color: var(--txt2); cursor: pointer;
+      font-size: 20px; line-height: 1; padding: 2px 6px; transition: color .15s;
+    }
+    .bk-close-btn:hover { color: var(--txt); }
+    .bk-dot {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; border: 2px solid var(--border);
+    }
+    .bk-dot-active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .bk-dot-done   { background: rgba(245,138,0,.15); border-color: var(--accent); color: var(--accent); }
+    .bk-dot-idle   { background: var(--card2); color: var(--txt2); }
+    .bk-line { flex: 1; height: 2px; background: var(--border); min-width: 6px; max-width: 40px; }
+    .bk-line-done { background: var(--accent); }
+    .bk-day-btn {
+      flex-shrink: 0; width: 58px; height: 76px; border-radius: 12px;
+      border: 2px solid var(--border); background: var(--card2); color: var(--txt2);
+      cursor: pointer; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 2px; font-family: inherit; transition: all .15s;
+    }
+    .bk-day-btn:hover { border-color: var(--accent); }
+    .bk-day-btn.today    { border-color: var(--accent); background: rgba(245,138,0,.08); color: var(--txt); }
+    .bk-day-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .bk-slot-btn {
+      padding: 10px; border-radius: 8px; border: 2px solid var(--border);
+      background: var(--card2); color: var(--txt); font-family: inherit;
+      font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s; text-align: center;
+    }
+    .bk-slot-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .bk-slot-btn.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .bk-slot-btn:disabled { opacity: .38; cursor: not-allowed; }
+    .bk-barber-card {
+      display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+      background: var(--card2); border: 2px solid var(--border); border-radius: 12px;
+      cursor: pointer; transition: all .15s;
+    }
+    .bk-barber-card:hover   { border-color: var(--accent); }
+    .bk-barber-card.selected { border-color: var(--accent); background: rgba(245,138,0,.06); }
+    .bk-summary-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px;
+    }
+    .bk-summary-row:last-child { border-bottom: none; }
   </style>
 </head>
 <body>
@@ -1371,12 +1442,13 @@
   }
 
   function renderClienteServicos(rows) {
+    clienteServicos = rows;
     if (!rows.length) {
       $('service-grid').innerHTML =
         '<p style="color:var(--txt2);font-size:13px">Nenhum serviço disponível.</p>';
       return;
     }
-    $('service-grid').innerHTML = rows.map(r => `
+    $('service-grid').innerHTML = rows.map((r, idx) => `
       <div class="service-card">
         <div class="service-card-name">${esc(r.nome)}</div>
         <div class="service-card-meta">
@@ -1388,7 +1460,7 @@
           <span>⏱ ${r.duracaoMin} min</span>
         </div>
         <div class="service-card-price">${fCurrency(r.preco)}</div>
-        <button class="btn-agendar" onclick="showToast('Agende pelo app mobile!', false)">
+        <button class="btn-agendar" onclick="openBookingModal(${idx})">
           Agendar
         </button>
       </div>`).join('');
@@ -1432,10 +1504,273 @@
     $('perfil-email').textContent  = currentUser.email;
   }
 
+  // ── Booking modal ─────────────────────────────────────────
+  let clienteServicos = [];
+  let bk = { step: 1, servico: null, data: null, hora: null, barbeiro: null };
+  let _bookedSlots = new Set();
+  let _barbeiros   = [];
+
+  const BK_TITLES = ['', 'Serviço', 'Escolher Data', 'Escolher Horário', 'Escolher Barbeiro', 'Confirmar'];
+
+  function openBookingModal(idx) {
+    bk = { step: 1, servico: clienteServicos[idx], data: null, hora: null, barbeiro: null };
+    _bookedSlots = new Set();
+    _barbeiros   = [];
+    $('booking-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    goBookingStep(1);
+  }
+
+  function closeBookingModal() {
+    $('booking-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function prevBookingStep() {
+    if (bk.step <= 1) { closeBookingModal(); return; }
+    goBookingStep(bk.step - 1);
+  }
+
+  function goBookingStep(n) {
+    bk.step = n;
+    $('bk-title').textContent = BK_TITLES[n];
+    $('btn-bk-back').style.visibility = n === 1 ? 'hidden' : 'visible';
+    renderBkProgress();
+    if      (n === 1) renderStep1();
+    else if (n === 2) renderStep2();
+    else if (n === 3) renderStep3();
+    else if (n === 4) renderStep4();
+    else if (n === 5) renderStep5();
+    $('bk-body').scrollTop = 0;
+  }
+
+  function renderBkProgress() {
+    const s = bk.step;
+    let html = '<div style="display:flex;align-items:center;justify-content:center;gap:0">';
+    for (let i = 1; i <= 5; i++) {
+      let cls, inner;
+      if      (i < s)  { cls = 'bk-dot bk-dot-done';   inner = '✓'; }
+      else if (i === s) { cls = 'bk-dot bk-dot-active'; inner = String(i); }
+      else              { cls = 'bk-dot bk-dot-idle';   inner = String(i); }
+      html += `<div class="${cls}">${inner}</div>`;
+      if (i < 5) html += `<div class="bk-line${i < s ? ' bk-line-done' : ''}"></div>`;
+    }
+    html += '</div>';
+    $('bk-steps').innerHTML = html;
+  }
+
+  function renderStep1() {
+    const r = bk.servico;
+    $('bk-body').innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Serviço Selecionado</div>
+      <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px">
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">${esc(r.nome)}</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px">
+          ${r.categoria ? `<span style="font-size:12px;color:var(--txt2)">${esc(r.categoria)}</span>` : ''}
+          <span style="font-size:12px;color:var(--txt2)">⏱ ${r.duracaoMin} min</span>
+          ${r.badge ? `<span class="badge-sm">${esc(r.badge)}</span>` : ''}
+        </div>
+        ${r.descricao ? `<div style="font-size:13px;color:var(--txt2);line-height:1.5;margin-bottom:14px">${esc(r.descricao)}</div>` : ''}
+        <div style="font-size:26px;font-weight:700;color:var(--accent)">${fCurrency(r.preco)}</div>
+      </div>
+      <button class="btn-primary" onclick="goBookingStep(2)">Escolher Data →</button>`;
+  }
+
+  function renderStep2() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const DAY_NAMES = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+    let cal = '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px">';
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const ds = d.toISOString().slice(0, 10);
+      const isToday    = i === 0;
+      const isSelected = bk.data === ds;
+      let cls = 'bk-day-btn' + (isSelected ? ' selected' : isToday ? ' today' : '');
+      cal += `<button class="${cls}" onclick="selectBookingDate('${ds}')">
+        <span style="font-size:10px;font-weight:600">${DAY_NAMES[d.getDay()]}</span>
+        <span style="font-size:17px;font-weight:700">${d.getDate()}</span>
+        <span style="font-size:9px;opacity:${isToday ? '.8' : '0'}">Hoje</span>
+      </button>`;
+    }
+    cal += '</div>';
+
+    const footer = bk.data ? `
+      <div style="padding:10px 14px;background:rgba(245,138,0,.08);border:1px solid rgba(245,138,0,.3);border-radius:8px;font-size:13px;margin-bottom:16px">
+        Selecionado: <strong style="color:var(--accent)">${fDate(bk.data)}</strong>
+      </div>
+      <button class="btn-primary" onclick="goBookingStep(3)">Continuar →</button>` : '';
+
+    $('bk-body').innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Escolha uma Data</div>
+      ${cal}${footer}`;
+  }
+
+  function selectBookingDate(ds) {
+    bk.data = ds;
+    bk.hora = null;
+    renderStep2();
+  }
+
+  async function renderStep3() {
+    $('bk-body').innerHTML = '<p style="color:var(--txt2);font-size:13px;text-align:center;padding:20px 0">Carregando horários…</p>';
+    try {
+      const rows = await apiFetch('GET', `/api/agendamentos?data=${bk.data}`);
+      _bookedSlots = new Set(rows.map(r => (r.horaInicio || '').substring(0, 5)));
+    } catch {
+      _bookedSlots = new Set();
+    }
+    _renderSlots();
+  }
+
+  function _renderSlots() {
+    let grid = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">';
+    for (let min = 9 * 60; min <= 18 * 60 + 30; min += 30) {
+      const h = Math.floor(min / 60), m = min % 60;
+      const slot = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+      const isBooked   = _bookedSlots.has(slot);
+      const isSelected = bk.hora === slot;
+      let cls = 'bk-slot-btn' + (isSelected ? ' selected' : '');
+      const attrs = isBooked ? 'disabled' : `onclick="selectBookingSlot('${slot}')"`;
+      grid += `<button class="${cls}" ${attrs}>${slot}</button>`;
+    }
+    grid += '</div>';
+    const footer = bk.hora
+      ? `<button class="btn-primary" style="margin-top:12px" onclick="goBookingStep(4)">Continuar →</button>`
+      : '';
+    $('bk-body').innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Escolha um Horário</div>
+      ${grid}
+      <div style="font-size:11px;color:var(--txt2);margin-bottom:4px">Slots acinzentados já estão ocupados</div>
+      ${footer}`;
+  }
+
+  function selectBookingSlot(slot) {
+    bk.hora = slot;
+    _renderSlots();
+  }
+
+  async function renderStep4() {
+    if (_barbeiros.length === 0) {
+      $('bk-body').innerHTML = '<p style="color:var(--txt2);font-size:13px;text-align:center;padding:20px 0">Carregando barbeiros…</p>';
+      try {
+        _barbeiros = await apiFetch('GET', '/api/barbeiros');
+      } catch (e) {
+        $('bk-body').innerHTML = `<p style="color:var(--red);font-size:13px">${esc(e.message)}</p>`;
+        return;
+      }
+    }
+    _renderBarbeiros();
+  }
+
+  function _renderBarbeiros() {
+    if (!_barbeiros.length) {
+      $('bk-body').innerHTML = '<p style="color:var(--txt2);font-size:13px;text-align:center;padding:20px 0">Nenhum barbeiro disponível.</p>';
+      return;
+    }
+    let cards = '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px">';
+    _barbeiros.forEach(b => {
+      const isSel = bk.barbeiro && bk.barbeiro.id === b.id;
+      cards += `
+        <div class="bk-barber-card${isSel ? ' selected' : ''}" data-bid="${b.id}" data-bname="${esc(b.nome)}" onclick="selectBookingBarbeiro(+this.dataset.bid, this.dataset.bname)">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;color:#fff">
+            ${b.nome.charAt(0).toUpperCase()}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px">${esc(b.nome)}</div>
+            <div style="font-size:12px;color:var(--txt2);margin-top:2px">${esc(b.cargo || 'Barbeiro')}</div>
+          </div>
+          ${b.avaliacaoMedia > 0 ? `<div style="font-size:13px;color:#FBBF24;font-weight:600;flex-shrink:0">★ ${Number(b.avaliacaoMedia).toFixed(1)}</div>` : ''}
+        </div>`;
+    });
+    cards += '</div>';
+    const footer = bk.barbeiro
+      ? `<button class="btn-primary" style="margin-top:16px" onclick="goBookingStep(5)">Continuar →</button>`
+      : '';
+    $('bk-body').innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Escolha um Barbeiro</div>
+      ${cards}${footer}`;
+  }
+
+  function selectBookingBarbeiro(id, nome) {
+    bk.barbeiro = { id, nome };
+    _renderBarbeiros();
+  }
+
+  function renderStep5() {
+    const { servico, data, hora, barbeiro } = bk;
+    const summaryRows = [
+      ['Serviço',  esc(servico.nome)],
+      ['Data',     fDate(data)],
+      ['Horário',  hora],
+      ['Barbeiro', esc(barbeiro.nome)],
+      ['Duração',  `${servico.duracaoMin} min`],
+      ['Valor',    `<span style="color:var(--accent);font-weight:700">${fCurrency(servico.preco)}</span>`],
+    ];
+    let tbl = '<div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px">';
+    summaryRows.forEach(([label, val]) => {
+      tbl += `<div class="bk-summary-row"><span style="color:var(--txt2)">${label}</span><span style="font-weight:500">${val}</span></div>`;
+    });
+    tbl += '</div>';
+    $('bk-body').innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Confirmar Agendamento</div>
+      ${tbl}
+      <div id="bk-confirm-err" style="display:none;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;color:#FCA5A5;font-size:13px;padding:10px 14px;margin-bottom:12px"></div>
+      <button id="btn-confirmar" class="btn-primary" onclick="confirmBooking()">✓ Confirmar Agendamento</button>`;
+  }
+
+  async function confirmBooking() {
+    const btn   = $('btn-confirmar');
+    const errEl = $('bk-confirm-err');
+    errEl.style.display = 'none';
+    btn.disabled    = true;
+    btn.textContent = 'Confirmando…';
+    try {
+      await apiFetch('POST', '/api/agendamentos', {
+        clienteId:  currentUser.id,
+        barbeiroId: bk.barbeiro.id,
+        servicoId:  bk.servico.id,
+        data:       bk.data,
+        horaInicio: bk.hora,
+        duracaoMin: bk.servico.duracaoMin,
+        valor:      bk.servico.preco,
+      });
+      closeBookingModal();
+      showToast('Agendamento confirmado com sucesso!', false);
+      showClienteSection('cli-agendamentos');
+    } catch (e) {
+      errEl.textContent   = e.message;
+      errEl.style.display = 'block';
+      btn.disabled        = false;
+      btn.textContent     = '✓ Confirmar Agendamento';
+    }
+  }
+
   // ── Init ──────────────────────────────────────────────────
   (function init() {
     showAuth('login');
   })();
 </script>
+
+<!-- ════════════════ BOOKING MODAL ════════════════════════ -->
+<div id="booking-overlay" onclick="if(event.target===this)closeBookingModal()">
+  <div id="booking-modal">
+    <div id="bk-header">
+      <button class="bk-back-btn" id="btn-bk-back" onclick="prevBookingStep()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Voltar
+      </button>
+      <span id="bk-title" style="font-size:15px;font-weight:600"></span>
+      <button class="bk-close-btn" onclick="closeBookingModal()">✕</button>
+    </div>
+    <div id="bk-steps"></div>
+    <div id="bk-body"></div>
+  </div>
+</div>
+
 </body>
 </html>

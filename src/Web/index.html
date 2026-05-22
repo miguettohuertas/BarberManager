@@ -1674,7 +1674,7 @@
     _barbeiros.forEach(b => {
       const isSel = bk.barbeiro && bk.barbeiro.id === b.id;
       cards += `
-        <div class="bk-barber-card${isSel ? ' selected' : ''}" onclick="selectBookingBarbeiro(${b.id}, ${JSON.stringify(b.nome)})">
+        <div class="bk-barber-card${isSel ? ' selected' : ''}" data-bid="${b.id}" data-bname="${esc(b.nome)}" onclick="selectBookingBarbeiro(+this.dataset.bid, this.dataset.bname)">
           <div style="width:44px;height:44px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;color:#fff">
             ${b.nome.charAt(0).toUpperCase()}
           </div>
