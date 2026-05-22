@@ -21,7 +21,8 @@ begin
   try
     Query := TFDQuery.Create(nil);
     try
-      Query.Connection := FDConnection;
+      Query.Connection   := FDConnection;
+      Query.Transaction  := nil;
       Query.SQL.Text :=
         'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UC.NOME_COMPLETO AS NOME_CLIENTE, ' +
@@ -80,7 +81,8 @@ begin
     end;
     Query := TFDQuery.Create(nil);
     try
-      Query.Connection := FDConnection;
+      Query.Connection  := FDConnection;
+      Query.Transaction := nil;
       Query.SQL.Text :=
         'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UC.NOME_COMPLETO AS NOME_CLIENTE ' +
@@ -133,7 +135,8 @@ begin
     end;
     Query := TFDQuery.Create(nil);
     try
-      Query.Connection := FDConnection;
+      Query.Connection  := FDConnection;
+      Query.Transaction := nil;
       Query.SQL.Text :=
         'SELECT AV.ID, AV.AGENDAMENTO_ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UB.NOME_COMPLETO AS NOME_BARBEIRO ' +
@@ -210,7 +213,8 @@ begin
 
     QCheck := TFDQuery.Create(nil);
     try
-      QCheck.Connection := FDConnection;
+      QCheck.Connection  := FDConnection;
+      QCheck.Transaction := nil;
       QCheck.SQL.Text := 'SELECT COUNT(*) FROM TB_AVALIACOES WHERE AGENDAMENTO_ID = :AID';
       QCheck.ParamByName('AID').AsInteger := AgendID;
       QCheck.Open;
@@ -226,7 +230,8 @@ begin
 
     QInsert := TFDQuery.Create(nil);
     try
-      QInsert.Connection := FDConnection;
+      QInsert.Connection  := FDConnection;
+      QInsert.Transaction := nil;
       QInsert.SQL.Text :=
         'INSERT INTO TB_AVALIACOES (AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA, COMENTARIO) ' +
         'VALUES (:AID, :CLI, :BAR, :NOTA, :COMENT)';
@@ -242,7 +247,8 @@ begin
 
     QUpdate := TFDQuery.Create(nil);
     try
-      QUpdate.Connection := FDConnection;
+      QUpdate.Connection  := FDConnection;
+      QUpdate.Transaction := nil;
       QUpdate.SQL.Text :=
         'UPDATE TB_BARBEIROS SET AVALIACAO_MEDIA = ' +
         '  (SELECT AVG(CAST(NOTA AS FLOAT)) FROM TB_AVALIACOES WHERE BARBEIRO_ID = :BID) ' +
