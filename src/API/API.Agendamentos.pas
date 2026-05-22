@@ -12,11 +12,6 @@ uses
   Horse,
   API.Conexao;
 
-function FixUTF8(const S: string): string;
-begin
-  Result := TEncoding.UTF8.GetString(TEncoding.ANSI.GetBytes(S));
-end;
-
 procedure RotaListar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   Query: TFDQuery;
@@ -68,12 +63,12 @@ begin
           Item.AddPair('horaFim',      Query.FieldByName('HR_FIM').AsString);
           Item.AddPair('status',       Query.FieldByName('STATUS').AsString);
           Item.AddPair('valor',        TJSONNumber.Create(Query.FieldByName('VALOR_COBRADO').AsFloat));
-          Item.AddPair('cliente',      FixUTF8(Query.FieldByName('NOME_CLIENTE').AsString));
-          Item.AddPair('emailCliente', FixUTF8(Query.FieldByName('EMAIL_CLIENTE').AsString));
-          Item.AddPair('servico',      FixUTF8(Query.FieldByName('NOME_SERVICO').AsString));
+          Item.AddPair('cliente',      Query.FieldByName('NOME_CLIENTE').AsString);
+          Item.AddPair('emailCliente', Query.FieldByName('EMAIL_CLIENTE').AsString);
+          Item.AddPair('servico',      Query.FieldByName('NOME_SERVICO').AsString);
           Item.AddPair('preco',        TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
           Item.AddPair('duracaoMin',   TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
-          Item.AddPair('barbeiro',     FixUTF8(Query.FieldByName('NOME_BARBEIRO').AsString));
+          Item.AddPair('barbeiro',     Query.FieldByName('NOME_BARBEIRO').AsString);
           Lista.AddElement(Item);
           Query.Next;
         end;

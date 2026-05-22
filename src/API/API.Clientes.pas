@@ -12,11 +12,6 @@ uses
   Horse,
   API.Conexao;
 
-function FixUTF8(const S: string): string;
-begin
-  Result := TEncoding.UTF8.GetString(TEncoding.ANSI.GetBytes(S));
-end;
-
 procedure RotaListar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   Query: TFDQuery;
@@ -53,8 +48,8 @@ begin
         begin
           Item := TJSONObject.Create;
           Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nome',        FixUTF8(Query.FieldByName('NOME_COMPLETO').AsString));
-          Item.AddPair('email',       FixUTF8(Query.FieldByName('EMAIL').AsString));
+          Item.AddPair('nome',        Query.FieldByName('NOME_COMPLETO').AsString);
+          Item.AddPair('email',       Query.FieldByName('EMAIL').AsString);
           Item.AddPair('ativo',       TJSONBool.Create(Query.FieldByName('ATIVO').AsInteger = 1));
           Item.AddPair('dtCadastro',  Query.FieldByName('DT_CADASTRO').AsString);
           Lista.AddElement(Item);
