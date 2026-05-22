@@ -137,10 +137,115 @@ begin
   end;
 end;
 
+procedure RotaFinanceiro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+const
+  MESES: array[1..12] of string = (
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
+var
+  Q1, Q2: TFDQuery;
+  Mes, Ano: Integer;
+  FatTotal, FatConc, TicketMedio: Double;
+  Total, Concluidos, Cancelados, Pendentes: Integer;
+  Resp: TJSONObject;
+  PorDia: TJSONArray;
+  Item: TJSONObject;
+begin
+  try
+    Mes := StrToIntDef(Req.Query.Field('mes').AsString, MonthOf(Date));
+    Ano := StrToIntDef(Req.Query.Field('ano').AsString, YearOf(Date));
+    if (Mes < 1) or (Mes > 12) then Mes := MonthOf(Date);
+    if Ano < 2000 then Ano := YearOf(Date);
+
+    Q1 := TFDQuery.Create(nil);
+    try
+      Q1.Connection := FDConnection;
+      Q1.SQL.Text :=
+        'SELECT COUNT(*) AS TOTAL, ' +
+        '  SUM(CASE WHEN STATUS=''CONCLUIDO'' THEN 1 ELSE 0 END) AS CONCLUIDOS, ' +
+        '  SUM(CASE WHEN STATUS=''CANCELADO'' THEN 1 ELSE 0 END) AS CANCELADOS, ' +
+        '  SUM(CASE WHEN STATUS=''PENDENTE'' OR STATUS=''EM_ANDAMENTO'' THEN 1 ELSE 0 END) AS PENDENTES, ' +
+        '  COALESCE(SUM(CASE WHEN STATUS=''CONCLUIDO'' THEN VALOR_COBRADO ELSE 0 END), 0) AS FAT_CONC, ' +
+        '  COALESCE(SUM(VALOR_COBRADO), 0) AS FAT_TOTAL ' +
+        'FROM TB_AGENDAMENTOS ' +
+        'WHERE EXTRACT(MONTH FROM DT_AGENDAMENTO) = :MES ' +
+        'AND EXTRACT(YEAR FROM DT_AGENDAMENTO) = :ANO';
+      Q1.ParamByName('MES').AsInteger := Mes;
+      Q1.ParamByName('ANO').AsInteger := Ano;
+      Q1.Open;
+      Total      := Q1.FieldByName('TOTAL').AsInteger;
+      Concluidos := Q1.FieldByName('CONCLUIDOS').AsInteger;
+      Cancelados := Q1.FieldByName('CANCELADOS').AsInteger;
+      Pendentes  := Q1.FieldByName('PENDENTES').AsInteger;
+      FatConc    := Q1.FieldByName('FAT_CONC').AsFloat;
+      FatTotal   := Q1.FieldByName('FAT_TOTAL').AsFloat;
+    finally
+      Q1.Free;
+    end;
+    if Concluidos > 0 then
+      TicketMedio := FatConc / Concluidos
+    else
+      TicketMedio := 0;
+
+    PorDia := TJSONArray.Create;
+    try
+      Q2 := TFDQuery.Create(nil);
+      try
+        Q2.Connection := FDConnection;
+        Q2.SQL.Text :=
+          'SELECT EXTRACT(DAY FROM DT_AGENDAMENTO) AS DIA, ' +
+          '  COALESCE(SUM(CASE WHEN STATUS=''CONCLUIDO'' THEN VALOR_COBRADO ELSE 0 END), 0) AS VALOR, ' +
+          '  COUNT(*) AS TOTAL ' +
+          'FROM TB_AGENDAMENTOS ' +
+          'WHERE EXTRACT(MONTH FROM DT_AGENDAMENTO) = :MES ' +
+          'AND EXTRACT(YEAR FROM DT_AGENDAMENTO) = :ANO ' +
+          'GROUP BY 1 ORDER BY 1';
+        Q2.ParamByName('MES').AsInteger := Mes;
+        Q2.ParamByName('ANO').AsInteger := Ano;
+        Q2.Open;
+        while not Q2.EOF do
+        begin
+          Item := TJSONObject.Create;
+          Item.AddPair('dia',   FormatFloat('00', Q2.FieldByName('DIA').AsFloat));
+          Item.AddPair('valor', TJSONNumber.Create(Q2.FieldByName('VALOR').AsFloat));
+          Item.AddPair('total', TJSONNumber.Create(Q2.FieldByName('TOTAL').AsInteger));
+          PorDia.AddElement(Item);
+          Q2.Next;
+        end;
+      finally
+        Q2.Free;
+      end;
+
+      Resp := TJSONObject.Create;
+      try
+        Resp.AddPair('faturamentoTotal',     TJSONNumber.Create(FatTotal));
+        Resp.AddPair('faturamentoConcluido', TJSONNumber.Create(FatConc));
+        Resp.AddPair('totalAgendamentos',    TJSONNumber.Create(Total));
+        Resp.AddPair('concluidos',           TJSONNumber.Create(Concluidos));
+        Resp.AddPair('cancelados',           TJSONNumber.Create(Cancelados));
+        Resp.AddPair('pendentes',            TJSONNumber.Create(Pendentes));
+        Resp.AddPair('ticketMedio',          TJSONNumber.Create(TicketMedio));
+        Resp.AddPair('mes',                  MESES[Mes] + ' ' + IntToStr(Ano));
+        Resp.AddPair('porDia',               PorDia);
+        PorDia := nil;
+        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
+      finally
+        Resp.Free;
+      end;
+    finally
+      PorDia.Free;
+    end;
+  except
+    on E: Exception do
+      Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
+  end;
+end;
+
 procedure RegistrarRotas;
 begin
   THorse.Get('/api/dashboard/kpis',     RotaKPIs);
   THorse.Get('/api/dashboard/timeline', RotaTimeline);
+  THorse.Get('/api/financeiro',         RotaFinanceiro);
 end;
 
 end.
