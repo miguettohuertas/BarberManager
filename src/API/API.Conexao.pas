@@ -3,7 +3,7 @@ unit API.Conexao;
 interface
 
 uses
-  System.SysUtils, System.Classes,
+  System.SysUtils,
   FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys.Intf,
@@ -34,18 +34,9 @@ begin
     'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
   FDConnection.Params.UserName := 'SYSDBA';
   FDConnection.Params.Password := 'masterkey';
+  FDConnection.Params.Add('CharacterSet=UTF8');
   FDConnection.Params.Add('Protocol=Local');
-  FDConnection.Params.Add('OpenMode=OpenOrCreate');
-  FDConnection.FormatOptions.StrsTrim := False;
-  FDConnection.FormatOptions.StrsEmpty2Null := False;
-  FDConnection.FormatOptions.AssignedValues := [fvStrsEmpty2Null];
   FDConnection.Connected := True;
-  FDConnection.FormatOptions.OwnMapRules := True;
-  with FDConnection.FormatOptions.MapRules.Add do
-  begin
-    SourceDataType := dtAnsiString;
-    TargetDataType := dtWideString;
-  end;
   Writeln('Database connected.');
 end;
 
