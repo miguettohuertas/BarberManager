@@ -12,6 +12,11 @@ uses
   Horse,
   API.Conexao;
 
+function FixUTF8(const S: string): string;
+begin
+  Result := TEncoding.UTF8.GetString(TEncoding.ANSI.GetBytes(S));
+end;
+
 function HashSenha(const Senha: string): string;
 begin
   Result := UpperCase(THashSHA2.GetHashString(Senha, THashSHA2.TSHA2Version.SHA256));
@@ -68,9 +73,9 @@ begin
       Resp := TJSONObject.Create;
       try
         Resp.AddPair('id', TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-        Resp.AddPair('nome', Query.FieldByName('NOME_COMPLETO').AsString);
-        Resp.AddPair('email', Query.FieldByName('EMAIL').AsString);
-        Resp.AddPair('perfil', Query.FieldByName('PERFIL').AsString);
+        Resp.AddPair('nome', FixUTF8(Query.FieldByName('NOME_COMPLETO').AsString));
+        Resp.AddPair('email', FixUTF8(Query.FieldByName('EMAIL').AsString));
+        Resp.AddPair('perfil', FixUTF8(Query.FieldByName('PERFIL').AsString));
         Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
       finally
         Resp.Free;
