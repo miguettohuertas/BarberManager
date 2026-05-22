@@ -58,13 +58,13 @@ begin
         begin
           Item := TJSONObject.Create;
           Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nome',        Query.FieldByName('NOME').AsString);
-          Item.AddPair('descricao',   Query.FieldByName('DESCRICAO').AsString);
+          Item.AddPair('nome',        Query.FieldByName('NOME').AsWideString);
+          Item.AddPair('descricao',   Query.FieldByName('DESCRICAO').AsWideString);
           Item.AddPair('preco',       TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
           Item.AddPair('duracaoMin',  TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
-          Item.AddPair('badge',       Query.FieldByName('BADGE').AsString);
+          Item.AddPair('badge',       Query.FieldByName('BADGE').AsWideString);
           Item.AddPair('ativo',       TJSONBool.Create(Query.FieldByName('ATIVO').AsInteger = 1));
-          Item.AddPair('categoria',   Query.FieldByName('CATEGORIA').AsString);
+          Item.AddPair('categoria',   Query.FieldByName('CATEGORIA').AsWideString);
           Lista.AddElement(Item);
           Query.Next;
         end;
