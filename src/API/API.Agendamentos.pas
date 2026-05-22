@@ -92,6 +92,9 @@ var
   HoraInicio: TTime;
   HoraFim: TTime;
   DuracaoMin: Integer;
+  DataStr: string;
+  DataParts: TArray<string>;
+  DtAgen: TDate;
 begin
   try
     Body := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
@@ -117,7 +120,18 @@ begin
         Exit;
       end;
 
-      HoraInicio := StrToTimeDef(Body.GetValue<string>('horaInicio', ''), 0);
+      // Parse 'YYYY-MM-DD' → TDate via EncodeDate (avoids locale date separator issues)
+      DataStr   := Body.GetValue<string>('data', '');
+      DataParts := DataStr.Split(['-']);
+      if Length(DataParts) = 3 then
+        DtAgen := EncodeDate(StrToIntDef(DataParts[0], 2024),
+                             StrToIntDef(DataParts[1], 1),
+                             StrToIntDef(DataParts[2], 1))
+      else
+        DtAgen := Date;
+
+      // 'HH:MM' → TTime; append ':00' so StrToTimeDef never gets a partial string
+      HoraInicio := StrToTimeDef(Body.GetValue<string>('horaInicio', '00:00') + ':00', 0);
       DuracaoMin := Body.GetValue<Integer>('duracaoMin', 60);
       HoraFim    := IncMinute(HoraInicio, DuracaoMin);
 
@@ -129,12 +143,13 @@ begin
           '  (CLIENTE_ID, BARBEIRO_ID, SERVICO_ID, DT_AGENDAMENTO, HR_INICIO, HR_FIM, STATUS, VALOR_COBRADO) ' +
           'VALUES ' +
           '  (:CLI, :BAR, :SVC, :DATA, :INICIO, :FIM, ''PENDENTE'', :VALOR)';
-        Query.ParamByName('CLI').AsInteger   := Body.GetValue<Integer>('clienteId', 0);
-        Query.ParamByName('BAR').AsInteger   := Body.GetValue<Integer>('barbeiroId', 0);
-        Query.ParamByName('SVC').AsInteger   := Body.GetValue<Integer>('servicoId', 0);
-        Query.ParamByName('DATA').AsString   := Body.GetValue<string>('data', '');
-        Query.ParamByName('INICIO').AsString := TimeToStr(HoraInicio);
-        Query.ParamByName('FIM').AsString    := TimeToStr(HoraFim);
+        Query.ParamByName('CLI').AsInteger  := Body.GetValue<Integer>('clienteId', 0);
+        Query.ParamByName('BAR').AsInteger  := Body.GetValue<Integer>('barbeiroId', 0);
+        Query.ParamByName('SVC').AsInteger  := Body.GetValue<Integer>('servicoId', 0);
+        Query.ParamByName('DATA').AsDate    := DtAgen;
+        // FormatDateTime 'hh:nn:ss' = locale-independent HH:MM:SS for Firebird TIME
+        Query.ParamByName('INICIO').AsString := FormatDateTime('hh:nn:ss', HoraInicio);
+        Query.ParamByName('FIM').AsString    := FormatDateTime('hh:nn:ss', HoraFim);
         Query.ParamByName('VALOR').AsFloat   := Body.GetValue<Double>('valor', 0);
         Query.ExecSQL;
         Res.ContentType('application/json; charset=utf-8').Status(201)
@@ -147,7 +162,10 @@ begin
     end;
   except
     on E: Exception do
+    begin
+      Writeln('ERROR POST /api/agendamentos: ' + E.Message);
       Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
+    end;
   end;
 end;
 
