@@ -37,6 +37,8 @@ begin
   FDConnection.Params.Add('CharacterSet=UTF8');
   FDConnection.Params.Add('Protocol=Local');
   FDConnection.Connected := True;
+  FDConnection.TxOptions.AutoCommit := True;
+  FDConnection.TxOptions.AutoStart  := True;
   Writeln('Database connected.');
 end;
 

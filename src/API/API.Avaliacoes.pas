@@ -22,7 +22,7 @@ begin
     Query := TFDQuery.Create(nil);
     try
       Query.Connection   := FDConnection;
-      Query.Transaction  := nil;
+
       Query.SQL.Text :=
         'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UC.NOME_COMPLETO AS NOME_CLIENTE, ' +
@@ -82,7 +82,7 @@ begin
     Query := TFDQuery.Create(nil);
     try
       Query.Connection  := FDConnection;
-      Query.Transaction := nil;
+
       Query.SQL.Text :=
         'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UC.NOME_COMPLETO AS NOME_CLIENTE ' +
@@ -136,7 +136,7 @@ begin
     Query := TFDQuery.Create(nil);
     try
       Query.Connection  := FDConnection;
-      Query.Transaction := nil;
+
       Query.SQL.Text :=
         'SELECT AV.ID, AV.AGENDAMENTO_ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
         '  UB.NOME_COMPLETO AS NOME_BARBEIRO ' +
