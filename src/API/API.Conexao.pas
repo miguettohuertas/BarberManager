@@ -36,10 +36,17 @@ begin
   FDConnection.Params.Password := 'masterkey';
   FDConnection.Params.Add('CharacterSet=UTF8');
   FDConnection.Params.Add('Protocol=Local');
+  FDConnection.Params.Add('OpenMode=OpenOrCreate');
+  FDConnection.FormatOptions.StrsTrim := False;
   FDConnection.FormatOptions.StrsEmpty2Null := False;
   FDConnection.FormatOptions.AssignedValues := [fvStrsEmpty2Null];
   FDConnection.Connected := True;
-  FDConnection.ExecSQL('SET NAMES UTF8');
+  FDConnection.FormatOptions.OwnMapRules := True;
+  with FDConnection.FormatOptions.MapRules.Add do
+  begin
+    SourceDataType := dtAnsiString;
+    TargetDataType := dtWideString;
+  end;
   Writeln('Database connected.');
 end;
 
