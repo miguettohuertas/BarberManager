@@ -23,19 +23,22 @@ begin
     try
       Query.Connection := FDConnection;
       Query.SQL.Text :=
-        'SELECT b.ID AS ID_BARBEIRO, u.NOME_COMPLETO AS NOME, b.CARGO, b.AVALIACAO_MEDIA ' +
+        'SELECT b.ID AS BID, ' +
+        '(SELECT u.NOME_COMPLETO FROM TB_USUARIOS u WHERE u.ID = b.USUARIO_ID) AS NOME, ' +
+        'b.CARGO, b.AVALIACAO_MEDIA ' +
         'FROM TB_BARBEIROS b ' +
-        'JOIN TB_USUARIOS u ON b.USUARIO_ID = u.ID ' +
         'WHERE b.ATIVO = 1 ' +
-        'ORDER BY u.NOME_COMPLETO';
+        'ORDER BY 2';
       Query.Open;
+      Writeln('Barbeiros found: ' + IntToStr(Query.RecordCount));
       Lista := TJSONArray.Create;
       try
         while not Query.EOF do
         begin
           Item := TJSONObject.Create;
-          Item.AddPair('id',             TJSONNumber.Create(Query.FieldByName('ID_BARBEIRO').AsInteger));
+          Item.AddPair('id',             TJSONNumber.Create(Query.FieldByName('BID').AsInteger));
           Item.AddPair('nome',           Query.FieldByName('NOME').AsString);
+          Writeln('  Barbeiro ID=' + IntToStr(Query.FieldByName('BID').AsInteger) + ' NOME=' + Query.FieldByName('NOME').AsString);
           Item.AddPair('cargo',          Query.FieldByName('CARGO').AsString);
           Item.AddPair('avaliacaoMedia', TJSONNumber.Create(Query.FieldByName('AVALIACAO_MEDIA').AsFloat));
           Lista.AddElement(Item);
