@@ -35,11 +35,11 @@ begin
   FDConnection.Params.UserName := 'SYSDBA';
   FDConnection.Params.Password := 'masterkey';
   FDConnection.Params.Add('CharacterSet=UTF8');
-  FDConnection.Params.Add('ExtendedMetadata=True');
   FDConnection.Params.Add('Protocol=Local');
   FDConnection.FormatOptions.StrsEmpty2Null := False;
   FDConnection.FormatOptions.AssignedValues := [fvStrsEmpty2Null];
   FDConnection.Connected := True;
+  FDConnection.ExecSQL('SET NAMES UTF8');
   Writeln('Database connected.');
 end;
 

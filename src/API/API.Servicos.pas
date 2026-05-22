@@ -50,6 +50,8 @@ begin
         Query.ParamByName('CATEGORIA').AsString := CategoriaParam;
       if BuscaParam <> '' then
         Query.ParamByName('BUSCA').AsString := BuscaParam;
+      Query.FetchOptions.AutoFetchAll := True;
+      Query.ResourceOptions.SilentMode := True;
       Query.Open;
 
       Lista := TJSONArray.Create;
@@ -58,13 +60,13 @@ begin
         begin
           Item := TJSONObject.Create;
           Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nome',        Query.FieldByName('NOME').AsWideString);
-          Item.AddPair('descricao',   Query.FieldByName('DESCRICAO').AsWideString);
+          Item.AddPair('nome',        Query.FieldByName('NOME').AsString);
+          Item.AddPair('descricao',   Query.FieldByName('DESCRICAO').AsString);
           Item.AddPair('preco',       TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
           Item.AddPair('duracaoMin',  TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
-          Item.AddPair('badge',       Query.FieldByName('BADGE').AsWideString);
+          Item.AddPair('badge',       Query.FieldByName('BADGE').AsString);
           Item.AddPair('ativo',       TJSONBool.Create(Query.FieldByName('ATIVO').AsInteger = 1));
-          Item.AddPair('categoria',   Query.FieldByName('CATEGORIA').AsWideString);
+          Item.AddPair('categoria',   Query.FieldByName('CATEGORIA').AsString);
           Lista.AddElement(Item);
           Query.Next;
         end;
