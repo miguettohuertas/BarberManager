@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BarberManager — Admin</title>
+  <title>BarberManager</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -31,182 +31,241 @@
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--txt);
+    }
+
+    /* ── App layout (used by both admin and client) ────── */
+    .app {
+      display: flex;
       height: 100vh;
       overflow: hidden;
     }
 
-    /* ── Layout ───────────────────────────────────────────── */
-    .app { display: flex; height: 100vh; }
-
-    /* ── Sidebar ──────────────────────────────────────────── */
-    .sidebar {
-      width: var(--sidebar-w);
-      min-width: var(--sidebar-w);
-      background: var(--card);
-      border-right: 1px solid var(--border);
+    /* ── Auth Screens ─────────────────────────────────── */
+    .auth-screen {
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      padding: 24px 0;
-      overflow-y: auto;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .auth-logo {
+      width: 56px; height: 56px;
+      background: var(--accent);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      margin: 0 auto 20px;
+    }
+
+    .auth-card h1 {
+      font-size: 22px; font-weight: 700;
+      text-align: center; margin-bottom: 4px;
+    }
+
+    .auth-sub {
+      font-size: 13px; color: var(--txt2);
+      text-align: center; margin-bottom: 28px;
+    }
+
+    .auth-error {
+      background: rgba(239,68,68,.12);
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: 8px; color: #FCA5A5;
+      font-size: 13px; padding: 10px 14px; margin-bottom: 16px;
+    }
+
+    .auth-success {
+      background: rgba(34,197,94,.12);
+      border: 1px solid rgba(34,197,94,.3);
+      border-radius: 8px; color: #86EFAC;
+      font-size: 13px; padding: 10px 14px; margin-bottom: 16px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-group label {
+      display: block; font-size: 12px; font-weight: 500;
+      color: var(--txt2); margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px;
+      color: var(--txt); font-family: inherit; font-size: 14px;
+      outline: none; transition: border-color .15s;
+    }
+
+    .form-group input:focus { border-color: var(--accent); }
+    .form-group input::placeholder { color: var(--txt2); opacity: .6; }
+
+    .form-check {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+    }
+
+    .form-check input[type="checkbox"] {
+      width: 16px; height: 16px;
+      accent-color: var(--accent); cursor: pointer; flex-shrink: 0;
+    }
+
+    .form-check label { font-size: 13px; color: var(--txt2); cursor: pointer; }
+
+    .btn-primary {
+      width: 100%; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px; padding: 12px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: opacity .15s; margin-bottom: 16px;
+    }
+
+    .btn-primary:hover { opacity: .9; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    .auth-link {
+      font-size: 13px; color: var(--txt2); text-align: center;
+    }
+
+    .auth-link a {
+      color: var(--accent); cursor: pointer;
+      text-decoration: none; font-weight: 500;
+    }
+
+    .auth-link a:hover { text-decoration: underline; }
+
+    /* ── Sidebar ──────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w); min-width: var(--sidebar-w);
+      background: var(--card); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 24px 0; overflow-y: auto;
     }
 
     .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 12px;
       padding: 0 20px 28px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border); margin-bottom: 20px;
     }
 
     .logo-icon {
-      width: 40px; height: 40px;
-      background: var(--accent);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; flex-shrink: 0;
+      width: 40px; height: 40px; background: var(--accent);
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
     }
 
     .logo-title { font-weight: 700; font-size: 14px; color: var(--txt); }
     .logo-sub   { font-size: 11px; color: var(--txt2); margin-top: 1px; }
 
     .nav-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: .08em;
-      color: var(--txt2);
-      padding: 8px 20px 6px;
-      text-transform: uppercase;
+      font-size: 10px; font-weight: 600; letter-spacing: .08em;
+      color: var(--txt2); padding: 8px 20px 6px; text-transform: uppercase;
     }
 
     .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      margin: 2px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      color: var(--txt2);
-      font-size: 14px;
-      font-weight: 500;
-      transition: background .15s, color .15s;
-      user-select: none;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; margin: 2px 10px; border-radius: 8px;
+      cursor: pointer; color: var(--txt2); font-size: 14px; font-weight: 500;
+      transition: background .15s, color .15s; user-select: none;
     }
 
     .nav-item:hover { background: var(--card2); color: var(--txt); }
-
-    .nav-item.active {
-      background: var(--accent-bg);
-      color: var(--accent);
-    }
-
+    .nav-item.active { background: var(--accent-bg); color: var(--accent); }
     .nav-item svg { flex-shrink: 0; }
 
     .sidebar-footer {
-      margin-top: auto;
-      padding: 20px 20px 0;
+      margin-top: auto; padding: 20px 20px 0;
       border-top: 1px solid var(--border);
     }
 
-    .admin-chip {
-      display: flex; align-items: center; gap: 10px;
-    }
+    .admin-chip { display: flex; align-items: center; gap: 10px; }
 
     .avatar {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 13px; flex-shrink: 0;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0;
     }
 
-    .admin-name  { font-size: 13px; font-weight: 600; }
-    .admin-role  { font-size: 11px; color: var(--txt2); }
+    .admin-name { font-size: 13px; font-weight: 600; }
+    .admin-role { font-size: 11px; color: var(--txt2); }
 
-    /* ── Main ─────────────────────────────────────────────── */
+    .btn-logout {
+      width: 100%; background: none; border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 12px; color: var(--txt2);
+      font-family: inherit; font-size: 12px; cursor: pointer;
+      margin-top: 12px; display: flex; align-items: center; gap: 8px;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(239,68,68,.1);
+      color: var(--red); border-color: rgba(239,68,68,.3);
+    }
+
+    /* ── Main ─────────────────────────────────────────── */
     .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      overflow: hidden;
+      flex: 1; display: flex; flex-direction: column;
+      min-width: 0; overflow: hidden;
     }
 
     .topbar {
-      height: var(--topbar-h);
-      min-height: var(--topbar-h);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      background: var(--card);
+      height: var(--topbar-h); min-height: var(--topbar-h);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; background: var(--card);
       border-bottom: 1px solid var(--border);
     }
 
-    #page-title { font-size: 20px; font-weight: 700; }
-    #page-date  { font-size: 12px; color: var(--txt2); margin-top: 2px; }
+    #page-title, #cli-page-title { font-size: 20px; font-weight: 700; }
+    #page-date, #cli-page-date  { font-size: 12px; color: var(--txt2); margin-top: 2px; }
 
     .topbar-right { display: flex; align-items: center; gap: 12px; }
 
     .search-box {
       display: flex; align-items: center; gap: 8px;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 12px;
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 12px;
     }
 
     .search-box input {
       background: none; border: none; outline: none;
-      color: var(--txt); font-size: 13px; font-family: inherit;
-      width: 180px;
+      color: var(--txt); font-size: 13px; font-family: inherit; width: 180px;
     }
 
     .search-box input::placeholder { color: var(--txt2); }
 
-    .badge-dot {
-      width: 8px; height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-    }
+    .badge-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
 
-    /* ── Content ──────────────────────────────────────────── */
-    .content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px 28px;
-    }
+    /* ── Content ──────────────────────────────────────── */
+    .content { flex: 1; overflow-y: auto; padding: 24px 28px; }
 
     .section { display: none; }
     .section.active { display: block; }
 
-    /* ── KPI Grid ─────────────────────────────────────────── */
+    /* ── KPI Grid ─────────────────────────────────────── */
     .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 24px;
     }
 
     @media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 700px)  { .kpi-grid { grid-template-columns: 1fr; } }
 
     .kpi-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px; position: relative; overflow: hidden;
     }
 
     .kpi-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      border-radius: 12px 12px 0 0;
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; border-radius: 12px 12px 0 0;
     }
 
     .kpi-card.kpi-green::before  { background: var(--green); }
@@ -215,10 +274,8 @@
     .kpi-card.kpi-red::before    { background: var(--red); }
 
     .kpi-icon {
-      width: 40px; height: 40px;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 14px;
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
     }
 
     .kpi-card.kpi-green  .kpi-icon { background: rgba(34,197,94,.15); }
@@ -228,204 +285,122 @@
 
     .kpi-label { font-size: 12px; color: var(--txt2); font-weight: 500; margin-bottom: 6px; }
 
-    .kpi-value {
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--txt);
-      line-height: 1;
-    }
+    .kpi-value { font-size: 26px; font-weight: 700; color: var(--txt); line-height: 1; }
 
     .kpi-sub { font-size: 11px; color: var(--txt2); margin-top: 6px; }
 
-    /* ── Cards ────────────────────────────────────────────── */
+    /* ── Cards ────────────────────────────────────────── */
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 20px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden; margin-bottom: 20px;
     }
 
     .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px; border-bottom: 1px solid var(--border);
     }
 
     .card-title { font-size: 15px; font-weight: 600; }
     .card-sub   { font-size: 12px; color: var(--txt2); margin-top: 2px; }
 
-    /* ── Tables ───────────────────────────────────────────── */
+    /* ── Tables ───────────────────────────────────────── */
     .table-wrap { overflow-x: auto; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
     thead th {
-      padding: 11px 16px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--txt2);
-      text-transform: uppercase;
-      letter-spacing: .06em;
+      padding: 11px 16px; text-align: left;
+      font-size: 11px; font-weight: 600; color: var(--txt2);
+      text-transform: uppercase; letter-spacing: .06em;
       background: rgba(255,255,255,.02);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
     }
 
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background .1s;
-    }
-
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: rgba(255,255,255,.025); }
 
-    tbody td {
-      padding: 13px 16px;
-      color: var(--txt);
-      vertical-align: middle;
-    }
+    tbody td { padding: 13px 16px; color: var(--txt); vertical-align: middle; }
 
     .td-secondary { color: var(--txt2); font-size: 12px; }
 
     .empty-cell, .loading-cell, .error-cell {
-      text-align: center;
-      padding: 40px 16px !important;
-      color: var(--txt2);
-      font-size: 13px;
+      text-align: center; padding: 40px 16px !important;
+      color: var(--txt2); font-size: 13px;
     }
 
     .error-cell { color: var(--red); }
 
     .loading-cell::after {
-      content: '';
-      display: inline-block;
+      content: ''; display: inline-block;
       width: 16px; height: 16px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      margin-left: 8px;
-      vertical-align: middle;
+      border: 2px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin .7s linear infinite;
+      margin-left: 8px; vertical-align: middle;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Badges ───────────────────────────────────────────── */
+    /* ── Badges ───────────────────────────────────────── */
     .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
+      display: inline-flex; align-items: center;
+      padding: 3px 9px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; white-space: nowrap;
     }
 
     .badge-sm {
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 600;
-      background: var(--accent-bg);
-      color: var(--accent);
+      padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 600;
+      background: var(--accent-bg); color: var(--accent);
     }
 
-    /* ── Filter bar ───────────────────────────────────────── */
+    /* ── Filter bar ───────────────────────────────────── */
     .filter-bar {
-      display: flex;
-      gap: 8px;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
+      display: flex; gap: 8px; padding: 16px 20px;
+      border-bottom: 1px solid var(--border); flex-wrap: wrap;
     }
 
     .filter-btn {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      font-family: inherit;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--card2);
-      color: var(--txt2);
-      transition: all .15s;
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      font-family: inherit; cursor: pointer; border: 1px solid var(--border);
+      background: var(--card2); color: var(--txt2); transition: all .15s;
     }
 
     .filter-btn:hover { border-color: var(--accent); color: var(--txt); }
 
     .filter-btn.active {
-      background: var(--accent-bg);
-      border-color: var(--accent);
-      color: var(--accent);
+      background: var(--accent-bg); border-color: var(--accent); color: var(--accent);
     }
 
-    /* ── Status select ────────────────────────────────────── */
+    /* ── Status select ────────────────────────────────── */
     .status-select {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--txt);
-      font-family: inherit;
-      font-size: 12px;
-      padding: 5px 8px;
-      cursor: pointer;
-      outline: none;
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--txt); font-family: inherit;
+      font-size: 12px; padding: 5px 8px; cursor: pointer; outline: none;
     }
 
     .status-select:focus { border-color: var(--accent); }
     .status-select:disabled { opacity: .5; cursor: not-allowed; }
 
-    /* ── Toggle switch ────────────────────────────────────── */
-    .toggle-wrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-    }
+    /* ── Toggle switch ────────────────────────────────── */
+    .toggle-wrap { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 
     .toggle-track {
-      width: 40px; height: 22px;
-      border-radius: 11px;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      position: relative;
-      transition: background .2s, border-color .2s;
+      width: 40px; height: 22px; border-radius: 11px;
+      background: var(--card2); border: 1px solid var(--border);
+      position: relative; transition: background .2s, border-color .2s;
     }
 
-    .toggle-track.on {
-      background: rgba(34,197,94,.2);
-      border-color: var(--green);
-    }
+    .toggle-track.on { background: rgba(34,197,94,.2); border-color: var(--green); }
 
     .toggle-thumb {
-      position: absolute;
-      top: 3px; left: 3px;
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      background: var(--txt2);
-      transition: transform .2s, background .2s;
+      position: absolute; top: 3px; left: 3px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--txt2); transition: transform .2s, background .2s;
     }
 
-    .toggle-track.on .toggle-thumb {
-      transform: translateX(18px);
-      background: var(--green);
-    }
+    .toggle-track.on .toggle-thumb { transform: translateX(18px); background: var(--green); }
 
-    .toggle-text {
-      font-size: 12px;
-      color: var(--txt2);
-      min-width: 36px;
-    }
-
+    .toggle-text { font-size: 12px; color: var(--txt2); min-width: 36px; }
     .toggle-track.on + .toggle-text { color: var(--green); }
 
     .toggle-btn {
@@ -435,45 +410,69 @@
 
     .toggle-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-    /* ── Client row ───────────────────────────────────────── */
-    .client-row {
-      display: flex; align-items: center; gap: 10px;
-    }
+    /* ── Client row ───────────────────────────────────── */
+    .client-row { display: flex; align-items: center; gap: 10px; }
 
     .avatar-sm {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700;
-      flex-shrink: 0;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center;
+      justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
     }
 
-    /* ── Section header ───────────────────────────────────── */
+    /* ── Section header ───────────────────────────────── */
     .section-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      display: flex; align-items: flex-end;
+      justify-content: space-between; margin-bottom: 20px;
     }
 
     .section-header h2 { font-size: 18px; font-weight: 700; }
     .section-header p  { font-size: 12px; color: var(--txt2); margin-top: 3px; }
 
-    /* ── Financeiro placeholder ───────────────────────────── */
+    /* ── Placeholder ──────────────────────────────────── */
     .placeholder-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 60px 20px;
-      text-align: center;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 60px 20px; text-align: center;
     }
 
     .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
     .placeholder-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
     .placeholder-sub { font-size: 13px; color: var(--txt2); }
 
-    /* ── Scrollbar ────────────────────────────────────────── */
+    /* ── Service cards (client area) ──────────────────── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+
+    .service-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      transition: border-color .15s;
+    }
+
+    .service-card:hover { border-color: var(--accent); }
+
+    .service-card-name { font-size: 15px; font-weight: 600; color: var(--txt); }
+
+    .service-card-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--txt2);
+    }
+
+    .service-card-price { font-size: 20px; font-weight: 700; color: var(--accent); }
+
+    .btn-agendar {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: 8px; padding: 9px 14px; font-family: inherit;
+      font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 4px;
+      transition: opacity .15s;
+    }
+
+    .btn-agendar:hover { opacity: .9; }
+
+    /* ── Scrollbar ────────────────────────────────────── */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -482,9 +481,69 @@
 </head>
 <body>
 
-<div class="app">
+<!-- ═══════════════════ AUTH ══════════════════════════════ -->
+<div id="screen-auth">
 
-  <!-- ═══════════════════ SIDEBAR ═══════════════════════ -->
+  <!-- LOGIN -->
+  <div id="screen-login" class="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">✂</div>
+      <h1>BarberManager</h1>
+      <p class="auth-sub">Faça login para continuar</p>
+      <div id="login-error" class="auth-error" style="display:none"></div>
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" placeholder="seu@email.com"
+               onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-group">
+        <label for="login-senha">Senha</label>
+        <input id="login-senha" type="password" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button id="btn-entrar" class="btn-primary" onclick="doLogin()">Entrar</button>
+      <p class="auth-link">Não tem conta? <a onclick="showAuth('cadastro')">Criar conta</a></p>
+    </div>
+  </div>
+
+  <!-- CADASTRO -->
+  <div id="screen-cadastro" class="auth-screen" style="display:none">
+    <div class="auth-card">
+      <div class="auth-logo">✂</div>
+      <h1>Criar Conta</h1>
+      <p class="auth-sub">Cadastre-se gratuitamente</p>
+      <div id="cadastro-error"   class="auth-error"   style="display:none"></div>
+      <div id="cadastro-success" class="auth-success" style="display:none"></div>
+      <div class="form-group">
+        <label for="cad-nome">Nome completo</label>
+        <input id="cad-nome" type="text" placeholder="Seu nome completo">
+      </div>
+      <div class="form-group">
+        <label for="cad-email">Email</label>
+        <input id="cad-email" type="email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label for="cad-senha">Senha</label>
+        <input id="cad-senha" type="password" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="form-group">
+        <label for="cad-confirmar">Confirmar senha</label>
+        <input id="cad-confirmar" type="password" placeholder="Repita a senha">
+      </div>
+      <div class="form-check">
+        <input id="cad-termos" type="checkbox">
+        <label for="cad-termos">Li e aceito os termos de uso</label>
+      </div>
+      <button id="btn-cadastrar" class="btn-primary" onclick="doCadastro()">Criar Conta</button>
+      <p class="auth-link">Já tem conta? <a onclick="showAuth('login')">Entrar</a></p>
+    </div>
+  </div>
+
+</div><!-- /screen-auth -->
+
+<!-- ═══════════════════ ADMIN ═════════════════════════════ -->
+<div id="screen-admin" class="app" style="display:none">
+
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">✂</div>
@@ -537,19 +596,22 @@
 
     <div class="sidebar-footer">
       <div class="admin-chip">
-        <div class="avatar">A</div>
+        <div class="avatar" id="admin-avatar">A</div>
         <div>
-          <div class="admin-name">Administrador</div>
-          <div class="admin-role">Admin</div>
+          <div class="admin-name" id="admin-name">Administrador</div>
+          <div class="admin-role" id="admin-role">Admin</div>
         </div>
       </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+        </svg>
+        Sair
+      </button>
     </div>
   </aside>
 
-  <!-- ═══════════════════ MAIN ══════════════════════════ -->
   <main class="main">
-
-    <!-- Top bar -->
     <header class="topbar">
       <div>
         <div id="page-title">Dashboard</div>
@@ -569,12 +631,10 @@
       </div>
     </header>
 
-    <!-- Scrollable content -->
     <div class="content">
 
-      <!-- ══ INÍCIO ══════════════════════════════════════ -->
+      <!-- ══ INÍCIO ═══════════════════════════════════════ -->
       <div id="section-inicio" class="section active">
-
         <div class="section-header">
           <div>
             <h2>Dashboard</h2>
@@ -588,7 +648,6 @@
           </button>
         </div>
 
-        <!-- KPI cards -->
         <div class="kpi-grid">
           <div class="kpi-card kpi-green">
             <div class="kpi-icon">
@@ -637,7 +696,6 @@
           </div>
         </div>
 
-        <!-- Timeline table -->
         <div class="card">
           <div class="card-header">
             <div>
@@ -649,13 +707,8 @@
             <table>
               <thead>
                 <tr>
-                  <th>Cliente</th>
-                  <th>Serviço</th>
-                  <th>Barbeiro</th>
-                  <th>Data</th>
-                  <th>Hora</th>
-                  <th>Valor</th>
-                  <th>Status</th>
+                  <th>Cliente</th><th>Serviço</th><th>Barbeiro</th>
+                  <th>Data</th><th>Hora</th><th>Valor</th><th>Status</th>
                 </tr>
               </thead>
               <tbody id="tbody-timeline">
@@ -664,38 +717,27 @@
             </table>
           </div>
         </div>
-
-      </div><!-- /section-inicio -->
+      </div>
 
       <!-- ══ AGENDA ════════════════════════════════════════ -->
       <div id="section-agenda" class="section">
-
         <div class="section-header">
-          <div>
-            <h2>Agenda</h2>
-            <p>Gestão de agendamentos</p>
-          </div>
+          <div><h2>Agenda</h2><p>Gestão de agendamentos</p></div>
         </div>
-
         <div class="card">
           <div class="filter-bar">
-            <button class="filter-btn active" data-filter="TODOS"       onclick="loadAgenda('TODOS')">Todos</button>
-            <button class="filter-btn"        data-filter="PENDENTE"    onclick="loadAgenda('PENDENTE')">Pendente</button>
+            <button class="filter-btn active" data-filter="TODOS"        onclick="loadAgenda('TODOS')">Todos</button>
+            <button class="filter-btn"        data-filter="PENDENTE"     onclick="loadAgenda('PENDENTE')">Pendente</button>
             <button class="filter-btn"        data-filter="EM_ANDAMENTO" onclick="loadAgenda('EM_ANDAMENTO')">Em Andamento</button>
-            <button class="filter-btn"        data-filter="CONCLUIDO"   onclick="loadAgenda('CONCLUIDO')">Concluído</button>
-            <button class="filter-btn"        data-filter="CANCELADO"   onclick="loadAgenda('CANCELADO')">Cancelado</button>
+            <button class="filter-btn"        data-filter="CONCLUIDO"    onclick="loadAgenda('CONCLUIDO')">Concluído</button>
+            <button class="filter-btn"        data-filter="CANCELADO"    onclick="loadAgenda('CANCELADO')">Cancelado</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Cliente</th>
-                  <th>Serviço</th>
-                  <th>Barbeiro</th>
-                  <th>Data / Hora</th>
-                  <th>Valor</th>
-                  <th>Status</th>
-                  <th>Alterar Status</th>
+                  <th>Cliente</th><th>Serviço</th><th>Barbeiro</th>
+                  <th>Data / Hora</th><th>Valor</th><th>Status</th><th>Alterar Status</th>
                 </tr>
               </thead>
               <tbody id="tbody-agenda">
@@ -704,33 +746,21 @@
             </table>
           </div>
         </div>
-
-      </div><!-- /section-agenda -->
+      </div>
 
       <!-- ══ SERVIÇOS ══════════════════════════════════════ -->
       <div id="section-servicos" class="section">
-
         <div class="section-header">
-          <div>
-            <h2>Serviços</h2>
-            <p>Catálogo de serviços da barbearia</p>
-          </div>
+          <div><h2>Serviços</h2><p>Catálogo de serviços da barbearia</p></div>
         </div>
-
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Todos os Serviços</div>
-          </div>
+          <div class="card-header"><div class="card-title">Todos os Serviços</div></div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>Categoria</th>
-                  <th>Badge</th>
-                  <th>Preço</th>
-                  <th>Duração</th>
-                  <th>Status</th>
+                  <th>Nome</th><th>Categoria</th><th>Badge</th>
+                  <th>Preço</th><th>Duração</th><th>Status</th>
                 </tr>
               </thead>
               <tbody id="tbody-servicos">
@@ -739,32 +769,19 @@
             </table>
           </div>
         </div>
-
-      </div><!-- /section-servicos -->
+      </div>
 
       <!-- ══ CLIENTES ══════════════════════════════════════ -->
       <div id="section-clientes" class="section">
-
         <div class="section-header">
-          <div>
-            <h2>Clientes</h2>
-            <p>Base de clientes cadastrados</p>
-          </div>
+          <div><h2>Clientes</h2><p>Base de clientes cadastrados</p></div>
         </div>
-
         <div class="card">
-          <div class="card-header">
-            <div class="card-title">Todos os Clientes</div>
-          </div>
+          <div class="card-header"><div class="card-title">Todos os Clientes</div></div>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Cadastro</th>
-                  <th>Status</th>
-                </tr>
+                <tr><th>Nome</th><th>Email</th><th>Cadastro</th><th>Status</th></tr>
               </thead>
               <tbody id="tbody-clientes">
                 <tr><td colspan="4" class="loading-cell">Carregando</td></tr>
@@ -772,8 +789,7 @@
             </table>
           </div>
         </div>
-
-      </div><!-- /section-clientes -->
+      </div>
 
       <!-- ══ FINANCEIRO ════════════════════════════════════ -->
       <div id="section-financeiro" class="section">
@@ -783,33 +799,180 @@
         <div class="placeholder-box">
           <div class="placeholder-icon">📊</div>
           <div class="placeholder-title">Em desenvolvimento</div>
-          <div class="placeholder-sub">Use GET /api/dashboard/kpis com parâmetro ?data= para dados financeiros por data.</div>
+          <div class="placeholder-sub">Dados via GET /api/dashboard/kpis?data=</div>
         </div>
       </div>
 
-    </div><!-- /content -->
-  </main><!-- /main -->
+    </div><!-- /content admin -->
+  </main>
+</div><!-- /screen-admin -->
 
-</div><!-- /app -->
+<!-- ═══════════════════ CLIENTE ════════════════════════════ -->
+<div id="screen-cliente" class="app" style="display:none">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">✂</div>
+      <div>
+        <div class="logo-title">BarberManager</div>
+        <div class="logo-sub">Área do Cliente</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Menu</div>
+
+    <div class="nav-item active" data-cs="cli-inicio" onclick="showClienteSection('cli-inicio')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Início
+    </div>
+
+    <div class="nav-item" data-cs="cli-agendamentos" onclick="showClienteSection('cli-agendamentos')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      Meus Agendamentos
+    </div>
+
+    <div class="nav-item" data-cs="cli-perfil" onclick="showClienteSection('cli-perfil')">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      Perfil
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="admin-chip">
+        <div class="avatar" id="cliente-avatar">C</div>
+        <div>
+          <div class="admin-name" id="cliente-name">Cliente</div>
+          <div class="admin-role">Cliente</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+        </svg>
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div id="cli-page-title">Serviços</div>
+        <div id="cli-page-date"></div>
+      </div>
+      <div class="topbar-right">
+        <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 12px">
+          <div class="badge-dot"></div>
+          <span style="font-size:12px;color:var(--txt2)">Online</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- ══ INÍCIO (serviços disponíveis) ════════════════ -->
+      <div id="section-cli-inicio" class="section active">
+        <div class="section-header">
+          <div>
+            <h2>Nossos Serviços</h2>
+            <p>Escolha um serviço para agendar</p>
+          </div>
+          <button onclick="loadClienteServicos()" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--txt2);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+        <div id="service-grid" class="service-grid">
+          <p style="color:var(--txt2);font-size:13px">Carregando...</p>
+        </div>
+      </div>
+
+      <!-- ══ MEUS AGENDAMENTOS ═════════════════════════════ -->
+      <div id="section-cli-agendamentos" class="section">
+        <div class="section-header">
+          <div>
+            <h2>Meus Agendamentos</h2>
+            <p>Histórico dos seus agendamentos</p>
+          </div>
+          <button onclick="loadMeusAgendamentos()" style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--txt2);font-family:inherit;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+            </svg>
+            Atualizar
+          </button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Serviço</th><th>Barbeiro</th>
+                  <th>Data / Hora</th><th>Valor</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-meus-agendamentos">
+                <tr><td colspan="5" class="loading-cell">Carregando</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PERFIL ═════════════════════════════════════════ -->
+      <div id="section-cli-perfil" class="section">
+        <div class="section-header">
+          <div><h2>Meu Perfil</h2><p>Informações da sua conta</p></div>
+        </div>
+        <div class="card" style="max-width:480px">
+          <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div class="avatar" id="perfil-avatar"
+                   style="width:52px;height:52px;font-size:20px;flex-shrink:0">?</div>
+              <div>
+                <div id="perfil-nome" style="font-size:17px;font-weight:600"></div>
+                <div id="perfil-email" style="font-size:13px;color:var(--txt2);margin-top:3px"></div>
+              </div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:16px">
+              <span class="badge"
+                    style="background:rgba(59,130,246,.15);color:#3B82F6;border:1px solid rgba(59,130,246,.3)">
+                Cliente
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content cliente -->
+  </main>
+</div><!-- /screen-cliente -->
 
 <script>
   'use strict';
 
   const API = '';
+  let currentUser  = null;
   let agendaFilter = 'TODOS';
 
-  // ── Helpers ──────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────
   const $ = id => document.getElementById(id);
 
   const fCurrency = v =>
-    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
-      .format(v || 0);
+    new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0);
 
   function fDate(s) {
     if (!s) return '—';
     let d;
     if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
-      d = new Date(s.substring(0,10) + 'T12:00:00');
+      d = new Date(s.substring(0, 10) + 'T12:00:00');
     } else if (/^\d{2}\/\d{2}\/\d{4}/.test(s)) {
       const [day, mon, yr] = s.split('/');
       d = new Date(+yr, +mon - 1, +day);
@@ -834,8 +997,7 @@
 
   function tableMsg(tbodyId, cols, msg, isError, isLoading) {
     const cls = isError ? 'error-cell' : isLoading ? 'loading-cell' : 'empty-cell';
-    $(tbodyId).innerHTML =
-      `<tr><td colspan="${cols}" class="${cls}">${msg}</td></tr>`;
+    $(tbodyId).innerHTML = `<tr><td colspan="${cols}" class="${cls}">${msg}</td></tr>`;
   }
 
   async function apiFetch(method, path, body) {
@@ -848,18 +1010,157 @@
     return data;
   }
 
-  // ── Navigation ───────────────────────────────────────────
-  const titles = {
+  function esc(s) {
+    if (s == null) return '—';
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function showToast(msg, isError) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    Object.assign(t.style, {
+      position: 'fixed', bottom: '24px', right: '24px', zIndex: '9999',
+      background: isError ? '#7F1D1D' : '#14532D',
+      color: isError ? '#FCA5A5' : '#86EFAC',
+      border: `1px solid ${isError ? '#EF444460' : '#22C55E60'}`,
+      borderRadius: '8px', padding: '12px 18px',
+      fontSize: '13px', fontFamily: 'inherit',
+      boxShadow: '0 4px 20px rgba(0,0,0,.4)',
+    });
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  // ── Screen routing ────────────────────────────────────────
+  function showAuth(screen) {
+    $('screen-auth').style.display  = 'block';
+    $('screen-admin').style.display = 'none';
+    $('screen-cliente').style.display = 'none';
+    $('screen-login').style.display    = screen === 'login'    ? 'flex' : 'none';
+    $('screen-cadastro').style.display = screen === 'cadastro' ? 'flex' : 'none';
+    // Clear previous error messages
+    $('login-error').style.display    = 'none';
+    $('cadastro-error').style.display = 'none';
+    $('cadastro-success').style.display = 'none';
+  }
+
+  function showApp() {
+    $('screen-auth').style.display = 'none';
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('pt-BR', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    if (currentUser.perfil === 'ADMIN') {
+      $('screen-admin').style.display   = 'flex';
+      $('screen-cliente').style.display = 'none';
+      $('admin-avatar').textContent = (currentUser.nome || 'A').charAt(0).toUpperCase();
+      $('admin-name').textContent   = currentUser.nome;
+      $('admin-role').textContent   = currentUser.perfil;
+      $('page-date').textContent    = dateStr;
+      loadDashboard();
+    } else {
+      $('screen-admin').style.display   = 'none';
+      $('screen-cliente').style.display = 'flex';
+      $('cliente-avatar').textContent = (currentUser.nome || 'C').charAt(0).toUpperCase();
+      $('cliente-name').textContent   = currentUser.nome;
+      $('cli-page-date').textContent  = now.toLocaleDateString('pt-BR', {
+        day: 'numeric', month: 'long', year: 'numeric'
+      });
+      loadClienteServicos();
+    }
+  }
+
+  // ── Auth actions ──────────────────────────────────────────
+  async function doLogin() {
+    const email = $('login-email').value.trim();
+    const senha = $('login-senha').value;
+    const errEl = $('login-error');
+    errEl.style.display = 'none';
+
+    if (!email || !senha) {
+      errEl.textContent   = 'Email e senha obrigatórios';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = $('btn-entrar');
+    btn.disabled    = true;
+    btn.textContent = 'Entrando…';
+
+    try {
+      const data = await apiFetch('POST', '/api/auth/login', { email, senha });
+      currentUser = data;
+      $('login-senha').value = '';
+      showApp();
+    } catch (e) {
+      errEl.textContent   = e.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Entrar';
+    }
+  }
+
+  async function doCadastro() {
+    const nome      = $('cad-nome').value.trim();
+    const email     = $('cad-email').value.trim();
+    const senha     = $('cad-senha').value;
+    const confirmar = $('cad-confirmar').value;
+    const termos    = $('cad-termos').checked;
+    const errEl     = $('cadastro-error');
+    const sucEl     = $('cadastro-success');
+
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+
+    if (!nome)           { errEl.textContent = 'Nome obrigatório';                    errEl.style.display = 'block'; return; }
+    if (!email)          { errEl.textContent = 'Email obrigatório';                   errEl.style.display = 'block'; return; }
+    if (senha.length < 6){ errEl.textContent = 'Senha deve ter no mínimo 6 caracteres'; errEl.style.display = 'block'; return; }
+    if (senha !== confirmar){ errEl.textContent = 'Senhas não conferem';              errEl.style.display = 'block'; return; }
+    if (!termos)         { errEl.textContent = 'Aceite os termos para continuar';     errEl.style.display = 'block'; return; }
+
+    const btn = $('btn-cadastrar');
+    btn.disabled    = true;
+    btn.textContent = 'Criando conta…';
+
+    try {
+      await apiFetch('POST', '/api/auth/cadastro', { nome, email, senha });
+      sucEl.textContent   = 'Conta criada com sucesso! Redirecionando para o login…';
+      sucEl.style.display = 'block';
+      $('login-email').value = email;
+      setTimeout(() => showAuth('login'), 2000);
+    } catch (e) {
+      errEl.textContent   = e.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Criar Conta';
+    }
+  }
+
+  function doLogout() {
+    currentUser = null;
+    $('login-email').value = '';
+    $('login-senha').value = '';
+    showAuth('login');
+  }
+
+  // ── Admin navigation ──────────────────────────────────────
+  const adminTitles = {
     inicio: 'Dashboard', agenda: 'Agenda',
     servicos: 'Serviços', clientes: 'Clientes', financeiro: 'Financeiro'
   };
 
   function showSection(name) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('#screen-admin .section')
+      .forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#screen-admin .nav-item')
+      .forEach(n => n.classList.remove('active'));
     $(`section-${name}`).classList.add('active');
-    document.querySelector(`[data-s="${name}"]`).classList.add('active');
-    $('page-title').textContent = titles[name] || name;
+    document.querySelector(`#screen-admin [data-s="${name}"]`).classList.add('active');
+    $('page-title').textContent = adminTitles[name] || name;
 
     if (name === 'inicio')     loadDashboard();
     else if (name === 'agenda')    loadAgenda();
@@ -867,12 +1168,13 @@
     else if (name === 'clientes')  loadClientes();
   }
 
-  // ── Dashboard ────────────────────────────────────────────
+  // ── Dashboard ─────────────────────────────────────────────
   async function loadDashboard() {
     const today = new Date().toISOString().slice(0, 10);
-    $('dash-sub').textContent = `Hoje — ${new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'})}`;
+    $('dash-sub').textContent = `Hoje — ${new Date().toLocaleDateString('pt-BR', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    })}`;
 
-    // KPIs
     for (const id of ['kpi-faturamento','kpi-total','kpi-pendentes','kpi-cancelamentos'])
       $(id).textContent = '…';
 
@@ -882,12 +1184,11 @@
       $('kpi-total').textContent         = d.total ?? '0';
       $('kpi-pendentes').textContent     = d.pendentes ?? '0';
       $('kpi-cancelamentos').textContent = d.cancelamentos ?? '0';
-    } catch (e) {
+    } catch {
       for (const id of ['kpi-faturamento','kpi-total','kpi-pendentes','kpi-cancelamentos'])
         $(id).textContent = '—';
     }
 
-    // Timeline
     tableMsg('tbody-timeline', 7, 'Carregando', false, true);
     try {
       const rows = await apiFetch('GET', `/api/dashboard/timeline?data=${today}`);
@@ -898,10 +1199,7 @@
   }
 
   function renderTimeline(rows) {
-    if (!rows.length) {
-      tableMsg('tbody-timeline', 7, 'Nenhum agendamento hoje');
-      return;
-    }
+    if (!rows.length) { tableMsg('tbody-timeline', 7, 'Nenhum agendamento hoje'); return; }
     $('tbody-timeline').innerHTML = rows.map(r => `
       <tr>
         <td>${esc(r.cliente)}</td>
@@ -914,11 +1212,10 @@
       </tr>`).join('');
   }
 
-  // ── Agenda ───────────────────────────────────────────────
+  // ── Agenda ────────────────────────────────────────────────
   async function loadAgenda(filter) {
     if (filter !== undefined) agendaFilter = filter;
-
-    document.querySelectorAll('.filter-btn').forEach(b =>
+    document.querySelectorAll('#screen-admin .filter-btn').forEach(b =>
       b.classList.toggle('active', b.dataset.filter === agendaFilter));
 
     tableMsg('tbody-agenda', 7, 'Carregando', false, true);
@@ -932,10 +1229,7 @@
   }
 
   function renderAgenda(rows) {
-    if (!rows.length) {
-      tableMsg('tbody-agenda', 7, 'Nenhum agendamento encontrado');
-      return;
-    }
+    if (!rows.length) { tableMsg('tbody-agenda', 7, 'Nenhum agendamento encontrado'); return; }
     $('tbody-agenda').innerHTML = rows.map(r => `
       <tr>
         <td>${esc(r.cliente)}</td>
@@ -966,7 +1260,7 @@
     }
   }
 
-  // ── Serviços ─────────────────────────────────────────────
+  // ── Serviços (admin) ──────────────────────────────────────
   async function loadServicos() {
     tableMsg('tbody-servicos', 6, 'Carregando', false, true);
     try {
@@ -978,10 +1272,7 @@
   }
 
   function renderServicos(rows) {
-    if (!rows.length) {
-      tableMsg('tbody-servicos', 6, 'Nenhum serviço cadastrado');
-      return;
-    }
+    if (!rows.length) { tableMsg('tbody-servicos', 6, 'Nenhum serviço cadastrado'); return; }
     $('tbody-servicos').innerHTML = rows.map(r => `
       <tr>
         <td style="font-weight:500">${esc(r.nome)}</td>
@@ -990,7 +1281,8 @@
         <td style="color:var(--green)">${fCurrency(r.preco)}</td>
         <td class="td-secondary">${r.duracaoMin} min</td>
         <td>
-          <button class="toggle-btn" onclick="toggleServico(${r.id}, this)" title="${r.ativo ? 'Desativar' : 'Ativar'}">
+          <button class="toggle-btn" onclick="toggleServico(${r.id}, this)"
+                  title="${r.ativo ? 'Desativar' : 'Ativar'}">
             <div class="toggle-track ${r.ativo ? 'on' : ''}">
               <div class="toggle-thumb"></div>
             </div>
@@ -1011,7 +1303,7 @@
     }
   }
 
-  // ── Clientes ─────────────────────────────────────────────
+  // ── Clientes (admin) ──────────────────────────────────────
   async function loadClientes() {
     tableMsg('tbody-clientes', 4, 'Carregando', false, true);
     try {
@@ -1023,10 +1315,7 @@
   }
 
   function renderClientes(rows) {
-    if (!rows.length) {
-      tableMsg('tbody-clientes', 4, 'Nenhum cliente cadastrado');
-      return;
-    }
+    if (!rows.length) { tableMsg('tbody-clientes', 4, 'Nenhum cliente cadastrado'); return; }
     $('tbody-clientes').innerHTML = rows.map(r => {
       const initial = (r.nome || '?').charAt(0).toUpperCase();
       const ativoBadge = r.ativo
@@ -1047,41 +1336,105 @@
     }).join('');
   }
 
-  // ── Toast ─────────────────────────────────────────────────
-  function showToast(msg, isError) {
-    const t = document.createElement('div');
-    t.textContent = msg;
-    Object.assign(t.style, {
-      position:'fixed', bottom:'24px', right:'24px', zIndex:'9999',
-      background: isError ? '#7F1D1D' : '#14532D',
-      color: isError ? '#FCA5A5' : '#86EFAC',
-      border: `1px solid ${isError ? '#EF444460' : '#22C55E60'}`,
-      borderRadius:'8px', padding:'12px 18px',
-      fontSize:'13px', fontFamily:'inherit',
-      boxShadow:'0 4px 20px rgba(0,0,0,.4)',
-      animation:'fadeIn .2s ease'
-    });
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3500);
+  // ── Cliente navigation ────────────────────────────────────
+  const clienteTitles = {
+    'cli-inicio':        'Serviços',
+    'cli-agendamentos':  'Meus Agendamentos',
+    'cli-perfil':        'Meu Perfil',
+  };
+
+  function showClienteSection(name) {
+    document.querySelectorAll('#screen-cliente .section')
+      .forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('#screen-cliente .nav-item')
+      .forEach(n => n.classList.remove('active'));
+    $(`section-${name}`).classList.add('active');
+    document.querySelector(`#screen-cliente [data-cs="${name}"]`).classList.add('active');
+    $('cli-page-title').textContent = clienteTitles[name] || name;
+
+    if (name === 'cli-inicio')       loadClienteServicos();
+    else if (name === 'cli-agendamentos') loadMeusAgendamentos();
+    else if (name === 'cli-perfil')       loadClientePerfil();
   }
 
-  // ── XSS guard ─────────────────────────────────────────────
-  function esc(s) {
-    if (s == null) return '—';
-    return String(s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
+  // ── Cliente — serviços ────────────────────────────────────
+  async function loadClienteServicos() {
+    $('service-grid').innerHTML =
+      '<p style="color:var(--txt2);font-size:13px;padding:4px 0">Carregando serviços…</p>';
+    try {
+      const rows = await apiFetch('GET', '/api/servicos?ativo=1');
+      renderClienteServicos(rows);
+    } catch (e) {
+      $('service-grid').innerHTML =
+        `<p style="color:var(--red);font-size:13px">${esc(e.message)}</p>`;
+    }
+  }
+
+  function renderClienteServicos(rows) {
+    if (!rows.length) {
+      $('service-grid').innerHTML =
+        '<p style="color:var(--txt2);font-size:13px">Nenhum serviço disponível.</p>';
+      return;
+    }
+    $('service-grid').innerHTML = rows.map(r => `
+      <div class="service-card">
+        <div class="service-card-name">${esc(r.nome)}</div>
+        <div class="service-card-meta">
+          <span>${esc(r.categoria || '—')}</span>
+          ${r.badge ? `<span class="badge-sm">${esc(r.badge)}</span>` : ''}
+        </div>
+        ${r.descricao ? `<div style="font-size:12px;color:var(--txt2);line-height:1.5">${esc(r.descricao)}</div>` : ''}
+        <div class="service-card-meta">
+          <span>⏱ ${r.duracaoMin} min</span>
+        </div>
+        <div class="service-card-price">${fCurrency(r.preco)}</div>
+        <button class="btn-agendar" onclick="showToast('Agende pelo app mobile!', false)">
+          Agendar
+        </button>
+      </div>`).join('');
+  }
+
+  // ── Cliente — meus agendamentos ───────────────────────────
+  async function loadMeusAgendamentos() {
+    tableMsg('tbody-meus-agendamentos', 5, 'Carregando', false, true);
+    try {
+      const rows = await apiFetch('GET', '/api/agendamentos');
+      // Filter client-side by email
+      const meus = currentUser
+        ? rows.filter(r => r.emailCliente === currentUser.email)
+        : rows;
+      renderMeusAgendamentos(meus);
+    } catch (e) {
+      tableMsg('tbody-meus-agendamentos', 5, e.message, true);
+    }
+  }
+
+  function renderMeusAgendamentos(rows) {
+    if (!rows.length) {
+      tableMsg('tbody-meus-agendamentos', 5, 'Nenhum agendamento encontrado');
+      return;
+    }
+    $('tbody-meus-agendamentos').innerHTML = rows.map(r => `
+      <tr>
+        <td style="font-weight:500">${esc(r.servico)}</td>
+        <td class="td-secondary">${esc(r.barbeiro)}</td>
+        <td class="td-secondary">${fDate(r.data)} ${fTime(r.horaInicio)}</td>
+        <td style="color:var(--green)">${fCurrency(r.valor)}</td>
+        <td>${badge(r.status)}</td>
+      </tr>`).join('');
+  }
+
+  // ── Cliente — perfil ──────────────────────────────────────
+  function loadClientePerfil() {
+    if (!currentUser) return;
+    $('perfil-avatar').textContent = (currentUser.nome || '?').charAt(0).toUpperCase();
+    $('perfil-nome').textContent   = currentUser.nome;
+    $('perfil-email').textContent  = currentUser.email;
   }
 
   // ── Init ──────────────────────────────────────────────────
   (function init() {
-    const now = new Date();
-    $('page-date').textContent = now.toLocaleDateString('pt-BR', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
-    loadDashboard();
+    showAuth('login');
   })();
 </script>
 </body>
