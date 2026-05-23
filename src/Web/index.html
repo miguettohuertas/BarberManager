@@ -1209,6 +1209,8 @@
   let agendaBusca   = '';
   let servicosBusca = '';
   let clientesBusca = '';
+  let lastSeenNotifId = parseInt(localStorage.getItem('lastSeenNotifId') || '0');
+  let notifMaxId      = 0;
 
   // ── Helpers ───────────────────────────────────────────────
   const $ = id => document.getElementById(id);
@@ -1309,6 +1311,7 @@
       $('page-date').textContent    = dateStr;
       loadDashboard();
       loadNotificacoes();
+      setInterval(loadNotificacoes, 30000);
     } else {
       $('screen-admin').style.display   = 'none';
       $('screen-cliente').style.display = 'flex';
@@ -1794,14 +1797,15 @@
   async function loadNotificacoes() {
     try {
       const data = await apiFetch('GET', '/api/avaliacoes/recentes');
-      const badge = $('bell-badge');
-      if (badge) {
-        const alreadySeen = sessionStorage.getItem('notif_seen') === '1';
-        if (data.length > 0 && !alreadySeen) {
-          badge.textContent  = data.length;
-          badge.style.display = 'flex';
+      notifMaxId = data.length ? Math.max(...data.map(r => r.id)) : 0;
+      const unseen = data.filter(r => r.id > lastSeenNotifId).length;
+      const bellBadge = $('bell-badge');
+      if (bellBadge) {
+        if (unseen > 0) {
+          bellBadge.textContent   = unseen;
+          bellBadge.style.display = 'flex';
         } else {
-          badge.style.display = 'none';
+          bellBadge.style.display = 'none';
         }
       }
       const list = $('notif-list');
@@ -1829,11 +1833,11 @@
     const p = $('notif-panel');
     if (!p) return;
     p.classList.toggle('open');
-    // Clear badge when opening and mark as seen for this session
     if (p.classList.contains('open')) {
-      const badge = $('bell-badge');
-      if (badge) badge.style.display = 'none';
-      sessionStorage.setItem('notif_seen', '1');
+      lastSeenNotifId = notifMaxId;
+      localStorage.setItem('lastSeenNotifId', lastSeenNotifId);
+      const bellBadge = $('bell-badge');
+      if (bellBadge) bellBadge.style.display = 'none';
     }
   }
 
