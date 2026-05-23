@@ -142,6 +142,9 @@
         <DCCReference Include="src\API\API.Servicos.pas"/>
         <DCCReference Include="src\API\API.Agendamentos.pas"/>
         <DCCReference Include="src\API\API.Clientes.pas"/>
+        <DCCReference Include="src\API\API.Barbeiros.pas"/>
+        <DCCReference Include="src\API\API.Avaliacoes.pas"/>
+        <DCCReference Include="src\API\API.Usuarios.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -162,6 +165,10 @@
                 <Source>
                     <Source Name="MainSource">BarberManagerAPI.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Platforms>
                 <Platform value="Android">False</Platform>
