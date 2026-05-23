@@ -147,10 +147,12 @@ begin
         'ORDER BY AV.DT_AVALIACAO DESC';
       Query.ParamByName('ID').AsInteger := ID;
       Query.Open;
+      Writeln('RotaPorCliente: query opened, RecordCount=' + IntToStr(Query.RecordCount));
       Lista := TJSONArray.Create;
       try
         while not Query.EOF do
         begin
+          Writeln('  row ID=' + IntToStr(Query.FieldByName('ID').AsInteger));
           Item := TJSONObject.Create;
           Item.AddPair('id',            TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
           Item.AddPair('agendamentoId', TJSONNumber.Create(Query.FieldByName('AGENDAMENTO_ID').AsInteger));
