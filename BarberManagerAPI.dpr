@@ -48,19 +48,27 @@ begin
     begin
       FilePath := IncludeTrailingPathDelimiter(ExtractFilePath(ParamStr(0))) + 'index.html';
       Writeln('Looking for: ' + FilePath);
-      if FileExists(FilePath) then
+      if not FileExists(FilePath) then
       begin
-        HTML := TStringList.Create;
+        Res.Status(404).Send('{"error":"index.html not found","path":"' + FilePath + '"}');
+        Exit;
+      end;
+      HTML := TStringList.Create;
+      try
         try
           HTML.LoadFromFile(FilePath, TEncoding.UTF8);
-          Res.ContentType('text/html; charset=utf-8');
-          Res.Send(HTML.Text);
-        finally
-          HTML.Free;
+        except
+          on E: Exception do
+          begin
+            Res.Status(500).Send('{"error":"' + E.Message + '"}');
+            Exit;
+          end;
         end;
-      end
-      else
-        Res.Status(404).Send('index.html not found');
+        Res.ContentType('text/html; charset=utf-8');
+        Res.Send(HTML.Text);
+      finally
+        HTML.Free;
+      end;
     end
   );
 
