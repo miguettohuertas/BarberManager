@@ -139,20 +139,18 @@ begin
 
       Query.SQL.Text :=
         'SELECT AV.ID, AV.AGENDAMENTO_ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
-        '  UB.NOME_COMPLETO AS NOME_BARBEIRO ' +
+        '  COALESCE(UB.NOME_COMPLETO, '''') AS NOME_BARBEIRO ' +
         'FROM TB_AVALIACOES AV ' +
-        'JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
-        'JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
+        'LEFT JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
+        'LEFT JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
         'WHERE AV.CLIENTE_ID = :ID ' +
         'ORDER BY AV.DT_AVALIACAO DESC';
       Query.ParamByName('ID').AsInteger := ID;
       Query.Open;
-      Writeln('RotaPorCliente: query opened, RecordCount=' + IntToStr(Query.RecordCount));
       Lista := TJSONArray.Create;
       try
         while not Query.EOF do
         begin
-          Writeln('  row ID=' + IntToStr(Query.FieldByName('ID').AsInteger));
           Item := TJSONObject.Create;
           Item.AddPair('id',            TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
           Item.AddPair('agendamentoId', TJSONNumber.Create(Query.FieldByName('AGENDAMENTO_ID').AsInteger));
