@@ -24,6 +24,7 @@ end;
 
 procedure RotaLogin(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Body: TJSONObject;
   Email, Senha: string;
   Query: TFDQuery;
@@ -49,34 +50,39 @@ begin
       Exit;
     end;
 
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection := FDConnection;
-      Query.SQL.Text :=
-        'SELECT ID, NOME_COMPLETO, EMAIL, PERFIL FROM TB_USUARIOS ' +
-        'WHERE EMAIL = :EMAIL AND SENHA_HASH = :HASH AND ATIVO = 1';
-      Query.ParamByName('EMAIL').AsString := Email;
-      Query.ParamByName('HASH').AsString := HashSenha(Senha);
-      Query.Open;
-
-      if Query.IsEmpty then
-      begin
-        Res.ContentType('application/json; charset=utf-8').Status(401).Send('{"erro":"Email ou senha inválidos"}');
-        Exit;
-      end;
-
-      Resp := TJSONObject.Create;
+      Query := TFDQuery.Create(nil);
       try
-        Resp.AddPair('id', TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-        Resp.AddPair('nome', Query.FieldByName('NOME_COMPLETO').AsString);
-        Resp.AddPair('email', Query.FieldByName('EMAIL').AsString);
-        Resp.AddPair('perfil', Query.FieldByName('PERFIL').AsString);
-        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
+        Query.Connection := Conn;
+        Query.SQL.Text :=
+          'SELECT ID, NOME_COMPLETO, EMAIL, PERFIL FROM TB_USUARIOS ' +
+          'WHERE EMAIL = :EMAIL AND SENHA_HASH = :HASH AND ATIVO = 1';
+        Query.ParamByName('EMAIL').AsString := Email;
+        Query.ParamByName('HASH').AsString := HashSenha(Senha);
+        Query.Open;
+
+        if Query.IsEmpty then
+        begin
+          Res.ContentType('application/json; charset=utf-8').Status(401).Send('{"erro":"Email ou senha inválidos"}');
+          Exit;
+        end;
+
+        Resp := TJSONObject.Create;
+        try
+          Resp.AddPair('id', TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+          Resp.AddPair('nome', Query.FieldByName('NOME_COMPLETO').AsString);
+          Resp.AddPair('email', Query.FieldByName('EMAIL').AsString);
+          Resp.AddPair('perfil', Query.FieldByName('PERFIL').AsString);
+          Res.ContentType('application/json; charset=utf-8').Status(200).Send(Resp.ToString);
+        finally
+          Resp.Free;
+        end;
       finally
-        Resp.Free;
+        Query.Free;
       end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -86,6 +92,7 @@ end;
 
 procedure RotaCadastro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Body: TJSONObject;
   Nome, Email, Senha: string;
   Query: TFDQuery;
@@ -121,33 +128,38 @@ begin
       Exit;
     end;
 
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection := FDConnection;
+      Query := TFDQuery.Create(nil);
+      try
+        Query.Connection := Conn;
 
-      Query.SQL.Text :=
-        'SELECT COUNT(*) FROM TB_USUARIOS WHERE EMAIL = :EMAIL';
-      Query.ParamByName('EMAIL').AsString := Email;
-      Query.Open;
-      if Query.Fields[0].AsInteger > 0 then
-      begin
-        Res.ContentType('application/json; charset=utf-8').Status(409).Send('{"erro":"Email já cadastrado"}');
-        Exit;
+        Query.SQL.Text :=
+          'SELECT COUNT(*) FROM TB_USUARIOS WHERE EMAIL = :EMAIL';
+        Query.ParamByName('EMAIL').AsString := Email;
+        Query.Open;
+        if Query.Fields[0].AsInteger > 0 then
+        begin
+          Res.ContentType('application/json; charset=utf-8').Status(409).Send('{"erro":"Email já cadastrado"}');
+          Exit;
+        end;
+        Query.Close;
+
+        Query.SQL.Text :=
+          'INSERT INTO TB_USUARIOS (NOME_COMPLETO, EMAIL, SENHA_HASH, PERFIL, ATIVO) ' +
+          'VALUES (:NOME, :EMAIL, :HASH, ''CLIENTE'', 1)';
+        Query.ParamByName('NOME').AsString  := Nome;
+        Query.ParamByName('EMAIL').AsString := Email;
+        Query.ParamByName('HASH').AsString  := HashSenha(Senha);
+        Query.ExecSQL;
+
+        Res.ContentType('application/json; charset=utf-8').Status(201)
+          .Send('{"mensagem":"Cadastro realizado com sucesso"}');
+      finally
+        Query.Free;
       end;
-      Query.Close;
-
-      Query.SQL.Text :=
-        'INSERT INTO TB_USUARIOS (NOME_COMPLETO, EMAIL, SENHA_HASH, PERFIL, ATIVO) ' +
-        'VALUES (:NOME, :EMAIL, :HASH, ''CLIENTE'', 1)';
-      Query.ParamByName('NOME').AsString  := Nome;
-      Query.ParamByName('EMAIL').AsString := Email;
-      Query.ParamByName('HASH').AsString  := HashSenha(Senha);
-      Query.ExecSQL;
-
-      Res.ContentType('application/json; charset=utf-8').Status(201)
-        .Send('{"mensagem":"Cadastro realizado com sucesso"}');
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do

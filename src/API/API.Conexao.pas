@@ -11,8 +11,7 @@ uses
   FireDAC.ConsoleUI.Wait, Data.DB, FireDAC.Comp.DataSet, FireDAC.DApt,
   FireDAC.Stan.ExprFuncs, FireDAC.Stan.Param;
 
-var
-  FDConnection: TFDConnection;
+function CreateConnection: TFDConnection;
 
 procedure IniciarConexao;
 procedure EncerrarConexao;
@@ -22,32 +21,30 @@ implementation
 var
   FDPhysFBDriverLink: TFDPhysFBDriverLink;
 
+function CreateConnection: TFDConnection;
+begin
+  Result := TFDConnection.Create(nil);
+  Result.Params.DriverID := 'FB';
+  Result.Params.Database :=
+    'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
+  Result.Params.UserName := 'SYSDBA';
+  Result.Params.Password := 'masterkey';
+  Result.Params.Add('CharacterSet=UTF8');
+  Result.Params.Add('Protocol=Local');
+  Result.Connected := True;
+  Result.TxOptions.Isolation := xiReadCommitted;
+end;
+
 procedure IniciarConexao;
 begin
   FDPhysFBDriverLink := TFDPhysFBDriverLink.Create(nil);
   FDPhysFBDriverLink.VendorLib :=
     'C:\Program Files (x86)\Firebird\Firebird_3_0\fbclient.dll';
-
-  FDConnection := TFDConnection.Create(nil);
-  FDConnection.Params.DriverID := 'FB';
-  FDConnection.Params.Database :=
-    'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
-  FDConnection.Params.UserName := 'SYSDBA';
-  FDConnection.Params.Password := 'masterkey';
-  FDConnection.Params.Add('CharacterSet=UTF8');
-  FDConnection.Params.Add('Protocol=Local');
-  FDConnection.Connected := True;
-  FDConnection.TxOptions.Isolation := xiReadCommitted;
-  Writeln('Database connected.');
+  Writeln('Database driver loaded.');
 end;
 
 procedure EncerrarConexao;
 begin
-  if Assigned(FDConnection) then
-  begin
-    FDConnection.Connected := False;
-    FreeAndNil(FDConnection);
-  end;
   FreeAndNil(FDPhysFBDriverLink);
 end;
 

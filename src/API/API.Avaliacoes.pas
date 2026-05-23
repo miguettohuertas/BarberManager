@@ -14,50 +14,55 @@ uses
 
 procedure RotaRecentes(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   Lista: TJSONArray;
   Item: TJSONObject;
 begin
   try
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection   := FDConnection;
-
-      Query.SQL.Text :=
-        'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
-        '  UC.NOME_COMPLETO AS NOME_CLIENTE, ' +
-        '  UB.NOME_COMPLETO AS NOME_BARBEIRO, ' +
-        '  S.NOME AS NOME_SERVICO ' +
-        'FROM TB_AVALIACOES AV ' +
-        'JOIN TB_USUARIOS UC ON UC.ID = AV.CLIENTE_ID ' +
-        'JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
-        'JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
-        'JOIN TB_AGENDAMENTOS AG ON AG.ID = AV.AGENDAMENTO_ID ' +
-        'JOIN TB_SERVICOS S ON S.ID = AG.SERVICO_ID ' +
-        'ORDER BY AV.DT_AVALIACAO DESC ' +
-        'ROWS 10';
-      Query.Open;
-      Lista := TJSONArray.Create;
+      Query := TFDQuery.Create(nil);
       try
-        while not Query.EOF do
-        begin
-          Item := TJSONObject.Create;
-          Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nota',        TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
-          Item.AddPair('comentario',  Query.FieldByName('COMENTARIO').AsString);
-          Item.AddPair('dtAvaliacao', Query.FieldByName('DT_AVALIACAO').AsString);
-          Item.AddPair('cliente',     Query.FieldByName('NOME_CLIENTE').AsString);
-          Item.AddPair('barbeiro',    Query.FieldByName('NOME_BARBEIRO').AsString);
-          Item.AddPair('servico',     Query.FieldByName('NOME_SERVICO').AsString);
-          Lista.AddElement(Item);
-          Query.Next;
+        Query.Connection := Conn;
+        Query.SQL.Text :=
+          'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
+          '  COALESCE(UC.NOME_COMPLETO, '''') AS NOME_CLIENTE, ' +
+          '  COALESCE(UB.NOME_COMPLETO, '''') AS NOME_BARBEIRO, ' +
+          '  COALESCE(S.NOME, '''') AS NOME_SERVICO ' +
+          'FROM TB_AVALIACOES AV ' +
+          'LEFT JOIN TB_USUARIOS UC ON UC.ID = AV.CLIENTE_ID ' +
+          'LEFT JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
+          'LEFT JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
+          'LEFT JOIN TB_AGENDAMENTOS AG ON AG.ID = AV.AGENDAMENTO_ID ' +
+          'LEFT JOIN TB_SERVICOS S ON S.ID = AG.SERVICO_ID ' +
+          'ORDER BY AV.DT_AVALIACAO DESC ' +
+          'ROWS 10';
+        Query.Open;
+        Lista := TJSONArray.Create;
+        try
+          while not Query.EOF do
+          begin
+            Item := TJSONObject.Create;
+            Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+            Item.AddPair('nota',        TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
+            Item.AddPair('comentario',  Query.FieldByName('COMENTARIO').AsString);
+            Item.AddPair('dtAvaliacao', Query.FieldByName('DT_AVALIACAO').AsString);
+            Item.AddPair('cliente',     Query.FieldByName('NOME_CLIENTE').AsString);
+            Item.AddPair('barbeiro',    Query.FieldByName('NOME_BARBEIRO').AsString);
+            Item.AddPair('servico',     Query.FieldByName('NOME_SERVICO').AsString);
+            Lista.AddElement(Item);
+            Query.Next;
+          end;
+          Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
+        finally
+          Lista.Free;
         end;
-        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
-        Lista.Free;
+        Query.Free;
       end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -67,6 +72,7 @@ end;
 
 procedure RotaPorBarbeiro(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   ID: Integer;
   Lista: TJSONArray;
@@ -79,39 +85,43 @@ begin
       Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID invalido"}');
       Exit;
     end;
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection  := FDConnection;
-
-      Query.SQL.Text :=
-        'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
-        '  UC.NOME_COMPLETO AS NOME_CLIENTE ' +
-        'FROM TB_AVALIACOES AV ' +
-        'JOIN TB_USUARIOS UC ON UC.ID = AV.CLIENTE_ID ' +
-        'WHERE AV.BARBEIRO_ID = :ID ' +
-        'ORDER BY AV.DT_AVALIACAO DESC ' +
-        'ROWS 20';
-      Query.ParamByName('ID').AsInteger := ID;
-      Query.Open;
-      Lista := TJSONArray.Create;
+      Query := TFDQuery.Create(nil);
       try
-        while not Query.EOF do
-        begin
-          Item := TJSONObject.Create;
-          Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nota',        TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
-          Item.AddPair('comentario',  Query.FieldByName('COMENTARIO').AsString);
-          Item.AddPair('dtAvaliacao', Query.FieldByName('DT_AVALIACAO').AsString);
-          Item.AddPair('cliente',     Query.FieldByName('NOME_CLIENTE').AsString);
-          Lista.AddElement(Item);
-          Query.Next;
+        Query.Connection := Conn;
+        Query.SQL.Text :=
+          'SELECT AV.ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
+          '  COALESCE(UC.NOME_COMPLETO, '''') AS NOME_CLIENTE ' +
+          'FROM TB_AVALIACOES AV ' +
+          'LEFT JOIN TB_USUARIOS UC ON UC.ID = AV.CLIENTE_ID ' +
+          'WHERE AV.BARBEIRO_ID = :ID ' +
+          'ORDER BY AV.DT_AVALIACAO DESC ' +
+          'ROWS 20';
+        Query.ParamByName('ID').AsInteger := ID;
+        Query.Open;
+        Lista := TJSONArray.Create;
+        try
+          while not Query.EOF do
+          begin
+            Item := TJSONObject.Create;
+            Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+            Item.AddPair('nota',        TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
+            Item.AddPair('comentario',  Query.FieldByName('COMENTARIO').AsString);
+            Item.AddPair('dtAvaliacao', Query.FieldByName('DT_AVALIACAO').AsString);
+            Item.AddPair('cliente',     Query.FieldByName('NOME_CLIENTE').AsString);
+            Lista.AddElement(Item);
+            Query.Next;
+          end;
+          Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
+        finally
+          Lista.Free;
         end;
-        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
-        Lista.Free;
+        Query.Free;
       end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -121,6 +131,7 @@ end;
 
 procedure RotaPorCliente(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   ID: Integer;
   Lista: TJSONArray;
@@ -133,40 +144,44 @@ begin
       Res.ContentType('application/json; charset=utf-8').Status(400).Send('{"erro":"ID invalido"}');
       Exit;
     end;
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection  := FDConnection;
-
-      Query.SQL.Text :=
-        'SELECT AV.ID, AV.AGENDAMENTO_ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
-        '  COALESCE(UB.NOME_COMPLETO, '''') AS NOME_BARBEIRO ' +
-        'FROM TB_AVALIACOES AV ' +
-        'LEFT JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
-        'LEFT JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
-        'WHERE AV.CLIENTE_ID = :ID ' +
-        'ORDER BY AV.DT_AVALIACAO DESC';
-      Query.ParamByName('ID').AsInteger := ID;
-      Query.Open;
-      Lista := TJSONArray.Create;
+      Query := TFDQuery.Create(nil);
       try
-        while not Query.EOF do
-        begin
-          Item := TJSONObject.Create;
-          Item.AddPair('id',            TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('agendamentoId', TJSONNumber.Create(Query.FieldByName('AGENDAMENTO_ID').AsInteger));
-          Item.AddPair('nota',          TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
-          Item.AddPair('comentario',    Query.FieldByName('COMENTARIO').AsString);
-          Item.AddPair('dtAvaliacao',   Query.FieldByName('DT_AVALIACAO').AsString);
-          Item.AddPair('barbeiro',      Query.FieldByName('NOME_BARBEIRO').AsString);
-          Lista.AddElement(Item);
-          Query.Next;
+        Query.Connection := Conn;
+        Query.SQL.Text :=
+          'SELECT AV.ID, AV.AGENDAMENTO_ID, AV.NOTA, AV.COMENTARIO, AV.DT_AVALIACAO, ' +
+          '  COALESCE(UB.NOME_COMPLETO, '''') AS NOME_BARBEIRO ' +
+          'FROM TB_AVALIACOES AV ' +
+          'LEFT JOIN TB_BARBEIROS B ON B.ID = AV.BARBEIRO_ID ' +
+          'LEFT JOIN TB_USUARIOS UB ON UB.ID = B.USUARIO_ID ' +
+          'WHERE AV.CLIENTE_ID = :ID ' +
+          'ORDER BY AV.DT_AVALIACAO DESC';
+        Query.ParamByName('ID').AsInteger := ID;
+        Query.Open;
+        Lista := TJSONArray.Create;
+        try
+          while not Query.EOF do
+          begin
+            Item := TJSONObject.Create;
+            Item.AddPair('id',            TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+            Item.AddPair('agendamentoId', TJSONNumber.Create(Query.FieldByName('AGENDAMENTO_ID').AsInteger));
+            Item.AddPair('nota',          TJSONNumber.Create(Query.FieldByName('NOTA').AsInteger));
+            Item.AddPair('comentario',    Query.FieldByName('COMENTARIO').AsString);
+            Item.AddPair('dtAvaliacao',   Query.FieldByName('DT_AVALIACAO').AsString);
+            Item.AddPair('barbeiro',      Query.FieldByName('NOME_BARBEIRO').AsString);
+            Lista.AddElement(Item);
+            Query.Next;
+          end;
+          Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
+        finally
+          Lista.Free;
         end;
-        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
-        Lista.Free;
+        Query.Free;
       end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -176,6 +191,7 @@ end;
 
 procedure RotaCriar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Body: TJSONObject;
   QCheck, QInsert, QUpdate: TFDQuery;
   AgendID, ClienteID, BarbeiroID, Nota: Integer;
@@ -211,61 +227,66 @@ begin
       Exit;
     end;
 
-    QCheck := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      QCheck.Connection := FDConnection;
-      QCheck.SQL.Text := 'SELECT COUNT(*) FROM TB_AVALIACOES WHERE AGENDAMENTO_ID = :AID';
-      QCheck.ParamByName('AID').AsInteger := AgendID;
-      QCheck.Open;
-      if QCheck.Fields[0].AsInteger > 0 then
-      begin
-        Res.ContentType('application/json; charset=utf-8').Status(409)
-          .Send('{"erro":"Este agendamento ja foi avaliado"}');
-        Exit;
+      QCheck := TFDQuery.Create(nil);
+      try
+        QCheck.Connection := Conn;
+        QCheck.SQL.Text := 'SELECT COUNT(*) FROM TB_AVALIACOES WHERE AGENDAMENTO_ID = :AID';
+        QCheck.ParamByName('AID').AsInteger := AgendID;
+        QCheck.Open;
+        if QCheck.Fields[0].AsInteger > 0 then
+        begin
+          Res.ContentType('application/json; charset=utf-8').Status(409)
+            .Send('{"erro":"Este agendamento ja foi avaliado"}');
+          Exit;
+        end;
+      finally
+        QCheck.Free;
       end;
+
+      Conn.StartTransaction;
+      try
+        QInsert := TFDQuery.Create(nil);
+        try
+          QInsert.Connection := Conn;
+          QInsert.SQL.Text :=
+            'INSERT INTO TB_AVALIACOES (AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA, COMENTARIO) ' +
+            'VALUES (:AID, :CLI, :BAR, :NOTA, :COMENT)';
+          QInsert.ParamByName('AID').AsInteger   := AgendID;
+          QInsert.ParamByName('CLI').AsInteger   := ClienteID;
+          QInsert.ParamByName('BAR').AsInteger   := BarbeiroID;
+          QInsert.ParamByName('NOTA').AsInteger  := Nota;
+          QInsert.ParamByName('COMENT').AsString := Comentario;
+          QInsert.ExecSQL;
+        finally
+          QInsert.Free;
+        end;
+
+        QUpdate := TFDQuery.Create(nil);
+        try
+          QUpdate.Connection := Conn;
+          QUpdate.SQL.Text :=
+            'UPDATE TB_BARBEIROS SET AVALIACAO_MEDIA = ' +
+            '  (SELECT AVG(CAST(NOTA AS FLOAT)) FROM TB_AVALIACOES WHERE BARBEIRO_ID = :BID) ' +
+            'WHERE ID = :BID';
+          QUpdate.ParamByName('BID').AsInteger := BarbeiroID;
+          QUpdate.ExecSQL;
+        finally
+          QUpdate.Free;
+        end;
+
+        Conn.Commit;
+      except
+        Conn.Rollback;
+        raise;
+      end;
+
+      Res.ContentType('application/json; charset=utf-8').Status(201)
+        .Send('{"mensagem":"Avaliacao registada com sucesso"}');
     finally
-      QCheck.Free;
+      Conn.Free;
     end;
-
-    FDConnection.StartTransaction;
-    try
-      QInsert := TFDQuery.Create(nil);
-      try
-        QInsert.Connection := FDConnection;
-        QInsert.SQL.Text :=
-          'INSERT INTO TB_AVALIACOES (AGENDAMENTO_ID, CLIENTE_ID, BARBEIRO_ID, NOTA, COMENTARIO) ' +
-          'VALUES (:AID, :CLI, :BAR, :NOTA, :COMENT)';
-        QInsert.ParamByName('AID').AsInteger   := AgendID;
-        QInsert.ParamByName('CLI').AsInteger   := ClienteID;
-        QInsert.ParamByName('BAR').AsInteger   := BarbeiroID;
-        QInsert.ParamByName('NOTA').AsInteger  := Nota;
-        QInsert.ParamByName('COMENT').AsString := Comentario;
-        QInsert.ExecSQL;
-      finally
-        QInsert.Free;
-      end;
-
-      QUpdate := TFDQuery.Create(nil);
-      try
-        QUpdate.Connection := FDConnection;
-        QUpdate.SQL.Text :=
-          'UPDATE TB_BARBEIROS SET AVALIACAO_MEDIA = ' +
-          '  (SELECT AVG(CAST(NOTA AS FLOAT)) FROM TB_AVALIACOES WHERE BARBEIRO_ID = :BID) ' +
-          'WHERE ID = :BID';
-        QUpdate.ParamByName('BID').AsInteger := BarbeiroID;
-        QUpdate.ExecSQL;
-      finally
-        QUpdate.Free;
-      end;
-
-      FDConnection.Commit;
-    except
-      FDConnection.Rollback;
-      raise;
-    end;
-
-    Res.ContentType('application/json; charset=utf-8').Status(201)
-      .Send('{"mensagem":"Avaliacao registada com sucesso"}');
   except
     on E: Exception do
       Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
@@ -274,7 +295,7 @@ end;
 
 procedure RegistrarRotas;
 begin
-  THorse.Get('/api/avaliacoes/recentes',    RotaRecentes);
+  THorse.Get('/api/avaliacoes/recentes',     RotaRecentes);
   THorse.Get('/api/avaliacoes/barbeiro/:id', RotaPorBarbeiro);
   THorse.Get('/api/avaliacoes/cliente/:id',  RotaPorCliente);
   THorse.Post('/api/avaliacoes',             RotaCriar);

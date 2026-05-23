@@ -14,15 +14,16 @@ uses
 
 procedure RotaListar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   AtivoParam, CategoriaParam, BuscaParam, SQL: string;
   Lista: TJSONArray;
   Item: TJSONObject;
 begin
   try
-    AtivoParam    := Req.Query.Field('ativo').AsString;
+    AtivoParam     := Req.Query.Field('ativo').AsString;
     CategoriaParam := Req.Query.Field('categoria').AsString;
-    BuscaParam    := Req.Query.Field('busca').AsString;
+    BuscaParam     := Req.Query.Field('busca').AsString;
 
     SQL :=
       'SELECT S.ID, S.NOME, S.DESCRICAO, S.PRECO, S.DURACAO_MIN, ' +
@@ -40,40 +41,45 @@ begin
 
     SQL := SQL + ' ORDER BY S.NOME';
 
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection := FDConnection;
-      Query.SQL.Text := SQL;
-      if AtivoParam <> '' then
-        Query.ParamByName('ATIVO').AsInteger := StrToIntDef(AtivoParam, 1);
-      if CategoriaParam <> '' then
-        Query.ParamByName('CATEGORIA').AsString := CategoriaParam;
-      if BuscaParam <> '' then
-        Query.ParamByName('BUSCA').AsString := BuscaParam;
-      Query.Open;
-
-      Lista := TJSONArray.Create;
+      Query := TFDQuery.Create(nil);
       try
-        while not Query.EOF do
-        begin
-          Item := TJSONObject.Create;
-          Item.AddPair('id',          TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
-          Item.AddPair('nome',        Query.FieldByName('NOME').AsString);
-          Item.AddPair('descricao',   Query.FieldByName('DESCRICAO').AsString);
-          Item.AddPair('preco',       TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
-          Item.AddPair('duracaoMin',  TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
-          Item.AddPair('badge',       Query.FieldByName('BADGE').AsString);
-          Item.AddPair('ativo',       TJSONBool.Create(Query.FieldByName('ATIVO').AsInteger = 1));
-          Item.AddPair('categoria',   Query.FieldByName('CATEGORIA').AsString);
-          Lista.AddElement(Item);
-          Query.Next;
+        Query.Connection := Conn;
+        Query.SQL.Text := SQL;
+        if AtivoParam <> '' then
+          Query.ParamByName('ATIVO').AsInteger := StrToIntDef(AtivoParam, 1);
+        if CategoriaParam <> '' then
+          Query.ParamByName('CATEGORIA').AsString := CategoriaParam;
+        if BuscaParam <> '' then
+          Query.ParamByName('BUSCA').AsString := BuscaParam;
+        Query.Open;
+
+        Lista := TJSONArray.Create;
+        try
+          while not Query.EOF do
+          begin
+            Item := TJSONObject.Create;
+            Item.AddPair('id',         TJSONNumber.Create(Query.FieldByName('ID').AsInteger));
+            Item.AddPair('nome',       Query.FieldByName('NOME').AsString);
+            Item.AddPair('descricao',  Query.FieldByName('DESCRICAO').AsString);
+            Item.AddPair('preco',      TJSONNumber.Create(Query.FieldByName('PRECO').AsFloat));
+            Item.AddPair('duracaoMin', TJSONNumber.Create(Query.FieldByName('DURACAO_MIN').AsInteger));
+            Item.AddPair('badge',      Query.FieldByName('BADGE').AsString);
+            Item.AddPair('ativo',      TJSONBool.Create(Query.FieldByName('ATIVO').AsInteger = 1));
+            Item.AddPair('categoria',  Query.FieldByName('CATEGORIA').AsString);
+            Lista.AddElement(Item);
+            Query.Next;
+          end;
+          Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
+        finally
+          Lista.Free;
         end;
-        Res.ContentType('application/json; charset=utf-8').Status(200).Send(Lista.ToString);
       finally
-        Lista.Free;
+        Query.Free;
       end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -83,6 +89,7 @@ end;
 
 procedure RotaCriar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Body: TJSONObject;
   Query: TFDQuery;
 begin
@@ -100,23 +107,28 @@ begin
         Exit;
       end;
 
-      Query := TFDQuery.Create(nil);
+      Conn := CreateConnection;
       try
-        Query.Connection := FDConnection;
-        Query.SQL.Text :=
-          'INSERT INTO TB_SERVICOS (NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA_ID, BADGE, ATIVO) ' +
-          'VALUES (:NOME, :DESC, :PRECO, :DUR, :CAT, :BADGE, 1)';
-        Query.ParamByName('NOME').AsString  := Body.GetValue<string>('nome', '');
-        Query.ParamByName('DESC').AsString  := Body.GetValue<string>('descricao', '');
-        Query.ParamByName('PRECO').AsFloat  := Body.GetValue<Double>('preco', 0);
-        Query.ParamByName('DUR').AsInteger  := Body.GetValue<Integer>('duracaoMin', 0);
-        Query.ParamByName('CAT').AsInteger  := Body.GetValue<Integer>('categoriaId', 0);
-        Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
-        Query.ExecSQL;
-        Res.ContentType('application/json; charset=utf-8').Status(201)
-          .Send('{"mensagem":"Serviço criado com sucesso"}');
+        Query := TFDQuery.Create(nil);
+        try
+          Query.Connection := Conn;
+          Query.SQL.Text :=
+            'INSERT INTO TB_SERVICOS (NOME, DESCRICAO, PRECO, DURACAO_MIN, CATEGORIA_ID, BADGE, ATIVO) ' +
+            'VALUES (:NOME, :DESC, :PRECO, :DUR, :CAT, :BADGE, 1)';
+          Query.ParamByName('NOME').AsString  := Body.GetValue<string>('nome', '');
+          Query.ParamByName('DESC').AsString  := Body.GetValue<string>('descricao', '');
+          Query.ParamByName('PRECO').AsFloat  := Body.GetValue<Double>('preco', 0);
+          Query.ParamByName('DUR').AsInteger  := Body.GetValue<Integer>('duracaoMin', 0);
+          Query.ParamByName('CAT').AsInteger  := Body.GetValue<Integer>('categoriaId', 0);
+          Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
+          Query.ExecSQL;
+          Res.ContentType('application/json; charset=utf-8').Status(201)
+            .Send('{"mensagem":"Serviço criado com sucesso"}');
+        finally
+          Query.Free;
+        end;
       finally
-        Query.Free;
+        Conn.Free;
       end;
     finally
       Body.Free;
@@ -129,6 +141,7 @@ end;
 
 procedure RotaAtualizar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Body: TJSONObject;
   Query: TFDQuery;
   ID: Integer;
@@ -148,26 +161,31 @@ begin
       Exit;
     end;
     try
-      Query := TFDQuery.Create(nil);
+      Conn := CreateConnection;
       try
-        Query.Connection := FDConnection;
-        Query.SQL.Text :=
-          'UPDATE TB_SERVICOS SET ' +
-          '  NOME = :NOME, DESCRICAO = :DESC, PRECO = :PRECO, ' +
-          '  DURACAO_MIN = :DUR, CATEGORIA_ID = :CAT, BADGE = :BADGE ' +
-          'WHERE ID = :ID';
-        Query.ParamByName('NOME').AsString  := Body.GetValue<string>('nome', '');
-        Query.ParamByName('DESC').AsString  := Body.GetValue<string>('descricao', '');
-        Query.ParamByName('PRECO').AsFloat  := Body.GetValue<Double>('preco', 0);
-        Query.ParamByName('DUR').AsInteger  := Body.GetValue<Integer>('duracaoMin', 0);
-        Query.ParamByName('CAT').AsInteger  := Body.GetValue<Integer>('categoriaId', 0);
-        Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
-        Query.ParamByName('ID').AsInteger   := ID;
-        Query.ExecSQL;
-        Res.ContentType('application/json; charset=utf-8').Status(200)
-          .Send('{"mensagem":"Serviço atualizado"}');
+        Query := TFDQuery.Create(nil);
+        try
+          Query.Connection := Conn;
+          Query.SQL.Text :=
+            'UPDATE TB_SERVICOS SET ' +
+            '  NOME = :NOME, DESCRICAO = :DESC, PRECO = :PRECO, ' +
+            '  DURACAO_MIN = :DUR, CATEGORIA_ID = :CAT, BADGE = :BADGE ' +
+            'WHERE ID = :ID';
+          Query.ParamByName('NOME').AsString  := Body.GetValue<string>('nome', '');
+          Query.ParamByName('DESC').AsString  := Body.GetValue<string>('descricao', '');
+          Query.ParamByName('PRECO').AsFloat  := Body.GetValue<Double>('preco', 0);
+          Query.ParamByName('DUR').AsInteger  := Body.GetValue<Integer>('duracaoMin', 0);
+          Query.ParamByName('CAT').AsInteger  := Body.GetValue<Integer>('categoriaId', 0);
+          Query.ParamByName('BADGE').AsString := Body.GetValue<string>('badge', '');
+          Query.ParamByName('ID').AsInteger   := ID;
+          Query.ExecSQL;
+          Res.ContentType('application/json; charset=utf-8').Status(200)
+            .Send('{"mensagem":"Serviço atualizado"}');
+        finally
+          Query.Free;
+        end;
       finally
-        Query.Free;
+        Conn.Free;
       end;
     finally
       Body.Free;
@@ -180,6 +198,7 @@ end;
 
 procedure RotaDeletar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   ID: Integer;
 begin
@@ -191,16 +210,21 @@ begin
       Exit;
     end;
 
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection := FDConnection;
-      Query.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
-      Query.ParamByName('ID').AsInteger := ID;
-      Query.ExecSQL;
-      Res.ContentType('application/json; charset=utf-8').Status(200)
-        .Send('{"mensagem":"Serviço removido"}');
+      Query := TFDQuery.Create(nil);
+      try
+        Query.Connection := Conn;
+        Query.SQL.Text := 'DELETE FROM TB_SERVICOS WHERE ID = :ID';
+        Query.ParamByName('ID').AsInteger := ID;
+        Query.ExecSQL;
+        Res.ContentType('application/json; charset=utf-8').Status(200)
+          .Send('{"mensagem":"Serviço removido"}');
+      finally
+        Query.Free;
+      end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -210,6 +234,7 @@ end;
 
 procedure RotaToggle(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
+  Conn: TFDConnection;
   Query: TFDQuery;
   ID: Integer;
 begin
@@ -221,18 +246,23 @@ begin
       Exit;
     end;
 
-    Query := TFDQuery.Create(nil);
+    Conn := CreateConnection;
     try
-      Query.Connection := FDConnection;
-      Query.SQL.Text :=
-        'UPDATE TB_SERVICOS SET ATIVO = (CASE WHEN ATIVO = 1 THEN 0 ELSE 1 END) ' +
-        'WHERE ID = :ID';
-      Query.ParamByName('ID').AsInteger := ID;
-      Query.ExecSQL;
-      Res.ContentType('application/json; charset=utf-8').Status(200)
-        .Send('{"mensagem":"Status atualizado"}');
+      Query := TFDQuery.Create(nil);
+      try
+        Query.Connection := Conn;
+        Query.SQL.Text :=
+          'UPDATE TB_SERVICOS SET ATIVO = (CASE WHEN ATIVO = 1 THEN 0 ELSE 1 END) ' +
+          'WHERE ID = :ID';
+        Query.ParamByName('ID').AsInteger := ID;
+        Query.ExecSQL;
+        Res.ContentType('application/json; charset=utf-8').Status(200)
+          .Send('{"mensagem":"Status atualizado"}');
+      finally
+        Query.Free;
+      end;
     finally
-      Query.Free;
+      Conn.Free;
     end;
   except
     on E: Exception do
@@ -242,11 +272,11 @@ end;
 
 procedure RegistrarRotas;
 begin
-  THorse.Get('/api/servicos',              RotaListar);
-  THorse.Post('/api/servicos',             RotaCriar);
-  THorse.Put('/api/servicos/:id',          RotaAtualizar);
-  THorse.Delete('/api/servicos/:id',       RotaDeletar);
-  THorse.Put('/api/servicos/:id/toggle',   RotaToggle);
+  THorse.Get('/api/servicos',            RotaListar);
+  THorse.Post('/api/servicos',           RotaCriar);
+  THorse.Put('/api/servicos/:id',        RotaAtualizar);
+  THorse.Delete('/api/servicos/:id',     RotaDeletar);
+  THorse.Put('/api/servicos/:id/toggle', RotaToggle);
 end;
 
 end.
