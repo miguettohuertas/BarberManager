@@ -12,7 +12,8 @@ uses
   API.Agendamentos in 'src\API\API.Agendamentos.pas',
   API.Clientes in 'src\API\API.Clientes.pas',
   API.Barbeiros in 'src\API\API.Barbeiros.pas',
-  API.Avaliacoes in 'src\API\API.Avaliacoes.pas';
+  API.Avaliacoes in 'src\API\API.Avaliacoes.pas',
+  API.Usuarios in 'src\API\API.Usuarios.pas';
 
 begin
   API.Conexao.IniciarConexao;
@@ -39,6 +40,7 @@ begin
   API.Clientes.RegistrarRotas;
   API.Barbeiros.RegistrarRotas;
   API.Avaliacoes.RegistrarRotas;
+  API.Usuarios.RegistrarRotas;
 
   THorse.Get('/',
     procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)

@@ -1149,9 +1149,9 @@
       <!-- ══ PERFIL ═════════════════════════════════════════ -->
       <div id="section-cli-perfil" class="section">
         <div class="section-header">
-          <div><h2>Meu Perfil</h2><p>Informações da sua conta</p></div>
+          <div><h2>Meu Perfil</h2><p>Edite as informações da sua conta</p></div>
         </div>
-        <div class="card" style="max-width:480px">
+        <div class="card" style="max-width:520px">
           <div style="padding:28px;display:flex;flex-direction:column;gap:20px">
             <div style="display:flex;align-items:center;gap:16px">
               <div class="avatar" id="perfil-avatar"
@@ -1161,11 +1161,36 @@
                 <div id="perfil-email" style="font-size:13px;color:var(--txt2);margin-top:3px"></div>
               </div>
             </div>
-            <div style="border-top:1px solid var(--border);padding-top:16px">
-              <span class="badge"
-                    style="background:rgba(59,130,246,.15);color:#3B82F6;border:1px solid rgba(59,130,246,.3)">
-                Cliente
-              </span>
+            <div style="border-top:1px solid var(--border);padding-top:16px;display:flex;flex-direction:column;gap:14px">
+              <div id="perfil-msg" style="display:none"></div>
+              <div class="form-group" style="margin:0">
+                <label>Nome Completo</label>
+                <input type="text" id="perfil-input-nome" placeholder="Seu nome completo">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Email</label>
+                <input type="email" id="perfil-input-email" placeholder="seu@email.com">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Telefone</label>
+                <input type="tel" id="perfil-input-tel" placeholder="(00) 00000-0000">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Nova Senha
+                  <span style="color:var(--txt2);font-weight:400;font-size:11px">(deixe vazio para não alterar)</span>
+                </label>
+                <input type="password" id="perfil-input-senha" placeholder="Mínimo 6 caracteres">
+              </div>
+              <div class="form-group" style="margin:0">
+                <label>Confirmar Nova Senha</label>
+                <input type="password" id="perfil-input-senha2" placeholder="Repita a nova senha">
+              </div>
+              <button onclick="saveClientePerfil()"
+                      style="background:var(--accent);color:#fff;border:none;border-radius:8px;
+                             padding:10px 24px;font-size:14px;font-weight:600;cursor:pointer;
+                             align-self:flex-start;font-family:inherit">
+                Salvar Alterações
+              </button>
             </div>
           </div>
         </div>
@@ -1709,11 +1734,60 @@
   }
 
   // ── Cliente — perfil ──────────────────────────────────────
-  function loadClientePerfil() {
+  async function loadClientePerfil() {
     if (!currentUser) return;
     $('perfil-avatar').textContent = (currentUser.nome || '?').charAt(0).toUpperCase();
     $('perfil-nome').textContent   = currentUser.nome;
     $('perfil-email').textContent  = currentUser.email;
+    $('perfil-msg').style.display  = 'none';
+    $('perfil-input-nome').value   = currentUser.nome  || '';
+    $('perfil-input-email').value  = currentUser.email || '';
+    $('perfil-input-senha').value  = '';
+    $('perfil-input-senha2').value = '';
+    try {
+      const data = await apiFetch('GET', `/api/usuarios/${currentUser.id}`);
+      $('perfil-input-tel').value = data.telefone || '';
+      if (data.telefone) currentUser.telefone = data.telefone;
+    } catch(e) {
+      $('perfil-input-tel').value = currentUser.telefone || '';
+    }
+  }
+
+  async function saveClientePerfil() {
+    const nome  = $('perfil-input-nome').value.trim();
+    const email = $('perfil-input-email').value.trim();
+    const tel   = $('perfil-input-tel').value.trim();
+    const senha = $('perfil-input-senha').value;
+    const senha2= $('perfil-input-senha2').value;
+    if (!nome)                       { showPerfilMsg('error', 'Nome é obrigatório.'); return; }
+    if (!email || !email.includes('@')) { showPerfilMsg('error', 'Email inválido.'); return; }
+    if (senha && senha.length < 6)   { showPerfilMsg('error', 'Senha deve ter no mínimo 6 caracteres.'); return; }
+    if (senha !== senha2)            { showPerfilMsg('error', 'As senhas não coincidem.'); return; }
+    const body = { nome, email, telefone: tel };
+    if (senha) body.senha = senha;
+    try {
+      const data = await apiFetch('PUT', `/api/usuarios/${currentUser.id}`, body);
+      currentUser.nome     = data.nome;
+      currentUser.email    = data.email;
+      currentUser.telefone = data.telefone;
+      $('perfil-avatar').textContent  = (data.nome || '?').charAt(0).toUpperCase();
+      $('perfil-nome').textContent    = data.nome;
+      $('perfil-email').textContent   = data.email;
+      $('perfil-input-senha').value   = '';
+      $('perfil-input-senha2').value  = '';
+      $('cliente-avatar').textContent = (data.nome || 'C').charAt(0).toUpperCase();
+      $('cliente-name').textContent   = data.nome;
+      showPerfilMsg('success', 'Perfil atualizado com sucesso!');
+    } catch(e) {
+      showPerfilMsg('error', e.message || 'Erro ao salvar perfil.');
+    }
+  }
+
+  function showPerfilMsg(type, msg) {
+    const el = $('perfil-msg');
+    el.className    = type === 'success' ? 'auth-success' : 'auth-error';
+    el.textContent  = msg;
+    el.style.display = 'block';
   }
 
   // ── Admin — notificações (sino) ───────────────────────────
