@@ -880,7 +880,16 @@
           <div><h2>Serviços</h2><p>Catálogo de serviços da barbearia</p></div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Todos os Serviços</div></div>
+          <div class="card-header">
+            <div class="card-title">Todos os Serviços</div>
+            <div class="search-box">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="servicos-search" placeholder="Pesquisar serviço..."
+                     oninput="servicosBusca=this.value;loadServicos()">
+            </div>
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -903,7 +912,16 @@
           <div><h2>Clientes</h2><p>Base de clientes cadastrados</p></div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Todos os Clientes</div></div>
+          <div class="card-header">
+            <div class="card-title">Todos os Clientes</div>
+            <div class="search-box">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="clientes-search" placeholder="Pesquisar cliente..."
+                     oninput="clientesBusca=this.value;loadClientes()">
+            </div>
+          </div>
           <div class="table-wrap">
             <table>
               <thead>
@@ -1162,8 +1180,10 @@
 
   const API = '';
   let currentUser  = null;
-  let agendaFilter = 'TODOS';
-  let agendaBusca  = '';
+  let agendaFilter  = 'TODOS';
+  let agendaBusca   = '';
+  let servicosBusca = '';
+  let clientesBusca = '';
 
   // ── Helpers ───────────────────────────────────────────────
   const $ = id => document.getElementById(id);
@@ -1507,7 +1527,8 @@
   async function loadServicos() {
     tableMsg('tbody-servicos', 6, 'Carregando', false, true);
     try {
-      const rows = await apiFetch('GET', '/api/servicos');
+      const qs = servicosBusca ? `?busca=${encodeURIComponent(servicosBusca)}` : '';
+      const rows = await apiFetch('GET', `/api/servicos${qs}`);
       renderServicos(rows);
     } catch (e) {
       tableMsg('tbody-servicos', 6, e.message, true);
@@ -1550,7 +1571,8 @@
   async function loadClientes() {
     tableMsg('tbody-clientes', 4, 'Carregando', false, true);
     try {
-      const rows = await apiFetch('GET', '/api/clientes');
+      const qs = clientesBusca ? `?busca=${encodeURIComponent(clientesBusca)}` : '';
+      const rows = await apiFetch('GET', `/api/clientes${qs}`);
       renderClientes(rows);
     } catch (e) {
       tableMsg('tbody-clientes', 4, e.message, true);
