@@ -179,8 +179,10 @@ begin
         '  COALESCE(Q.PENDENTES, 0) AS PENDENTES, ' +
         '  COALESCE(Q.FAT_CONC, 0) AS FAT_CONC, ' +
         '  COALESCE(Q.FAT_TOTAL, 0) AS FAT_TOTAL ' +
-        'FROM (' +
-        '  SELECT COUNT(*) AS TOTAL, ' +
+        'FROM RDB$DATABASE ' +
+        'LEFT JOIN (' +
+        '  SELECT ' +
+        '    COUNT(*) AS TOTAL, ' +
         '    SUM(CASE WHEN STATUS=''CONCLUIDO'' THEN 1 ELSE 0 END) AS CONCLUIDOS, ' +
         '    SUM(CASE WHEN STATUS=''CANCELADO'' THEN 1 ELSE 0 END) AS CANCELADOS, ' +
         '    SUM(CASE WHEN STATUS=''PENDENTE'' OR STATUS=''EM_ANDAMENTO'' THEN 1 ELSE 0 END) AS PENDENTES, ' +
@@ -189,7 +191,7 @@ begin
         '  FROM TB_AGENDAMENTOS ' +
         '  WHERE EXTRACT(MONTH FROM DT_AGENDAMENTO) = :MES ' +
         '  AND EXTRACT(YEAR FROM DT_AGENDAMENTO) = :ANO' +
-        ') Q';
+        ') Q ON 1=1';
       Q1.ParamByName('MES').AsInteger := Mes;
       Q1.ParamByName('ANO').AsInteger := Ano;
       Q1.Open;
