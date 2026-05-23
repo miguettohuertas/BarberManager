@@ -1728,6 +1728,11 @@
     const p = $('notif-panel');
     if (!p) return;
     p.classList.toggle('open');
+    // Clear badge when opening
+    if (p.classList.contains('open')) {
+      const badge = $('bell-badge');
+      if (badge) badge.style.display = 'none';
+    }
   }
 
   // ── Avaliação modal ───────────────────────────────────────
@@ -2127,6 +2132,15 @@
   // ── Init ──────────────────────────────────────────────────
   (function init() {
     showAuth('login');
+    document.addEventListener('click', function(e) {
+      const panel = $('notif-panel');
+      const bell = document.querySelector('.bell-btn');
+      if (panel && panel.classList.contains('open')) {
+        if (!panel.contains(e.target) && (!bell || !bell.contains(e.target))) {
+          panel.classList.remove('open');
+        }
+      }
+    });
   })();
 </script>
 
