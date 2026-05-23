@@ -16,7 +16,7 @@ procedure RotaListar(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   Conn: TFDConnection;
   Query: TFDQuery;
-  StatusParam, DataParam, ClienteParam, SQL: string;
+  StatusParam, DataParam, ClienteParam, BuscaParam, SQL: string;
   Lista: TJSONArray;
   Item: TJSONObject;
 begin
@@ -24,6 +24,7 @@ begin
     StatusParam  := Req.Query.Field('status').AsString;
     DataParam    := Req.Query.Field('data').AsString;
     ClienteParam := Req.Query.Field('clienteId').AsString;
+    BuscaParam   := Req.Query.Field('busca').AsString;
 
     SQL :=
       'SELECT A.ID, A.DT_AGENDAMENTO, CAST(A.HR_INICIO AS VARCHAR(13)) AS HR_INICIO, CAST(A.HR_FIM AS VARCHAR(13)) AS HR_FIM, A.STATUS, ' +
@@ -45,6 +46,8 @@ begin
       SQL := SQL + ' AND A.DT_AGENDAMENTO = :DATA';
     if ClienteParam <> '' then
       SQL := SQL + ' AND A.CLIENTE_ID = :CLIENTE_ID';
+    if BuscaParam <> '' then
+      SQL := SQL + ' AND (UPPER(U.NOME_COMPLETO) CONTAINING UPPER(:BUSCA) OR UPPER(S.NOME) CONTAINING UPPER(:BUSCA))';
 
     SQL := SQL + ' ORDER BY A.DT_AGENDAMENTO DESC, A.HR_INICIO';
 
@@ -60,6 +63,8 @@ begin
           Query.ParamByName('DATA').AsString := DataParam;
         if ClienteParam <> '' then
           Query.ParamByName('CLIENTE_ID').AsInteger := StrToIntDef(ClienteParam, 0);
+        if BuscaParam <> '' then
+          Query.ParamByName('BUSCA').AsString := BuscaParam;
         Query.Open;
 
         Lista := TJSONArray.Create;
