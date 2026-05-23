@@ -33,6 +33,15 @@ begin
     end
   );
 
+  THorse.Use(
+    procedure(Req: THorseRequest; Res: THorseResponse; Next: TProc)
+    begin
+      if Req.Method = 'GET' then
+        API.Agendamentos.AutoAtualizarStatus;
+      Next;
+    end
+  );
+
   API.Auth.RegistrarRotas;
   API.Dashboard.RegistrarRotas;
   API.Servicos.RegistrarRotas;

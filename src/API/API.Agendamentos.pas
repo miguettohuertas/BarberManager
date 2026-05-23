@@ -2,6 +2,7 @@ unit API.Agendamentos;
 
 interface
 
+procedure AutoAtualizarStatus;
 procedure RegistrarRotas;
 
 implementation
@@ -249,6 +250,48 @@ begin
   except
     on E: Exception do
       Res.ContentType('application/json; charset=utf-8').Status(500).Send('{"erro":"' + E.Message + '"}');
+  end;
+end;
+
+procedure AutoAtualizarStatus;
+var
+  Conn: TFDConnection;
+  Q: TFDQuery;
+begin
+  try
+    Conn := CreateConnection;
+    try
+      Q := TFDQuery.Create(nil);
+      try
+        Q.Connection := Conn;
+
+        Q.SQL.Text :=
+          'UPDATE TB_AGENDAMENTOS SET STATUS = ''EM_ANDAMENTO'' ' +
+          'WHERE STATUS = ''PENDENTE'' ' +
+          'AND DT_AGENDAMENTO = CURRENT_DATE ' +
+          'AND HR_INICIO <= CURRENT_TIME';
+        Q.ExecSQL;
+
+        Q.SQL.Text :=
+          'UPDATE TB_AGENDAMENTOS SET STATUS = ''CONCLUIDO'' ' +
+          'WHERE STATUS = ''EM_ANDAMENTO'' ' +
+          'AND (DT_AGENDAMENTO < CURRENT_DATE ' +
+          '  OR (DT_AGENDAMENTO = CURRENT_DATE AND HR_FIM <= CURRENT_TIME))';
+        Q.ExecSQL;
+
+        Q.SQL.Text :=
+          'UPDATE TB_AGENDAMENTOS SET STATUS = ''CONCLUIDO'' ' +
+          'WHERE STATUS IN (''PENDENTE'', ''EM_ANDAMENTO'') ' +
+          'AND DT_AGENDAMENTO < CURRENT_DATE';
+        Q.ExecSQL;
+      finally
+        Q.Free;
+      end;
+    finally
+      Conn.Free;
+    end;
+  except
+    // Silent — status update is best-effort; do not fail the request
   end;
 end;
 
