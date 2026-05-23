@@ -258,40 +258,62 @@
     @media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 700px)  { .kpi-grid { grid-template-columns: 1fr; } }
 
+    /* ── Mobile client — always-off on desktop ─────────────── */
+    #cli-mobile-topbar { display: none; }
+
+    #cli-sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 199;
+    }
+    #cli-sidebar-overlay.open { display: block; }
+
     @media (max-width: 768px) {
+      #cli-mobile-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 56px;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 0 16px;
+        z-index: 100;
+      }
+      #cli-menu-btn {
+        background: var(--card2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--txt);
+        font-size: 20px;
+        width: 38px; height: 38px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        padding: 0; line-height: 1;
+      }
       #screen-cliente {
-        flex-direction: column;
+        padding-top: 56px;
       }
       #cli-sidebar {
-        width: 100%;
-        min-width: unset;
-        flex-direction: row;
-        align-items: center;
-        padding: 12px 16px;
-        gap: 8px;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
+        position: fixed;
+        top: 56px; left: 0; bottom: 0;
+        width: 220px;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        overflow-y: auto;
+        padding: 16px 0;
       }
-      #cli-sidebar .sidebar-menu {
-        display: flex;
-        flex-direction: row;
-        gap: 4px;
-        flex: 1;
-      }
-      #cli-sidebar .sidebar-menu a {
-        padding: 8px 12px;
-        font-size: 13px;
-      }
-      #cli-sidebar .sidebar-user {
-        display: none;
-      }
-      #cli-sidebar .sidebar-logo {
-        display: none;
+      #cli-sidebar.open {
+        transform: translateX(0);
       }
       #cli-content {
         flex: 1;
         overflow-y: auto;
         padding: 16px;
+        min-width: 0;
       }
       #section-cli-perfil .card {
         max-width: 100% !important;
@@ -1073,7 +1095,18 @@
 <!-- ═══════════════════ CLIENTE ════════════════════════════ -->
 <div id="screen-cliente" class="app" style="display:none">
 
-  <aside class="sidebar">
+  <!-- Mobile: fixed top bar (logo + hamburger) -->
+  <div id="cli-mobile-topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="logo-icon" style="width:32px;height:32px;font-size:14px;flex-shrink:0">✂</div>
+      <span style="font-weight:700;font-size:14px">BarberManager</span>
+    </div>
+    <button id="cli-menu-btn" onclick="toggleCliSidebar()">☰</button>
+  </div>
+  <!-- Overlay behind the open sidebar drawer -->
+  <div id="cli-sidebar-overlay" onclick="toggleCliSidebar()"></div>
+
+  <aside class="sidebar" id="cli-sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon">✂</div>
       <div>
@@ -1123,7 +1156,7 @@
     </div>
   </aside>
 
-  <main class="main">
+  <main class="main" id="cli-content">
     <header class="topbar">
       <div>
         <div id="cli-page-title">Serviços</div>
@@ -1679,6 +1712,14 @@
     'cli-perfil':        'Meu Perfil',
   };
 
+  function toggleCliSidebar() {
+    const sidebar  = $('cli-sidebar');
+    const overlay  = $('cli-sidebar-overlay');
+    if (!sidebar) return;
+    sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('open');
+  }
+
   function showClienteSection(name) {
     document.querySelectorAll('#screen-cliente .section')
       .forEach(s => s.classList.remove('active'));
@@ -1687,8 +1728,14 @@
     $(`section-${name}`).classList.add('active');
     document.querySelector(`#screen-cliente [data-cs="${name}"]`).classList.add('active');
     $('cli-page-title').textContent = clienteTitles[name] || name;
-
-    if (name === 'cli-inicio')       loadClienteServicos();
+    // Auto-close sidebar drawer on mobile after navigation
+    if (window.innerWidth <= 768) {
+      const sidebar = $('cli-sidebar');
+      const overlay = $('cli-sidebar-overlay');
+      if (sidebar) sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+    }
+    if (name === 'cli-inicio')            loadClienteServicos();
     else if (name === 'cli-agendamentos') loadMeusAgendamentos();
     else if (name === 'cli-perfil')       loadClientePerfil();
   }
