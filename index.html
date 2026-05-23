@@ -1696,7 +1696,8 @@
       const data = await apiFetch('GET', '/api/avaliacoes/recentes');
       const badge = $('bell-badge');
       if (badge) {
-        if (data.length > 0) {
+        const alreadySeen = sessionStorage.getItem('notif_seen') === '1';
+        if (data.length > 0 && !alreadySeen) {
           badge.textContent  = data.length;
           badge.style.display = 'flex';
         } else {
@@ -1728,10 +1729,11 @@
     const p = $('notif-panel');
     if (!p) return;
     p.classList.toggle('open');
-    // Clear badge when opening
+    // Clear badge when opening and mark as seen for this session
     if (p.classList.contains('open')) {
       const badge = $('bell-badge');
       if (badge) badge.style.display = 'none';
+      sessionStorage.setItem('notif_seen', '1');
     }
   }
 
