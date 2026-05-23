@@ -85,3 +85,11 @@ modules/
 # Não adicionar regras *.fdb ou database/ sem remover esta excepção primeiro
 !database/BARBERMANAGER.FDB
 database/*.fdb
+
+# Build artifacts — plataformas específicas (geradas pelo Delphi, não devem ser versionadas)
+src/Android/
+src/Win32/
+
+# Ficheiros locais Claude Code (configuração por máquina, não do projecto)
+.claude/
+*.local.json
