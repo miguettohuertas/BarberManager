@@ -344,15 +344,24 @@ BarberManager/
    - ✅ Post-build MSBuild copia `src/Web/index.html` → `Win32\Debug\` automaticamente
    - ✅ Testado e funcional — login, dashboard admin, área cliente
    - ✅ Acentos corrigidos — FixDB.pas corrigiu dados na BD, CharacterSet=UTF8 na conexão
+   - ✅ Agendamento online — modal 5 passos funcional (calendário, horários, barbeiro)
+   - ✅ Financeiro — dashboard mensal com KPIs e gráfico diário (CSS puro)
+   - ✅ Gráfico diário no financeiro (CSS puro, substituiu gráfico semanal)
+   - ✅ Sistema de notificações e avaliações implementado (pendente fix AV)
+   - ⏳ Fix Access Violation em GET /api/avaliacoes/cliente/:id (Meus Agendamentos)
    - ⏳ Deploy em servidor público
-   - ⏳ Agendamento online — fluxo completo (calendário, horários, barbeiro)
-   - ⏳ Financeiro — relatórios e KPIs financeiros
-   - ⏳ Gráfico semanal no dashboard admin
    - ⏳ README actualizado com nova arquitectura web
 
 ---
 
 ## Regras Críticas — Nunca Quebrar
+
+### Bug Conhecido — Access Violation em GET /api/avaliacoes/cliente/:id
+- **Sintoma:** `Access violation at address 00D96372 in module BarberManagerAPI.exe. Read of address 0000001C`
+- **Quando ocorre:** cliente acede a "Meus Agendamentos" (loadMeusAgendamentos faz fetch paralelo desta rota)
+- **Causa provável:** `TFDQuery` a aceder campo `nil` no JOIN `TB_AVALIACOES → TB_BARBEIROS → TB_USUARIOS` — possivelmente barbeiro_id inválido ou registo orfão
+- **Ficheiro:** `src/API/API.Avaliacoes.pas` — `RotaPorCliente`
+- **Próximo passo:** adicionar `Writeln` de debug antes de cada `FieldByName` para isolar a linha exacta do crash
 
 ### Horse API — Regras
 - `FireDAC.ConsoleUI.Wait` (não `FireDAC.FMXUI.Wait`) nos projectos console (`BarberManagerAPI`)
