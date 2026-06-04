@@ -163,29 +163,42 @@ BarberManager/
 
 ## Telas e Navegação
 
-### Universo Cliente
+### Área do Cliente
 
 #### Login
-![Login](docs/Telas/01_login.png)
+![Login](docs/Telas_Web/login.png)
 
 #### Criar Nova Conta
-![Nova Conta](docs/Telas/02_novaConta.png)
+![Criar Conta](docs/Telas_Web/criarConta.png)
 
-#### Home do Cliente — Catálogo de Serviços
-![Home Principal](docs/Telas/03_clienteHome.png)
+#### Catálogo de Serviços
+![Serviços](docs/Telas_Web/servicosCliente.png)
 
-#### Motor de Agendamento
-![Agendamento](docs/Telas/04_clienteAgendar.png)
+#### Agendamento (Modal 5 passos)
+![Agendar](docs/Telas_Web/agendarServico.png)
 
----
+#### Meus Agendamentos
+![Meus Agendamentos](docs/Telas_Web/agendamentosCliente.png)
 
-### Universo Administrador
+#### Meu Perfil
+![Perfil](docs/Telas_Web/perfilCliente.png)
 
-#### Dashboard com KPIs e Linha do Tempo
-![Dashboard Administrativo](docs/Telas/05_adminDashboard.png)
+### Área do Administrador
+
+#### Dashboard — KPIs e Linha do Tempo
+![Dashboard](docs/Telas_Web/inicioDashboard.png)
 
 #### Gestão de Serviços
-![Gestão de Serviços](docs/Telas/06_servicos.png)
+![Serviços Admin](docs/Telas_Web/servicosDashboard.png)
+
+#### Agenda
+![Agenda](docs/Telas_Web/agendaDashboard.png)
+
+#### Clientes
+![Clientes](docs/Telas_Web/clientes.png)
+
+#### Financeiro
+![Financeiro](docs/Telas_Web/financeiro.png)
 
 ---
 
