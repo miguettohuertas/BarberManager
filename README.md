@@ -14,7 +14,7 @@
 - [Estrutura do Repositório](#estrutura-do-repositório)
 - [Diagramas de Arquitetura](#diagramas-de-arquitetura-c4-model)
 - [Telas](#telas-e-navegação)
-- [Como Executar Localmente](#como-executar-localmente)
+- [Como Executar](#como-executar)
 - [Roadmap](#roadmap)
 
 ---
@@ -105,7 +105,7 @@ BarberManager/
 │   └── BARBERMANAGER.FDB          # Base de dados Firebird 3.0
 ├── docs/
 │   ├── Diagramas_C4/              # Diagramas C4 Model (.png)
-│   └── Telas/                     # Prints das telas aprovadas (.png)
+│   └── Telas_Web/                 # Screenshots do Web App (.png)
 ├── src/
 │   ├── API/                       # Handlers Horse REST API
 │   │   ├── API.Conexao.pas        # CreateConnection per-request
@@ -130,7 +130,10 @@ BarberManager/
 │   └── Web/
 │       └── index.html             # SPA: login + admin + cliente (fonte)
 ├── BarberManagerAPI.dpr           # Projecto Horse REST API
+├── BarberManagerAPI.exe           # Servidor API compilado (porta 9000)
 ├── BarberManager.dproj            # Projecto app nativo FMX
+├── cloudflared.exe                # Cloudflare Tunnel — expõe porta 9000 publicamente
+├── start-barbermanager.ps1        # Script de arranque automático (dois terminais)
 ├── index.html                     # Cópia servida pelo .exe em GET /
 ├── CLAUDE.md                      # Contexto técnico para IA
 └── README.md                      # Esta documentação
@@ -202,7 +205,7 @@ BarberManager/
 
 ---
 
-## Como Executar Localmente
+## Como Executar
 
 ### Pré-requisitos
 
@@ -232,7 +235,7 @@ FDConnection1.Params.Database :=
 
 ---
 
-### Opção B — Web App (Horse REST API) ← recomendado
+### Opção B — Web App local (Horse REST API)
 
 **1. Aplique as migrations da BD** (se ainda não aplicadas):
 ```sql
@@ -250,13 +253,42 @@ cp src/Web/index.html index.html
 # O post-build MSBuild também copia automaticamente para Win32\Debug\
 ```
 
-**4. Execute** `Win32\Debug\BarberManagerAPI.exe` — verá no console:
+**4. Execute** `BarberManagerAPI.exe` — verá no console:
 ```
 BarberManager API running on http://localhost:9000
 Press Enter to stop...
 ```
 
 **5. Abra o browser** em `http://localhost:9000`
+
+---
+
+### Opção C — Deploy público via Cloudflare Tunnel ← recomendado
+
+O sistema inclui `cloudflared.exe` para expor a API publicamente sem servidor dedicado, IP fixo ou abertura de portas.
+
+**Arranque automático (recomendado):**
+```powershell
+.\start-barbermanager.ps1
+```
+Abre dois terminais PowerShell: um com a API Horse e outro com o túnel Cloudflare.
+
+**Arranque manual (dois terminais):**
+```powershell
+# Terminal 1 — API
+.\BarberManagerAPI.exe
+
+# Terminal 2 — Túnel Cloudflare
+.\cloudflared.exe tunnel --url http://localhost:9000
+```
+
+O terminal do `cloudflared` mostrará a URL pública:
+```
+Your quick Tunnel has been created! Visit it at (it may take some seconds to start up):
+https://xxxx-xxxx-xxxx.trycloudflare.com
+```
+
+> **Nota:** A URL `trycloudflare.com` é temporária e muda a cada reinício. Para URL permanente é necessário criar um túnel nomeado com conta Cloudflare gratuita.
 
 ---
 
@@ -301,7 +333,7 @@ Press Enter to stop...
 | **Fase 6** | Back-End — Conexão, Login, KPIs, Agendamento | ✅ Concluído |
 | **Fase 7** | Integração Front × Back — App nativo + Web App | ✅ Concluído |
 | **Fase 8** | Web App completo (Horse REST + HTML/CSS/JS) — local | ✅ Concluído |
-| **Fase 9** | Deploy em servidor público | ⏳ Pendente |
+| **Fase 9** | Deploy público via Cloudflare Tunnel | ✅ Concluído |
 
 ---
 

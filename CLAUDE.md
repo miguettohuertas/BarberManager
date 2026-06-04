@@ -72,6 +72,9 @@ BarberManager/
 │   └── Web/
 │       └── index.html            — SPA: login + área admin + área cliente
 ├── BarberManagerAPI.dpr          — projecto Horse REST API (porta 9000)
+├── BarberManagerAPI.exe          — servidor API compilado (porta 9000)
+├── cloudflared.exe               — Cloudflare Tunnel (expõe porta 9000 publicamente)
+├── start-barbermanager.ps1       — script de arranque automático (dois terminais)
 ├── index.html                    — cópia de src/Web/index.html servida pelo .exe
 ├── CLAUDE.md
 └── README.md
@@ -214,7 +217,7 @@ API.Auth.RegistrarRotas; ... etc.
 
 ## Estado Actual do Projecto
 
-### Tudo concluído localmente ✅
+### Sistema completo e em produção ✅
 
 | Módulo | Estado |
 |--------|--------|
@@ -228,12 +231,35 @@ API.Auth.RegistrarRotas; ... etc.
 | Mobile hamburger drawer (≤768px) | ✅ |
 | Perfil editável (nome, email, telefone, senha) | ✅ |
 | Auto-status middleware (PENDENTE→EM_ANDAMENTO→CONCLUIDO) | ✅ |
+| Deploy via Cloudflare Tunnel (URL pública temporária) | ✅ |
+| Script de arranque automático (`start-barbermanager.ps1`) | ✅ |
 | README + CLAUDE.md actualizados | ✅ |
 | Screenshots web em `docs/Telas_Web/` | ✅ |
 
-### Único passo pendente
+### Deploy — Cloudflare Tunnel
 
-- ⏳ **Deploy em servidor público** — expor `localhost:9000` com URL pública acessível de qualquer lugar
+O sistema é exposto publicamente através do **Cloudflare Tunnel** (`cloudflared.exe`) sem necessidade de servidor dedicado, IP fixo ou abertura de portas no router.
+
+**Ficheiros necessários na raiz do projecto:**
+- `BarberManagerAPI.exe` — servidor Horse (porta 9000)
+- `cloudflared.exe` — cliente do túnel Cloudflare
+
+**Arranque manual (dois terminais):**
+```powershell
+# Terminal 1 — API
+.\BarberManagerAPI.exe
+
+# Terminal 2 — Túnel
+.\cloudflared.exe tunnel --url http://localhost:9000
+```
+
+**Arranque automático (script):**
+```powershell
+.\start-barbermanager.ps1
+```
+O script abre dois terminais PowerShell separados.
+
+**Nota importante sobre a URL:** A URL pública (formato `https://xxxx.trycloudflare.com`) é **temporária** — muda a cada reinício do `cloudflared`. Para URL permanente seria necessário criar um túnel nomeado com conta Cloudflare gratuita.
 
 ### Nota sobre o ambiente de desenvolvimento
 
