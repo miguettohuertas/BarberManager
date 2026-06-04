@@ -35,8 +35,7 @@ Sistema de gestão de barbearia com duas camadas:
 | Horse framework      | `C:\Horse\horse-master\src`                                                          |
 | API project          | `BarberManagerAPI.dpr` (raiz do projecto)                                            |
 | Web frontend         | `src\Web\index.html` → copiado para `index.html` na raiz após cada alteração        |
-| D2Bridge Framework   | `C:\D2Bridge\d2bridgeframework-main\Stable\D2Bridge Framework`                       |
-| BarberManagerWeb.dpr | `C:\ProjetosDelphi\BarberManager\BarberManager\BarberManagerWeb.dpr`                 |
+| Screenshots web      | `docs\Telas_Web\` — 11 PNGs das telas do Web App                                    |
 
 ---
 
@@ -47,6 +46,8 @@ BarberManager/
 ├── database/
 │   └── BARBERMANAGER.FDB
 ├── docs/
+│   ├── Diagramas_C4/             — diagramas C4 Model (.png)
+│   └── Telas_Web/                — 11 screenshots do Web App (login, dashboard, etc.)
 ├── src/
 │   ├── API/
 │   │   ├── API.Conexao.pas       — CreateConnection per-request (sem global)
@@ -211,29 +212,35 @@ API.Auth.RegistrarRotas; ... etc.
 
 ---
 
-## Próximos Passos Pendentes
+## Estado Actual do Projecto
 
-1. **Frame Serviços — CONCLUÍDO** ✅
-2. **Frame Agenda — CONCLUÍDO** ✅
-3. **Frame Clientes — CONCLUÍDO** ✅
-4. **Frame Financeiro — CONCLUÍDO** ✅
-5. **Frame Configurações — CONCLUÍDO** ✅
-6. **Dashboard Admin melhorias — CONCLUÍDO** ✅
-7. **Deploy D2Bridge** — pausado; substituído pela abordagem Horse REST + HTML
-8. **Frontend Web (Horse REST + HTML/CSS/JS) — CONCLUÍDO localmente** ✅
-   - ✅ Servidor REST porta 9000, compila e corre
-   - ✅ Todos os endpoints funcionais com LEFT JOIN + COALESCE + per-request connection
-   - ✅ Access Violation em RotaPorCliente — **RESOLVIDO** (LEFT JOIN + COALESCE)
-   - ✅ AV por conexão global partilhada — **RESOLVIDO** (CreateConnection per-request)
-   - ✅ 'Field not found' em agregados zero-row — **RESOLVIDO** (RDB$DATABASE LEFT JOIN pattern)
-   - ✅ Auto-status middleware (PENDENTE→EM_ANDAMENTO→CONCLUIDO em cada GET)
-   - ✅ Perfil editável do cliente (GET+PUT /api/usuarios/:id)
-   - ✅ Busca no backend para agenda, serviços e clientes
-   - ✅ loadMeusAgendamentos com filtro por clienteId no backend
-   - ✅ Notificações com localStorage lastSeenNotifId + polling 30s
-   - ✅ Mobile hamburger drawer no cliente
-   - ⏳ Deploy em servidor público
-   - ⏳ README atualizado com nova arquitetura (feito nesta sessão)
+### Tudo concluído localmente ✅
+
+| Módulo | Estado |
+|--------|--------|
+| App FMX nativo — Login, Cadastro, Home, Agendamento | ✅ |
+| App FMX — Carrinho (Meus Agendamentos) + Avaliação | ✅ |
+| App FMX — Dashboard Admin (KPIs, timeline, frames) | ✅ |
+| Horse REST API — todos os endpoints (porta 9000) | ✅ |
+| Web SPA — Área Cliente (serviços, agendamento, perfil) | ✅ |
+| Web SPA — Área Admin (dashboard, agenda, serviços, clientes, financeiro, configurações) | ✅ |
+| Notificações admin com badge localStorage | ✅ |
+| Mobile hamburger drawer (≤768px) | ✅ |
+| Perfil editável (nome, email, telefone, senha) | ✅ |
+| Auto-status middleware (PENDENTE→EM_ANDAMENTO→CONCLUIDO) | ✅ |
+| README + CLAUDE.md actualizados | ✅ |
+| Screenshots web em `docs/Telas_Web/` | ✅ |
+
+### Único passo pendente
+
+- ⏳ **Deploy em servidor público** — expor `localhost:9000` com URL pública acessível de qualquer lugar
+
+### Nota sobre o ambiente de desenvolvimento
+
+- Delphi 12 Athens foi **reinstalado** nesta máquina (nova instalação limpa)
+- Horse framework foi **clonado de novo** em `C:\Horse\horse-master\`
+- A base de dados `BARBERMANAGER.FDB` foi **transferida manualmente** para o caminho correcto
+- Tudo compilado e funcional após reinstalação — sem dependências adicionais necessárias
 
 ---
 
