@@ -73,7 +73,7 @@ BarberManager/
 │       └── index.html            — SPA: login + área admin + área cliente
 ├── BarberManagerAPI.dpr          — projecto Horse REST API (porta 9000)
 ├── BarberManagerAPI.exe          — servidor API compilado (porta 9000)
-├── cloudflared.exe               — Cloudflare Tunnel (expõe porta 9000 publicamente)
+├── ngrok.exe                     — ngrok Tunnel (expõe porta 9000 publicamente com domínio fixo)
 ├── start-barbermanager.ps1       — script de arranque automático (dois terminais)
 ├── index.html                    — cópia de src/Web/index.html servida pelo .exe
 ├── CLAUDE.md
@@ -231,26 +231,28 @@ API.Auth.RegistrarRotas; ... etc.
 | Mobile hamburger drawer (≤768px) | ✅ |
 | Perfil editável (nome, email, telefone, senha) | ✅ |
 | Auto-status middleware (PENDENTE→EM_ANDAMENTO→CONCLUIDO) | ✅ |
-| Deploy via Cloudflare Tunnel (URL pública temporária) | ✅ |
+| Deploy via ngrok Tunnel (domínio fixo permanente) | ✅ |
 | Script de arranque automático (`start-barbermanager.ps1`) | ✅ |
 | README + CLAUDE.md actualizados | ✅ |
 | Screenshots web em `docs/Telas_Web/` | ✅ |
 
-### Deploy — Cloudflare Tunnel
+### Deploy — ngrok Tunnel
 
-O sistema é exposto publicamente através do **Cloudflare Tunnel** (`cloudflared.exe`) sem necessidade de servidor dedicado, IP fixo ou abertura de portas no router.
+O sistema é exposto publicamente através do **ngrok** (`ngrok.exe`) com domínio fixo permanente, sem necessidade de servidor dedicado, IP fixo ou abertura de portas no router.
+
+**URL pública permanente:** `https://humid-boots-posted.ngrok-free.dev`
 
 **Ficheiros necessários na raiz do projecto:**
 - `BarberManagerAPI.exe` — servidor Horse (porta 9000)
-- `cloudflared.exe` — cliente do túnel Cloudflare
+- `ngrok.exe` — cliente do túnel ngrok
 
 **Arranque manual (dois terminais):**
 ```powershell
 # Terminal 1 — API
 .\BarberManagerAPI.exe
 
-# Terminal 2 — Túnel
-.\cloudflared.exe tunnel --url http://localhost:9000
+# Terminal 2 — Túnel ngrok (domínio fixo)
+.\ngrok.exe http --url=humid-boots-posted.ngrok-free.dev 9000
 ```
 
 **Arranque automático (script):**
@@ -258,8 +260,6 @@ O sistema é exposto publicamente através do **Cloudflare Tunnel** (`cloudflare
 .\start-barbermanager.ps1
 ```
 O script abre dois terminais PowerShell separados.
-
-**Nota importante sobre a URL:** A URL pública (formato `https://xxxx.trycloudflare.com`) é **temporária** — muda a cada reinício do `cloudflared`. Para URL permanente seria necessário criar um túnel nomeado com conta Cloudflare gratuita.
 
 ### Nota sobre o ambiente de desenvolvimento
 

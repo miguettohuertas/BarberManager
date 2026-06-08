@@ -132,7 +132,7 @@ BarberManager/
 ├── BarberManagerAPI.dpr           # Projecto Horse REST API
 ├── BarberManagerAPI.exe           # Servidor API compilado (porta 9000)
 ├── BarberManager.dproj            # Projecto app nativo FMX
-├── cloudflared.exe                # Cloudflare Tunnel — expõe porta 9000 publicamente
+├── ngrok.exe                      # ngrok Tunnel — expõe porta 9000 com domínio fixo permanente
 ├── start-barbermanager.ps1        # Script de arranque automático (dois terminais)
 ├── index.html                     # Cópia servida pelo .exe em GET /
 ├── CLAUDE.md                      # Contexto técnico para IA
@@ -263,32 +263,28 @@ Press Enter to stop...
 
 ---
 
-### Opção C — Deploy público via Cloudflare Tunnel ← recomendado
+### Opção C — Deploy público via ngrok ← recomendado
 
-O sistema inclui `cloudflared.exe` para expor a API publicamente sem servidor dedicado, IP fixo ou abertura de portas.
+O sistema inclui `ngrok.exe` para expor a API publicamente com **domínio fixo permanente**, sem servidor dedicado, IP fixo ou abertura de portas.
+
+**URL pública permanente:** `https://humid-boots-posted.ngrok-free.dev`
 
 **Arranque automático (recomendado):**
 ```powershell
 .\start-barbermanager.ps1
 ```
-Abre dois terminais PowerShell: um com a API Horse e outro com o túnel Cloudflare.
+Abre dois terminais PowerShell: um com a API Horse e outro com o túnel ngrok.
 
 **Arranque manual (dois terminais):**
 ```powershell
 # Terminal 1 — API
 .\BarberManagerAPI.exe
 
-# Terminal 2 — Túnel Cloudflare
-.\cloudflared.exe tunnel --url http://localhost:9000
+# Terminal 2 — Túnel ngrok (domínio fixo)
+.\ngrok.exe http --url=humid-boots-posted.ngrok-free.dev 9000
 ```
 
-O terminal do `cloudflared` mostrará a URL pública:
-```
-Your quick Tunnel has been created! Visit it at (it may take some seconds to start up):
-https://xxxx-xxxx-xxxx.trycloudflare.com
-```
-
-> **Nota:** A URL `trycloudflare.com` é temporária e muda a cada reinício. Para URL permanente é necessário criar um túnel nomeado com conta Cloudflare gratuita.
+Após iniciar, a API fica acessível em `https://humid-boots-posted.ngrok-free.dev`.
 
 ---
 
@@ -333,7 +329,7 @@ https://xxxx-xxxx-xxxx.trycloudflare.com
 | **Fase 6** | Back-End — Conexão, Login, KPIs, Agendamento | ✅ Concluído |
 | **Fase 7** | Integração Front × Back — App nativo + Web App | ✅ Concluído |
 | **Fase 8** | Web App completo (Horse REST + HTML/CSS/JS) — local | ✅ Concluído |
-| **Fase 9** | Deploy público via Cloudflare Tunnel | ✅ Concluído |
+| **Fase 9** | Deploy público via ngrok (domínio fixo permanente) | ✅ Concluído |
 
 ---
 
