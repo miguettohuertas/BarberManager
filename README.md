@@ -1,5 +1,15 @@
 # BarberManager
 
+![Delphi](https://img.shields.io/badge/Delphi-12_Athens-EE1111?style=flat&logo=delphi&logoColor=white)
+![Firebird](https://img.shields.io/badge/Firebird-3.0-F9A825?style=flat&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
+![GitHub last commit](https://img.shields.io/github/last-commit/miguettohuertas/BarberManager?style=flat)
+![GitHub repo size](https://img.shields.io/github/repo-size/miguettohuertas/BarberManager?style=flat)
+![Deploy: ngrok](https://img.shields.io/badge/Deploy-ngrok-orange?style=flat)
+
 **BarberManager** é um sistema completo e moderno para a gestão de barbearias, com painel do cliente para agendamentos online e dashboard administrativo com KPIs, gestão de serviços, agenda, clientes e financeiro.
 
 > Desenvolvido como projeto acadêmico da disciplina de **Programação Web**, aplicando Engenharia de Software, UI/UX Design moderno e Arquitetura em camadas.
