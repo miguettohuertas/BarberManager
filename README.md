@@ -9,6 +9,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/miguettohuertas/BarberManager?style=flat)
 ![GitHub repo size](https://img.shields.io/github/repo-size/miguettohuertas/BarberManager?style=flat)
 ![Deploy: ngrok](https://img.shields.io/badge/Deploy-ngrok-orange?style=flat)
+![Quality Gate](https://img.shields.io/badge/Quality_Gate-Passed-brightgreen?style=flat&logo=sonarqube&logoColor=white)
 
 **BarberManager** é um sistema completo e moderno para a gestão de barbearias, com painel do cliente para agendamentos online e dashboard administrativo com KPIs, gestão de serviços, agenda, clientes e financeiro.
 
@@ -25,6 +26,7 @@
 - [Diagramas de Arquitetura](#diagramas-de-arquitetura-c4-model)
 - [Telas](#telas-e-navegação)
 - [Como Executar](#como-executar)
+- [Qualidade de Código](#qualidade-de-código)
 - [Roadmap](#roadmap)
 
 ---
@@ -324,6 +326,30 @@ Após iniciar, a API fica acessível em `https://humid-boots-posted.ngrok-free.d
 | Admin → **Financeiro** | Relatório mensal com KPIs e gráfico diário |
 | Admin → **Configurações** | Leitura e escrita em TB_CONFIGURACOES |
 | Sino de notificações (Admin) | Badge conta avaliações novas desde última abertura |
+
+---
+
+## Qualidade de Código
+
+![Quality Gate](https://img.shields.io/badge/Quality_Gate-Passed-brightgreen?style=flat&logo=sonarqube&logoColor=white)
+
+Análise estática realizada com **SonarQube Community Build v26.6.0** em 13/06/2026, cobrindo 4.264 linhas de código-fonte (`.pas`, `.dpr`, `.js`, `.html`).
+
+### Resultados da Análise
+
+| Métrica | Valor | Grau |
+|---|---|---|
+| **Quality Gate** | — | ✅ Passed |
+| **Security** | 2 vulnerabilidades | 🟡 B |
+| **Reliability** | 72 bugs | 🔴 C |
+| **Maintainability** | 60 code smells | 🟢 A |
+| **LOC** | 4.264 linhas | — |
+| **Dívida Técnica** | 6h 24min | — |
+| **Duplicações** | 100% | — |
+
+> **Nota sobre duplicações:** A taxa de 100% é **intencional** e resulta da arquitectura de deploy — `src/Web/index.html` (fonte) e `index.html` (raiz, cópia servida pelo `.exe`) são ficheiros idênticos por necessidade operacional, não por dívida técnica. O post-build MSBuild gere esta cópia automaticamente.
+
+Relatório completo: [`docs/Qualidade/relatorio_sonarqube_barbermanager.tex`](docs/Qualidade/relatorio_sonarqube_barbermanager.tex)
 
 ---
 

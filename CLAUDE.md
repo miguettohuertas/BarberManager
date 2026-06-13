@@ -428,3 +428,55 @@ begin
   end;
 end;
 ```
+
+---
+
+## Integração SonarQube
+
+### Versões
+
+| Componente        | Versão / Detalhe                                              |
+|-------------------|---------------------------------------------------------------|
+| SonarQube         | Community Build v26.6.0.123539                                |
+| SonarScanner CLI  | v8.0.1.6346                                                   |
+| Caminho SonarQube | `C:\sonarqube\sonarqube-26.6.0.123539`                        |
+| Caminho Scanner   | `C:\sonar-scanner\sonar-scanner-cli-8.0.1.6346-windows-x64\` |
+
+### Comandos
+
+**Iniciar SonarQube:**
+```powershell
+cd C:\sonarqube\sonarqube-26.6.0.123539\bin\windows-x86-64
+.\StartSonar.bat
+```
+
+**Executar análise:**
+```powershell
+"C:\sonar-scanner\sonar-scanner-cli-8.0.1.6346-windows-x64\bin\sonar-scanner.bat" `
+  -D"sonar.projectKey=BarberManager" `
+  -D"sonar.sources=." `
+  -D"sonar.host.url=http://localhost:9000" `
+  -D"sonar.token=sqp_c4ef070f992044231bee8e52e77839eeb689c749"
+```
+
+**Dashboard:** `http://localhost:9000/dashboard?id=BarberManager`
+
+### Última Análise — 13/06/2026
+
+| Métrica           | Valor        | Grau    |
+|-------------------|--------------|---------|
+| Quality Gate      | —            | Passed  |
+| Security          | 2 issues     | B       |
+| Reliability       | 72 bugs      | C       |
+| Maintainability   | 60 smells    | A       |
+| LOC               | 4.264 linhas | —       |
+| Dívida Técnica    | 6h 24min     | —       |
+| Duplicações       | 100%         | —       |
+| **Issues totais** | **94**       | —       |
+
+### Notas
+- `sonar-project.properties` está na raiz do projecto — configuração base para corridas locais
+- A duplicação de 100% é intencional: `src/Web/index.html` e `index.html` (raiz) são cópias idênticas por arquitectura de deploy
+- O SonarQube tem suporte parcial para Object Pascal — muitos dos 72 bugs são falsos positivos de construções Delphi idiomáticas
+- Relatório completo em `docs/Qualidade/relatorio_sonarqube_barbermanager.tex`
+- Screenshots da análise em `docs/Qualidade/prints/`

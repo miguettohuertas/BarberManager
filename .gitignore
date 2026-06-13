@@ -93,3 +93,6 @@ src/Win32/
 # Ficheiros locais Claude Code (configuração por máquina, não do projecto)
 .claude/
 *.local.json
+
+# SonarQube scanner artifacts (runtime, não versionados)
+.scannerwork/
