@@ -1,0 +1,174 @@
+{
+  "info": {
+    "_postman_id": "851ba0f4-6166-4643-bc68-0f7379913cf3",
+    "name": "BarberManager API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49958259",
+    "_collection_link": "https://go.postman.co/collection/49958259-851ba0f4-6166-4643-bc68-0f7379913cf3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "Login - Cliente válido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Resposta contém dados do usuário\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property(\"id\");\r",
+                  "    pm.expect(jsonData).to.have.property(\"perfil\");\r",
+                  "    pm.expect(jsonData.perfil).to.eql(\"CLIENTE\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Salva cliente_id no environment\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.environment.set(\"cliente_id\", jsonData.id);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{cliente_email}}\",\r\n  \"senha\": \"{{cliente_senha}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Senha inválida",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{cliente_email}}\",\r\n  \"senha\": \"senha_errada_123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login - Email não cadastrado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login inválido não retorna 200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.equal(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Resposta indica erro de credenciais\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 401, 404]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"naoexiste@teste.com\",\r\n  \"senha\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Servicos",
+      "item": []
+    },
+    {
+      "name": "03 - Agendamentos",
+      "item": []
+    },
+    {
+      "name": "04 - DashBoard",
+      "item": []
+    },
+    {
+      "name": "05 - Clientes",
+      "item": []
+    },
+    {
+      "name": "06 - Barbeiros",
+      "item": []
+    },
+    {
+      "name": "07 - Avaliacoes",
+      "item": []
+    },
+    {
+      "name": "08 - Usuarios",
+      "item": []
+    }
+  ]
+}

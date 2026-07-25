@@ -1,42 +1,31 @@
 # BarberManager
 
-![Delphi](https://img.shields.io/badge/Delphi-12_Athens-EE1111?style=flat&logo=delphi&logoColor=white)
-![Firebird](https://img.shields.io/badge/Firebird-3.0-F9A825?style=flat&logoColor=white)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
-![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
-![GitHub last commit](https://img.shields.io/github/last-commit/miguettohuertas/BarberManager?style=flat)
-![GitHub repo size](https://img.shields.io/github/repo-size/miguettohuertas/BarberManager?style=flat)
-![Deploy: ngrok](https://img.shields.io/badge/Deploy-ngrok-orange?style=flat)
-![Quality Gate](https://img.shields.io/badge/Quality_Gate-Passed-brightgreen?style=flat&logo=sonarqube&logoColor=white)
+**BarberManager** é um sistema completo e moderno para a gestão de barbearias, projetado para revolucionar a conexão entre barbeiros e clientes. O projeto visa eliminar o atrito dos agendamentos manuais e oferecer um controle financeiro e administrativo robusto para os proprietários.
 
-**BarberManager** é um sistema completo e moderno para a gestão de barbearias, com painel do cliente para agendamentos online e dashboard administrativo com KPIs, gestão de serviços, agenda, clientes e financeiro.
-
-> Desenvolvido como projeto acadêmico da disciplina de **Programação Web**, aplicando Engenharia de Software, UI/UX Design moderno e Arquitetura em camadas.
+> Este projeto é desenvolvido como requisito da disciplina de **Programação Web**, aplicando boas práticas de Engenharia de Software, UI/UX Design moderno e Arquitetura Limpa.
 
 ---
 
 ## Sumário
 
-- [Visão Geral](#visão-geral)
+- [Visão Geral do Sistema](#visão-geral-do-sistema)
 - [Arquitetura e Tecnologias](#arquitetura-e-tecnologias)
-- [Funcionalidades](#funcionalidades)
+- [Diagramas de Arquitetura (C4 Model)](#diagramas-de-arquitetura-c4-model)
+- [Telas e Navegação (Protótipo Interativo)](#telas-e-navegação-protótipo-interativo)
+- [Módulos e Funcionalidades](#módulos-e-funcionalidades)
+- [Funcionalidades Implementadas (Back-End)](#funcionalidades-implementadas-back-end)
 - [Estrutura do Repositório](#estrutura-do-repositório)
-- [Diagramas de Arquitetura](#diagramas-de-arquitetura-c4-model)
-- [Telas](#telas-e-navegação)
-- [Como Executar](#como-executar)
-- [Qualidade de Código](#qualidade-de-código)
-- [Roadmap](#roadmap)
+- [Próximos Passos (Roadmap)](#próximos-passos-roadmap)
+- [Como Executar Localmente](#como-executar-localmente)
 
 ---
 
-## Visão Geral
+## Visão Geral do Sistema
 
-O sistema é composto por duas camadas independentes que partilham a mesma base de dados Firebird:
+O sistema é dividido em dois universos distintos, compartilhando a mesma base de código (**Single Codebase**) graças ao poder do Delphi FMX:
 
-- **App Nativo (Delphi FMX):** App mobile/desktop compilado nativamente para Windows. Painel do cliente e dashboard do administrador.
-- **Web App (Horse REST + HTML/CSS/JS):** Servidor REST em Object Pascal (Horse framework) na porta 9000. Frontend em HTML/CSS/JS puro servido pelo mesmo processo — sem CORS, sem dependências externas.
+- **App Mobile (Para Clientes):** Focado na experiência do utilizador (UX), permitindo cadastro ágil, escolha de serviços e agendamento de horários em poucos cliques.
+- **Dashboard Web/Desktop (Para Administradores):** Um painel de controle de alta produtividade (resolução 1280x720) para os barbeiros gerirem a fila de espera, serviços oferecidos e a faturação diária.
 
 ---
 
@@ -44,180 +33,230 @@ O sistema é composto por duas camadas independentes que partilham a mesma base 
 
 | Item | Detalhe |
 |---|---|
-| **Linguagem** | Delphi 12 (Object Pascal) |
-| **App nativo** | FMX (FireMonkey) — Windows, Android, iOS |
-| **REST API** | Horse framework — servidor HTTP porta 9000 |
-| **Frontend Web** | HTML/CSS/JS puro — SPA single-file (`index.html`) |
-| **Base de Dados** | Firebird 3.0 (protocolo Local, `fbclient.dll`) |
-| **Acesso a Dados** | FireDAC — conexão per-request na API; singleton no app nativo |
-| **Segurança** | SHA-256 uppercase (`THashSHA2`) para passwords |
-| **Paradigma UI** | SPA com secções via `display` toggle; drawer mobile hamburger |
-
----
-
-## Funcionalidades
-
-### Área do Cliente
-- [x] Login e cadastro com hash SHA-256 e validação na BD
-- [x] Catálogo de serviços carregado dinamicamente com filtros de categoria e busca
-- [x] Motor de agendamento completo: calendário interativo, seleção de barbeiro e horário
-- [x] Meus Agendamentos com badges de status coloridos
-- [x] Avaliação de serviço concluído (1-5 estrelas + comentário)
-- [x] Perfil editável: nome, email, telefone, senha
-- [x] Notificações de agendamentos
-- [x] Layout responsivo com hamburger drawer no mobile (≤768px)
-- [x] Logout com limpeza de sessão
-
-### Área do Administrador
-- [x] Dashboard com KPIs do dia: faturamento, total, pendentes, cancelamentos, ticket médio
-- [x] Linha do tempo de agendamentos com busca e navegação por data (← →)
-- [x] Gráfico de faturamento semanal dinâmico
-- [x] Relatório semanal detalhado por dia
-- [x] Resumo financeiro com comparação vs. dia anterior
-- [x] Gestão de Serviços: CRUD completo (criar, editar, toggle ativo/inativo, deletar)
-- [x] Gestão de Agenda: filtros por status, alteração de status por linha
-- [x] Gestão de Clientes: lista, toggle ativo/inativo, busca
-- [x] Relatório Financeiro mensal com KPIs e gráfico diário
-- [x] Configurações da barbearia (nome, meta, horário, telefone, endereço)
-- [x] Notificações de avaliações recentes com badge persistente (localStorage)
-- [x] Auto-update de status: PENDENTE→EM_ANDAMENTO→CONCLUIDO baseado no horário atual
-
-### REST API (porta 9000)
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| POST | `/api/auth/login` | Login — retorna `{id, nome, email, perfil}` |
-| POST | `/api/auth/cadastro` | Cadastro de cliente |
-| GET | `/api/dashboard/kpis` | KPIs do dia (faturamento, total, status counts) |
-| GET | `/api/dashboard/timeline` | Linha do tempo de agendamentos |
-| GET | `/api/financeiro` | Relatório mensal com detalhes por dia |
-| GET/POST | `/api/agendamentos` | Listar (com filtros) / criar agendamento |
-| PUT | `/api/agendamentos/:id/status` | Alterar status do agendamento |
-| GET | `/api/servicos` | Listar serviços (filtros: ativo, categoria, busca) |
-| POST | `/api/servicos` | Criar serviço |
-| PUT | `/api/servicos/:id` | Atualizar serviço |
-| DELETE | `/api/servicos/:id` | Remover serviço |
-| PUT | `/api/servicos/:id/toggle` | Toggle ativo/inativo |
-| GET | `/api/clientes` | Listar clientes com busca |
-| PUT | `/api/clientes/:id/toggle` | Toggle ativo/inativo de cliente |
-| GET | `/api/barbeiros` | Listar barbeiros |
-| GET | `/api/avaliacoes/recentes` | Últimas 10 avaliações |
-| GET | `/api/avaliacoes/barbeiro/:id` | Avaliações de um barbeiro |
-| GET | `/api/avaliacoes/cliente/:id` | Avaliações de um cliente |
-| POST | `/api/avaliacoes` | Registar avaliação |
-| GET | `/api/usuarios/:id` | Perfil do utilizador (incl. telefone) |
-| PUT | `/api/usuarios/:id` | Atualizar perfil (nome, email, telefone, senha) |
-
----
-
-## Estrutura do Repositório
-
-```
-BarberManager/
-├── database/
-│   └── BARBERMANAGER.FDB          # Base de dados Firebird 3.0
-├── docs/
-│   ├── Diagramas_C4/              # Diagramas C4 Model (.png)
-│   └── Telas_Web/                 # Screenshots do Web App (.png)
-├── src/
-│   ├── API/                       # Handlers Horse REST API
-│   │   ├── API.Conexao.pas        # CreateConnection per-request
-│   │   ├── API.Auth.pas           # Login e cadastro
-│   │   ├── API.Agendamentos.pas   # CRUD agendamentos + AutoAtualizarStatus
-│   │   ├── API.Avaliacoes.pas     # Avaliações de serviço
-│   │   ├── API.Barbeiros.pas      # Listagem de barbeiros
-│   │   ├── API.Clientes.pas       # Gestão de clientes
-│   │   ├── API.Dashboard.pas      # KPIs, timeline, financeiro
-│   │   ├── API.Servicos.pas       # CRUD serviços
-│   │   └── API.Usuarios.pas       # Perfil editável GET+PUT
-│   ├── Model/
-│   │   └── Model.Conexao.pas      # DataModule FireDAC (app nativo)
-│   ├── View/
-│   │   ├── View.Principal.pas     # App nativo — Login, Home, Agendamento
-│   │   ├── View.DashboardAdmin.pas# Dashboard admin nativo
-│   │   ├── View.Frame.Servicos.pas
-│   │   ├── View.Frame.Agenda.pas
-│   │   ├── View.Frame.Clientes.pas
-│   │   ├── View.Frame.Financeiro.pas
-│   │   └── View.Frame.Configuracoes.pas
-│   └── Web/
-│       └── index.html             # SPA: login + admin + cliente (fonte)
-├── BarberManagerAPI.dpr           # Projecto Horse REST API
-├── BarberManagerAPI.exe           # Servidor API compilado (porta 9000)
-├── BarberManager.dproj            # Projecto app nativo FMX
-├── ngrok.exe                      # ngrok Tunnel — expõe porta 9000 com domínio fixo permanente
-├── start-barbermanager.ps1        # Script de arranque automático (dois terminais)
-├── index.html                     # Cópia servida pelo .exe em GET /
-├── CLAUDE.md                      # Contexto técnico para IA
-└── README.md                      # Esta documentação
-```
+| **Linguagem** | Delphi (Object Pascal) |
+| **Framework de Interface** | FMX (FireMonkey) — compilação nativa para Windows, Android, iOS e Web |
+| **Paradigma UI** | Single Page Application (SPA) com `TTabControl` (Mobile) e injeção de `TFrames` (Desktop) |
+| **Modelagem** | C4 Model (Contexto, Componentes e Servidor) |
+| **Base de Dados** | Firebird 3.0 (servidor local via protocolo Local) |
+| **Acesso a Dados** | FireDAC — componentes criados inteiramente por código (sem designer) |
+| **Segurança** | Hash SHA-256 (via `System.Hash.THashSHA2`) para armazenamento de passwords |
 
 ---
 
 ## Diagramas de Arquitetura (C4 Model)
 
+A arquitetura do sistema foi modelada seguindo o **C4 Model**, que descreve o software em diferentes níveis de abstração — do contexto geral até os componentes internos e a infraestrutura de servidor.
+
+---
+
 ### Diagrama de Contexto
-> Visão macro: BarberManager e os atores externos (Cliente, Barbeiro/Admin).
+
+> Visão macro do sistema: mostra o BarberManager e como ele se relaciona com os atores externos (Cliente, Barbeiro/Admin) e sistemas de terceiros.
 
 ![Diagrama de Contexto](docs/Diagramas_C4/diagrama_contexto.png)
 
 ---
 
 ### Diagrama de Componentes
-> Componentes internos — separação entre universo Mobile (Cliente) e Web/Desktop (Admin).
+
+> Detalha os principais componentes internos da aplicação e suas responsabilidades, evidenciando a separação entre o universo Mobile (Cliente) e Desktop (Admin).
 
 ![Diagrama de Componentes](docs/Diagramas_C4/diagrama_componentes.png)
 
 ---
 
 ### Diagrama de Servidor
-> Infraestrutura: clientes → servidor Horse (porta 9000) → Firebird 3.0 local.
+
+> Representa a infraestrutura de implantação planejada, incluindo a comunicação entre os clientes, o servidor de aplicação e a base de dados.
 
 ![Diagrama de Servidor](docs/Diagramas_C4/diagrama_servidor.png)
 
 ---
 
-## Telas e Navegação
+## Telas e Navegação (Protótipo Interativo)
 
-### Área do Cliente
-
-#### Login
-![Login](docs/Telas_Web/login.png)
-
-#### Criar Nova Conta
-![Criar Conta](docs/Telas_Web/criarConta.png)
-
-#### Catálogo de Serviços
-![Serviços](docs/Telas_Web/servicosCliente.png)
-
-#### Agendamento (Modal 5 passos)
-![Agendar](docs/Telas_Web/agendarServico.png)
-
-#### Meus Agendamentos
-![Meus Agendamentos](docs/Telas_Web/agendamentosCliente.png)
-
-#### Meu Perfil
-![Perfil](docs/Telas_Web/perfilCliente.png)
-
-### Área do Administrador
-
-#### Dashboard — KPIs e Linha do Tempo
-![Dashboard](docs/Telas_Web/inicioDashboard.png)
-
-#### Gestão de Serviços
-![Serviços Admin](docs/Telas_Web/servicosDashboard.png)
-
-#### Agenda
-![Agenda](docs/Telas_Web/agendaDashboard.png)
-
-#### Clientes
-![Clientes](docs/Telas_Web/clientes.png)
-
-#### Financeiro
-![Financeiro](docs/Telas_Web/financeiro.png)
+Atualmente, o projeto encontra-se na fase de **Integração Front × Back**, onde todas as telas estão conectadas à base de dados Firebird e os dados são carregados e persistidos em tempo real.
 
 ---
 
-## Como Executar
+### Universo Cliente — App Mobile
+
+---
+
+#### Tela 01 — Login
+
+> Acesso seguro com design limpo e logo em destaque. Ponto de entrada principal do app mobile.
+
+![Login](docs/Telas/01_login.png)
+
+---
+
+#### Tela 02 — Criar Nova Conta
+
+> Formulário amigável de cadastro com ícones ilustrativos e identificação visual clara para novos utilizadores.
+
+![Nova Conta](docs/Telas/02_novaConta.png)
+
+---
+
+#### Tela 03 — Home do Cliente
+
+> Carrossel de categorias de serviços, banners de ofertas em destaque e listagem de serviços disponíveis.
+
+![Home Principal](docs/Telas/03_clienteHome.png)
+
+---
+
+#### Tela 04 — Agendamento
+
+> Motor de agendamento completo: calendário interativo, grelha de horários disponíveis via `FlowLayout` e tela de confirmação do pedido.
+
+![Agendamento](docs/Telas/04_clienteAgendar.png)
+
+---
+
+### Universo Administrador — Dashboard Web/Desktop
+
+---
+
+#### Tela 05 — Dashboard Administrativo
+
+> Visão geral financeira com KPIs principais (Faturação, Ticket Médio, Agendamentos Pendentes) e Linha do Tempo da agenda do dia.
+
+![Dashboard Administrativo](docs/Telas/05_adminDashboard.png)
+
+---
+
+#### Tela 06 — Gestão de Serviços
+
+> Catálogo dinâmico de serviços com filtros, contadores, e ações rápidas de edição e exclusão — construído com componentes nativos, sem dependências de terceiros.
+
+![Gestão de Serviços](docs/Telas/06_servicos.png)
+
+---
+
+> **Nota:** Para visualizar as imagens em alta resolução, acesse o diretório [`docs/Telas/`](docs/Telas/) neste repositório.
+
+---
+
+## Módulos e Funcionalidades
+
+### Módulo Cliente *(Front-End + Back-End Concluídos)*
+
+- [x] Autenticação (Login e Cadastro com ícones nos inputs)
+- [x] Login real com validação na base de dados e hash SHA-256
+- [x] Navegação por "Bottom Navigation" (Início, Agenda, Carrinho, Perfil)
+- [x] Catálogo de Serviços carregado dinamicamente de `TB_SERVICOS`
+- [x] Filtros de categoria funcionais (Todos / Cabelo / Barba / Estética)
+- [x] Motor de Agendamento completo (Serviço + Barbeiro + Horário)
+- [x] Persistência do agendamento em `TB_AGENDAMENTOS` com cálculo automático de `HR_FIM`
+
+### Módulo Barbeiro/Admin *(Front-End + Back-End Concluídos)*
+
+- [x] Sidebar de Navegação responsiva
+- [x] Cards de Resumo Financeiro com dados reais do dia (KPIs via query agregada)
+- [x] Linha do Tempo com agendamentos reais, coloridos por status
+- [x] Tela de Gestão de Serviços (visual concluído — lógica CRUD em desenvolvimento)
+
+---
+
+## Funcionalidades Implementadas (Back-End)
+
+> Esta secção detalha o que foi efectivamente desenvolvido e integrado com a base de dados Firebird nas Fases 5, 6 e 7.
+
+---
+
+### Conexão à Base de Dados — `Model.Conexao.pas`
+
+> `TdmConexao` é um DataModule singleton criado inteiramente por código (sem componentes no designer), garantindo portabilidade e controlo total da ligação FireDAC.
+
+- Ligação ao Firebird 3.0 via protocolo Local (`fbclient.dll`)
+- CharacterSet UTF-8, credenciais configuradas em código
+- `FDConnection1` exposto como `public` para acesso por todos os Forms e Frames
+
+---
+
+### Autenticação Real — `View.Principal.pas`
+
+> O login deixou de ser simulado e passou a validar as credenciais directamente na tabela `TB_USUARIOS`.
+
+- Query à `TB_USUARIOS` com filtro por e-mail e hash SHA-256 da password
+- Redireccionamento automático: perfil `CLIENTE` → Home Mobile; perfil `ADMIN` → Dashboard Desktop
+- Password armazenada como SHA-256 em maiúsculas (`UpperCase(THashSHA2.GetHashString(...))`)
+
+---
+
+### Catálogo de Serviços Dinâmico
+
+> Os cards de serviços na Home do cliente são criados programaticamente a partir dos registos activos em `TB_SERVICOS`.
+
+- Cards (`TLayout`) criados em runtime com `Align=None` e `Position.Y` explícito
+- Filtros de categoria aplicam cláusula `WHERE CATEGORIA = :CAT` dinamicamente
+- Cor e estado visual actualizados via `StyledSettings := []` + `TextSettings.FontColor`
+
+---
+
+### Motor de Agendamento
+
+> Fluxo completo: o cliente selecciona serviço → barbeiro → horário → confirma. O registo é inserido na base de dados.
+
+- Barbeiros carregados de `TB_BARBEIROS` com JOIN a `TB_USUARIOS`
+- 20 slots de horário gerados programaticamente no `TFlowLayout`, com estados disponível/ocupado
+- `HR_FIM` calculado automaticamente com `IncMinute(HR_INICIO, DURACAO_MIN)`
+- INSERT em `TB_AGENDAMENTOS` com todos os campos (cliente, barbeiro, serviço, datas, valor)
+
+---
+
+### Dashboard Administrativo com KPIs Reais
+
+> Os dados exibidos no painel deixaram de ser estáticos — são calculados em tempo real a partir dos agendamentos do dia.
+
+- Query agregada a `TB_AGENDAMENTOS` com filtro `DT_AGENDAMENTO = CURRENT_DATE`
+- KPIs actualizados: Faturação (`SUM`), Total, Pendentes e Cancelados (`SUM CASE WHEN`)
+- Linha do Tempo: JOIN entre `TB_AGENDAMENTOS`, `TB_USUARIOS`, `TB_BARBEIROS` e `TB_SERVICOS`
+- Cards dinâmicos na linha do tempo com cores por status: Concluído / Em Andamento / Pendente / Cancelado
+
+---
+
+## Estrutura do Repositório
+
+```
+BarberManager
+ ┣ database
+ ┃ ┗ BARBERMANAGER.FDB          # Base de dados Firebird 3.0
+ ┣ docs
+ ┃ ┣ Diagramas_C4               # Diagramas C4 Model da arquitetura (.png)
+ ┃ ┗ Telas                      # Prints das telas de UI/UX aprovadas (.png)
+ ┣ src
+ ┃ ┣ Model
+ ┃ ┃ ┗ Model.Conexao.pas        # DataModule de ligação FireDAC/Firebird
+ ┃ ┗ View
+ ┃   ┣ View.Principal.pas       # App Mobile — Login, Home, Agendamento
+ ┃   ┣ View.DashboardAdmin.pas  # Dashboard Admin — KPIs e Linha do Tempo
+ ┃   ┗ View.Frame.Servicos.pas  # Frame injetável de Gestão de Serviços
+ ┣ CLAUDE.md                    # Contexto técnico do projecto para o assistente IA
+ ┗ README.md                    # Esta documentação
+```
+
+---
+
+## Próximos Passos (Roadmap)
+
+A metodologia de desenvolvimento adotada separa estritamente o **Front-end** do **Back-end**. Estado actual das fases:
+
+- [x] **Fase 1:** Definição de Escopo e Requisitos
+- [x] **Fase 2:** Design System e Protótipos no Figma
+- [x] **Fase 3:** Construção do Front-End (UI) no Delphi FMX
+- [x] **Fase 4:** Navegação, Transições e UX interativa (Mockups)
+- [x] **Fase 5:** Modelagem da Base de Dados Relacional (DER) e criação do schema Firebird ✅
+- [x] **Fase 6:** Criação do Back-End (Regras de Negócio — Conexão, Login, Agendamento, KPIs) ✅
+- [x] **Fase 7:** Integração Front × Back (Data Binding e Persistência) — parcial ✅
+- [ ] **Fase 8:** CRUD completo de Serviços no Frame Admin + Deploy via D2Bridge ⏳
+- [ ] **Fase 9:** Testes Automatizados da API (Postman/Newman) 🔄 Em andamento
+
+---
+
+## Como Executar Localmente
 
 ### Pré-requisitos
 
@@ -225,78 +264,46 @@ BarberManager/
 |---|---|
 | **Delphi** | 12 Athens (Community Edition ou superior) |
 | **Firebird** | 3.0 — [download](https://firebirdsql.org/en/firebird-3-0/) |
-| **fbclient.dll** | Incluída na instalação (`Firebird_3_0\fbclient.dll`) |
-| **Horse framework** | Instalado em `C:\Horse\horse-master\src` |
+| **fbclient.dll** | Incluída na instalação do Firebird (`Firebird_3_0\fbclient.dll`) |
 
 ---
 
-### Opção A — App Nativo (Delphi FMX)
+### 1. Clone o repositório
 
-**1. Clone o repositório**
 ```bash
 git clone https://github.com/miguettohuertas/BarberManager.git
 ```
 
-**2. Verifique o caminho da BD** em `src\Model\Model.Conexao.pas`:
+---
+
+### 2. Configure a base de dados
+
+**a)** Certifique-se de que o servidor Firebird 3.0 está instalado em:
+```
+C:\Program Files (x86)\Firebird\Firebird_3_0\
+```
+
+**b)** O ficheiro da base de dados já está incluído no repositório em:
+```
+database\BARBERMANAGER.FDB
+```
+
+**c)** Verifique que o caminho em `src\Model\Model.Conexao.pas` aponta para a localização correcta:
 ```pascal
 FDConnection1.Params.Database :=
   'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
 ```
-
-**3. Compile e execute** — abra `BarberManager.dproj` no Delphi 12, plataforma **Windows 32-bit**, pressione `F9`.
-
----
-
-### Opção B — Web App local (Horse REST API)
-
-**1. Aplique as migrations da BD** (se ainda não aplicadas):
-```sql
--- Executar no IBExpert ou isql com Charset=UTF8
-ALTER TABLE TB_USUARIOS ADD DT_CADASTRO TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE TB_USUARIOS ADD TELEFONE VARCHAR(20);
-```
-
-**2. Compile o projeto API** — abra `BarberManagerAPI.dproj` no Delphi 12, plataforma **Windows 32-bit**, compile (`Ctrl+F9`).
-
-**3. Certifique-se de que `index.html` está na mesma pasta do `.exe`:**
-```bash
-# Se alterou src/Web/index.html, copie para a raiz:
-cp src/Web/index.html index.html
-# O post-build MSBuild também copia automaticamente para Win32\Debug\
-```
-
-**4. Execute** `BarberManagerAPI.exe` — verá no console:
-```
-BarberManager API running on http://localhost:9000
-Press Enter to stop...
-```
-
-**5. Abra o browser** em `http://localhost:9000`
+> Ajuste o caminho se tiver clonado o repositório para outra directoria.
 
 ---
 
-### Opção C — Deploy público via ngrok ← recomendado
+### 3. Compile e execute
 
-O sistema inclui `ngrok.exe` para expor a API publicamente com **domínio fixo permanente**, sem servidor dedicado, IP fixo ou abertura de portas.
+**a)** Abra o arquivo `.dproj` no **Embarcadero Delphi 12**.
 
-**URL pública permanente:** `https://humid-boots-posted.ngrok-free.dev`
+**b)** Defina a plataforma alvo como **Windows 32-bit**.
 
-**Arranque automático (recomendado):**
-```powershell
-.\start-barbermanager.ps1
-```
-Abre dois terminais PowerShell: um com a API Horse e outro com o túnel ngrok.
-
-**Arranque manual (dois terminais):**
-```powershell
-# Terminal 1 — API
-.\BarberManagerAPI.exe
-
-# Terminal 2 — Túnel ngrok (domínio fixo)
-.\ngrok.exe http --url=humid-boots-posted.ngrok-free.dev 9000
-```
-
-Após iniciar, a API fica acessível em `https://humid-boots-posted.ngrok-free.dev`.
+**c)** Pressione `F9` para compilar e executar.
 
 ---
 
@@ -304,68 +311,21 @@ Após iniciar, a API fica acessível em `https://humid-boots-posted.ngrok-free.d
 
 | Perfil | E-mail | Password | Acesso |
 |---|---|---|---|
-| **Administrador** | `admin@barber.com` | `123456` | Dashboard Admin completo |
-| **Cliente** | `carlos@email.com` | `123456` | Área do cliente + agendamento |
+| **Administrador** | `admin@barber.com` | `123456` | Dashboard Admin (Desktop) |
+| **Cliente** | `carlos@email.com` | `123456` | App Mobile (Home + Agendamento) |
 
 ---
 
-### Navegação de Teste (Web App)
+### Navegação de Teste
 
 | Ação | Resultado |
 |---|---|
-| Login como **Cliente** | Catálogo de serviços com filtros e busca |
-| **Agendar** → selecionar serviço, barbeiro, data, hora | Agendamento persistido na BD |
-| **Meus Agendamentos** | Lista real do cliente com badges de status |
-| Clicar em agendamento CONCLUIDO | Abre modal de avaliação (estrelas + comentário) |
-| **Meu Perfil** | Formulário editável com nome, email, telefone, senha |
-| Login como **Admin** | Dashboard com KPIs e linha do tempo do dia |
-| Admin → **← →** nas datas | Navega entre dias; KPIs e timeline atualizam |
-| Admin → **Serviços** | CRUD completo com filtros, editar, toggle, deletar |
-| Admin → **Agenda** | Lista de agendamentos com ComboBox de status por linha |
-| Admin → **Clientes** | Lista com toggle ativo/inativo e busca |
-| Admin → **Financeiro** | Relatório mensal com KPIs e gráfico diário |
-| Admin → **Configurações** | Leitura e escrita em TB_CONFIGURACOES |
-| Sino de notificações (Admin) | Badge conta avaliações novas desde última abertura |
-
----
-
-## Qualidade de Código
-
-![Quality Gate](https://img.shields.io/badge/Quality_Gate-Passed-brightgreen?style=flat&logo=sonarqube&logoColor=white)
-
-Análise estática realizada com **SonarQube Community Build v26.6.0** em 13/06/2026, cobrindo 4.264 linhas de código-fonte (`.pas`, `.dpr`, `.js`, `.html`).
-
-### Resultados da Análise
-
-| Métrica | Valor | Grau |
-|---|---|---|
-| **Quality Gate** | — | ✅ Passed |
-| **Security** | 2 vulnerabilidades | 🟡 B |
-| **Reliability** | 72 bugs | 🔴 C |
-| **Maintainability** | 60 code smells | 🟢 A |
-| **LOC** | 4.264 linhas | — |
-| **Dívida Técnica** | 6h 24min | — |
-| **Duplicações** | 100% | — |
-
-> **Nota sobre duplicações:** A taxa de 100% é **intencional** e resulta da arquitectura de deploy — `src/Web/index.html` (fonte) e `index.html` (raiz, cópia servida pelo `.exe`) são ficheiros idênticos por necessidade operacional, não por dívida técnica. O post-build MSBuild gere esta cópia automaticamente.
-
-Relatório completo: [`docs/Qualidade/relatorio_sonarqube_barbermanager.tex`](docs/Qualidade/relatorio_sonarqube_barbermanager.tex)
-
----
-
-## Roadmap
-
-| Fase | Descrição | Estado |
-|---|---|---|
-| **Fase 1** | Definição de Escopo e Requisitos | ✅ Concluído |
-| **Fase 2** | Design System e Protótipos | ✅ Concluído |
-| **Fase 3** | Construção do Front-End FMX (UI) | ✅ Concluído |
-| **Fase 4** | Navegação, Transições e UX | ✅ Concluído |
-| **Fase 5** | Modelagem da BD (DER + schema Firebird) | ✅ Concluído |
-| **Fase 6** | Back-End — Conexão, Login, KPIs, Agendamento | ✅ Concluído |
-| **Fase 7** | Integração Front × Back — App nativo + Web App | ✅ Concluído |
-| **Fase 8** | Web App completo (Horse REST + HTML/CSS/JS) — local | ✅ Concluído |
-| **Fase 9** | Deploy público via ngrok (domínio fixo permanente) | ✅ Concluído |
+| Login com credenciais de **Cliente** | Acesso à Home do Cliente com serviços reais |
+| Filtros **Todos / Cabelo / Barba / Estética** | Lista de serviços filtrada dinamicamente da BD |
+| Clicar num serviço → **Agendar** | Seleção de barbeiro, horário e confirmação persistida na BD |
+| Login com credenciais de **Administrador** | Dashboard com KPIs e linha do tempo do dia actual |
+| Menu lateral → **Serviços** | Frame de gestão de serviços (visual) |
+| Menu lateral → **Sair** | Retorno ao ecrã de Login |
 
 ---
 
