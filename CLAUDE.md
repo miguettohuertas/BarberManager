@@ -482,7 +482,7 @@ Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param
 | Módulo | Status |
 |---|---|
 | 01 - Auth | ✅ Completo (login válido, senha inválida, email não cadastrado) |
-| 02 - Servicos | 🔄 Em andamento |
+| 02 - Servicos | ✅ Completo (listar, criar, editar, toggle, deletar, validação de nome — todos com confirmação real via GET, não só mensagem) |
 | 03 - Agendamentos | ⏳ Pendente |
 | 04 - Dashboard | ⏳ Pendente |
 | 05 - Clientes | ⏳ Pendente |
@@ -501,6 +501,21 @@ A API não possui banco de teste isolado — os testes gravam dados reais no
 `BARBERMANAGER.FDB` de desenvolvimento. Além disso, o middleware `AutoAtualizarStatus`
 (rodado a cada `GET`) pode alterar o status de agendamentos automaticamente durante os
 testes — usar datas futuras em agendamentos de teste para evitar falsos negativos.
+
+### Cuidado operacional — IBExpert x API rodando ao mesmo tempo
+A conexão Firebird da API usa `Protocol=Local` (acesso direto ao arquivo `.fdb`). Se o
+IBExpert estiver conectado ao mesmo `BARBERMANAGER.FDB` enquanto a API tenta escrever,
+ocorre erro de I/O (`arquivo já está sendo usado por outro processo`) e a exceção não é
+tratada, travando a API no debugger. **Sempre desconectar o IBExpert do banco antes de
+rodar os testes de escrita (POST/PUT/DELETE).**
+
+### Bugs e melhorias encontrados
+Ver documento detalhado: [`docs/Qualidade/BUGS_ENCONTRADOS.md`](../../docs/Qualidade/BUGS_ENCONTRADOS.md)
+
+Resumo rápido (módulo Servicos):
+1. `POST /api/servicos` — FK de `categoriaId` inválida/ausente gera exceção não tratada (trava a API) em vez de erro `400` limpo
+2. Encoding: respostas de sucesso/erro (`criar`, `editar`, `deletar`, validação) retornam acentuação corrompida (`ServiÃ§o` em vez de `Serviço`)
+3. `POST /api/servicos` permite nomes duplicados, sem validação de unicidade
 
 ---
 

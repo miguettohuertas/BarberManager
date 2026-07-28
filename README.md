@@ -253,6 +253,15 @@ A metodologia de desenvolvimento adotada separa estritamente o **Front-end** do 
 - [x] **Fase 7:** Integração Front × Back (Data Binding e Persistência) — parcial ✅
 - [ ] **Fase 8:** CRUD completo de Serviços no Frame Admin + Deploy via D2Bridge ⏳
 - [ ] **Fase 9:** Testes Automatizados da API (Postman/Newman) 🔄 Em andamento
+  - [x] Módulo Auth (login válido, senha inválida, email não cadastrado)
+  - [x] Módulo Servicos (CRUD completo + validação, com 3 bugs encontrados e documentados)
+  - [ ] Módulo Agendamentos
+  - [ ] Módulo Dashboard
+  - [ ] Módulo Clientes
+  - [ ] Módulo Barbeiros
+  - [ ] Módulo Avaliacoes
+  - [ ] Módulo Usuarios
+  - Ver [`docs/Qualidade/BUGS_ENCONTRADOS.md`](docs/Qualidade/BUGS_ENCONTRADOS.md) para o relatório detalhado de bugs
 
 ---
 
