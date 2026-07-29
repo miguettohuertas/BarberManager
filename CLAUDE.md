@@ -483,7 +483,7 @@ Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param
 |---|---|
 | 01 - Auth | ✅ Completo (login válido, senha inválida, email não cadastrado) |
 | 02 - Servicos | ✅ Completo (listar, criar, editar, toggle, deletar, validação de nome — todos com confirmação real via GET, não só mensagem) |
-| 03 - Agendamentos | ⏳ Pendente |
+| 03 - Agendamentos | 🔄 Em andamento (listar, criar, conflito de horário e valor zerado já testados — falta status/PUT) |
 | 04 - Dashboard | ⏳ Pendente |
 | 05 - Clientes | ⏳ Pendente |
 | 06 - Barbeiros | ⏳ Pendente |
@@ -516,6 +516,10 @@ Resumo rápido (módulo Servicos):
 1. `POST /api/servicos` — FK de `categoriaId` inválida/ausente gera exceção não tratada (trava a API) em vez de erro `400` limpo
 2. Encoding: respostas de sucesso/erro (`criar`, `editar`, `deletar`, validação) retornam acentuação corrompida (`ServiÃ§o` em vez de `Serviço`)
 3. `POST /api/servicos` permite nomes duplicados, sem validação de unicidade
+
+Resumo rápido (módulo Agendamentos):
+4. **[CRÍTICO]** `POST /api/agendamentos` não valida conflito de horário — permite dois agendamentos para o mesmo barbeiro, mesma data, em horários sobrepostos. Confirmado tanto por teste automatizado quanto por registros já existentes no banco (ex: agendamentos `id 5`/`id 6`, mesmo barbeiro/data/hora)
+5. `POST /api/agendamentos` não calcula `valor` (campo `VALOR_COBRADO`) — fica `0.0` em vez do preço do serviço selecionado, o que compromete KPIs financeiros
 
 ---
 

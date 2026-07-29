@@ -119,6 +119,95 @@ end;
 
 ---
 
+## Módulo: Agendamentos (`API.Agendamentos.pas`)
+
+### 🐛 Bug #4 — Sem validação de conflito de horário do barbeiro
+
+**Severidade:** Crítica
+
+**Como reproduzir:**
+1. `POST /api/agendamentos` com `barbeiroId: 3`, `data: "2026-12-15"`, `horaInicio: "10:00"`
+   (serviço de 30min, então ocupa `10:00–11:00` considerando o horário de exemplo usado)
+   → sucesso, `201 Created`
+2. `POST /api/agendamentos` novamente, **mesmo barbeiro (3)**, **mesma data**, agora com
+   `horaInicio: "10:30"` (horário que se sobrepõe ao primeiro) → também retorna sucesso,
+   `201 Created` — deveria ter sido rejeitado
+
+**Comportamento observado:**
+A API aceita dois (ou mais) agendamentos para o mesmo barbeiro, na mesma data, em
+horários que se sobrepõem, sem qualquer validação ou aviso.
+
+**Comportamento esperado:**
+Rejeitar com `400 Bad Request` (ex: `{"erro": "Barbeiro já possui agendamento nesse
+horário"}`) quando o intervalo `[horaInicio, horaFim]` do novo agendamento colide com
+outro agendamento existente do mesmo barbeiro na mesma data (considerar apenas status
+`PENDENTE`/`EM_ANDAMENTO`/`CONCLUIDO` — agendamentos `CANCELADO` não devem contar).
+
+**Evidência adicional:** os próprios dados de desenvolvimento já continham este problema
+antes do teste automatizado confirmar formalmente — agendamentos `id 5` e `id 6` (ambos
+`Pedro Alves`, `26/04/2026`, `09:00–11:00`) e `id 7`/`id 8` (mesmo barbeiro, mesma data,
+`18:00–18:30`).
+
+**Impacto no negócio:** este é o bug de maior severidade encontrado até agora — permite
+que a barbearia aceite, na prática, compromissos impossíveis de cumprir (um barbeiro
+não pode atender dois clientes simultaneamente), gerando conflitos reais de agenda.
+
+**Sugestão de correção:**
+```pascal
+// Antes do INSERT em API.Agendamentos.pas (RotaCriar):
+QueryConflito.SQL.Text :=
+  'SELECT COUNT(*) AS TOTAL FROM TB_AGENDAMENTOS ' +
+  'WHERE BARBEIRO_ID = :BARBEIRO_ID ' +
+  '  AND DT_AGENDAMENTO = :DATA ' +
+  '  AND STATUS NOT IN (''CANCELADO'') ' +
+  '  AND (:HR_INICIO < HR_FIM AND :HR_FIM > HR_INICIO)'; // sobreposição de intervalos
+QueryConflito.ParamByName('BARBEIRO_ID').AsInteger := BarbeiroId;
+QueryConflito.ParamByName('DATA').AsDate := DataAgendamento;
+QueryConflito.ParamByName('HR_INICIO').AsTime := HoraInicio;
+QueryConflito.ParamByName('HR_FIM').AsTime := HoraFim;
+QueryConflito.Open;
+if QueryConflito.FieldByName('TOTAL').AsInteger > 0 then
+begin
+  Res.Status(400).Send<TJSONObject>(TJSONObject.Create.AddPair('erro', 'Barbeiro já possui agendamento nesse horário'));
+  Exit;
+end;
+```
+
+---
+
+### 🐛 Bug #5 — Valor do agendamento não é calculado na criação
+
+**Severidade:** Alta (impacto financeiro/relatórios)
+
+**Como reproduzir:**
+1. `POST /api/agendamentos` com um `servicoId` cujo `preco` é, por exemplo, `35.0`
+2. Consultar o agendamento criado via `GET /api/agendamentos`
+
+**Comportamento observado:**
+O campo `valor` do agendamento criado vem como `0.0`, independente do preço real do
+serviço selecionado.
+
+**Comportamento esperado:**
+Segundo a própria documentação do projeto (`CLAUDE.md`), `VALOR_COBRADO` deveria ser um
+"snapshot do preço no momento do agendamento" — ou seja, ao criar o agendamento, a API
+deveria buscar o `PRECO` atual do `servicoId` e gravá-lo em `VALOR_COBRADO`.
+
+**Impacto no negócio:** KPIs de faturamento (Dashboard) e relatórios financeiros que
+somam `VALOR_COBRADO` ficam incorretos para todo agendamento criado via API sem esse
+cálculo — o que compromete diretamente as métricas mais importantes do painel do admin.
+
+**Sugestão de correção:**
+```pascal
+// Ao montar o INSERT em API.Agendamentos.pas (RotaCriar), buscar o preço antes:
+QueryServico.SQL.Text := 'SELECT PRECO, DURACAO_MIN FROM TB_SERVICOS WHERE ID = :ID';
+QueryServico.ParamByName('ID').AsInteger := ServicoId;
+QueryServico.Open;
+ValorCobrado := QueryServico.FieldByName('PRECO').AsFloat;
+// ... usar ValorCobrado no INSERT como VALOR_COBRADO
+```
+
+---
+
 ## Observações de Ambiente (não são bugs de código)
 
 ### ⚠️ IBExpert conectado bloqueia a API
