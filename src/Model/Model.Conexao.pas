@@ -64,7 +64,7 @@ begin
 
     FDConnection1.Params.DriverID := 'FB';
     FDConnection1.Params.Database :=
-      'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
+      'C:\ProjetosDelphi\BarberManager\database\barbermanager.fdb';
     FDConnection1.Params.UserName := 'SYSDBA';
     FDConnection1.Params.Password := 'masterkey';
     FDConnection1.Params.Add('CharacterSet=UTF8');

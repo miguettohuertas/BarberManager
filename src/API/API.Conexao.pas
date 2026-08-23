@@ -26,7 +26,7 @@ begin
   Result := TFDConnection.Create(nil);
   Result.Params.DriverID := 'FB';
   Result.Params.Database :=
-    'C:\ProjetosDelphi\BarberManager\BarberManager\database\barbermanager.fdb';
+    'C:\ProjetosDelphi\BarberManager\database\barbermanager.fdb';
   Result.Params.UserName := 'SYSDBA';
   Result.Params.Password := 'masterkey';
   Result.Params.Add('CharacterSet=UTF8');
