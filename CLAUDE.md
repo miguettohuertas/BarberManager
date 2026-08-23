@@ -483,7 +483,7 @@ Model.Conexao, FireDAC.Comp.Client, Data.DB, FireDAC.Stan.Param
 |---|---|
 | 01 - Auth | ✅ Completo (login válido, senha inválida, email não cadastrado) |
 | 02 - Servicos | ✅ Completo (listar, criar, editar, toggle, deletar, validação de nome — todos com confirmação real via GET, não só mensagem) |
-| 03 - Agendamentos | 🔄 Em andamento (listar, criar, conflito de horário e valor zerado já testados — falta status/PUT) |
+| 03 - Agendamentos | ✅ Completo (listar, criar, atualizar status — todos com confirmação real. 2 bugs críticos encontrados: sem validação de conflito de horário, valor não calculado. Ambos reconfirmados em 2 bancos de dados diferentes) |
 | 04 - Dashboard | ⏳ Pendente |
 | 05 - Clientes | ⏳ Pendente |
 | 06 - Barbeiros | ⏳ Pendente |
@@ -502,6 +502,36 @@ A API não possui banco de teste isolado — os testes gravam dados reais no
 (rodado a cada `GET`) pode alterar o status de agendamentos automaticamente durante os
 testes — usar datas futuras em agendamentos de teste para evitar falsos negativos.
 
+### Reconstrução de ambiente em nova máquina — lições aprendidas
+Ao configurar o projeto do zero numa máquina nova (agosto/2026), os seguintes pontos
+exigiram atenção e vale documentar para a próxima vez:
+
+- **Delphi Community Edition 12.1 foi descontinuada.** A Embarcadero migrou o CE para a
+  versão 13.1 Florence — não há mais instalador de CE 12.1 disponível para novo download.
+  O projeto foi originalmente feito no Delphi 12, mas abre e compila normalmente no
+  RAD Studio 13 CE (só atualiza `ProjectVersion` no `.dproj` automaticamente, sem quebrar
+  nada). Ao registrar a licença, usar `https://www.embarcadero.com/products/delphi/starter/free-download`
+  para gerar um novo serial de CE 13.1 (o serial antigo de 12.1 não é aceito na 13).
+- **Firebird precisa ser instalado como 32-bit (Win32), não 64-bit.** A API compila como
+  `Win32`, então o `fbclient.dll` precisa ser da mesma arquitetura — um Firebird 64-bit
+  instalado por engano gera `System error: 193` (incompatibilidade de arquitetura) ao
+  tentar conectar via IBExpert ou pela própria API.
+- **Cuidado com caminhos absolutos ao clonar em pasta diferente.** `Model.Conexao.pas`
+  e `API.Conexao.pas` têm o caminho do `.fdb` fixo no código (não é `.gitignore`d nem
+  relativo). Se o repositório for clonado numa estrutura de pastas diferente da esperada
+  (`C:\ProjetosDelphi\BarberManager\BarberManager\`), a conexão falha com erro de I/O
+  "caminho especificado não encontrado" — é preciso editar as duas strings manualmente.
+- **`BARBERMANAGER.FDB` está no `.gitignore` — nunca vai para o GitHub.** É preciso um
+  backup separado do arquivo `.fdb` (OneDrive, pendrive etc.) antes de formatar/trocar de
+  máquina, ou o banco precisa ser recriado do zero via scripts em `database\migrations\`.
+- **Cuidado ao restaurar de backups antigos de `.fdb`**: o banco restaurado pode estar
+  desatualizado em relação ao último estado de testes — sempre conferir `SELECT MAX(ID)`
+  nas tabelas relevantes antes de assumir que os dados de teste anteriores ainda existem.
+- **Evitar múltiplas cópias do projeto na mesma máquina.** Extrair um backup ou clonar o
+  repo em mais de um local (ex: `C:\Dev\...` e `C:\ProjetosDelphi\...`) facilmente causa
+  abrir/compilar a cópia errada no Delphi sem perceber — o "Recent Projects" do IDE não
+  distingue isso visualmente. Manter só uma cópia de trabalho por máquina.
+
 ### Cuidado operacional — IBExpert x API rodando ao mesmo tempo
 A conexão Firebird da API usa `Protocol=Local` (acesso direto ao arquivo `.fdb`). Se o
 IBExpert estiver conectado ao mesmo `BARBERMANAGER.FDB` enquanto a API tenta escrever,
@@ -518,8 +548,8 @@ Resumo rápido (módulo Servicos):
 3. `POST /api/servicos` permite nomes duplicados, sem validação de unicidade
 
 Resumo rápido (módulo Agendamentos):
-4. **[CRÍTICO]** `POST /api/agendamentos` não valida conflito de horário — permite dois agendamentos para o mesmo barbeiro, mesma data, em horários sobrepostos. Confirmado tanto por teste automatizado quanto por registros já existentes no banco (ex: agendamentos `id 5`/`id 6`, mesmo barbeiro/data/hora)
-5. `POST /api/agendamentos` não calcula `valor` (campo `VALOR_COBRADO`) — fica `0.0` em vez do preço do serviço selecionado, o que compromete KPIs financeiros
+4. **[CRÍTICO]** `POST /api/agendamentos` não valida conflito de horário — permite dois agendamentos para o mesmo barbeiro, mesma data, em horários sobrepostos. Confirmado por teste automatizado em **2 bancos de dados diferentes** (ambiente original e ambiente reconstruído), além de registros já existentes no banco (ex: agendamentos `id 5`/`id 6`, `id 32`/`id 33`)
+5. `POST /api/agendamentos` não calcula `valor` (campo `VALOR_COBRADO`) — fica `0.0` em vez do preço do serviço selecionado, o que compromete KPIs financeiros. Também confirmado por teste automatizado em 2 bancos de dados diferentes
 
 ---
 

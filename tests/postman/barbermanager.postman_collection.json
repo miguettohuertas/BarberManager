@@ -331,25 +331,271 @@
         },
         {
           "name": "Criar Agendamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200 ou 201\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Resposta contém confirmação\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    console.log(JSON.stringify(jsonData));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"clienteId\": {{cliente_id}},\r\n  \"barbeiroId\": 3,\r\n  \"servicoId\": 2,\r\n  \"data\": \"2026-12-15\",\r\n  \"horaInicio\": \"10:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Buscar Agendamento Criado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Encontra o agendamento criado e salva o ID\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    const agendamento = jsonData.find(a =>\r",
+                  "        a.data === \"15/12/2026\" &&\r",
+                  "        a.barbeiroId === 3 &&\r",
+                  "        a.horaInicio.startsWith(\"10:00\")\r",
+                  "    );\r",
+                  "\r",
+                  "    pm.expect(agendamento, \"Agendamento criado deveria existir na lista\").to.not.be.undefined;\r",
+                  "\r",
+                  "    if (agendamento) {\r",
+                  "        pm.environment.set(\"agendamento_id\", agendamento.id);\r",
+                  "    }\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar valor agendamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Agendamento criado deveria ter o valor do serviço, não zero\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    const idCriado = parseInt(pm.environment.get(\"agendamento_id\"));\r",
+                  "    const agendamento = jsonData.find(a => a.id === idCriado);\r",
+                  "\r",
+                  "    pm.expect(agendamento, \"Agendamento deveria existir\").to.not.be.undefined;\r",
+                  "    pm.expect(agendamento.valor).to.eql(agendamento.preco);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "Criar Agendamento - Conflito Horario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"API deveria rejeitar conflito de horário (não retornar 200/201)\", function () {\r",
+                  "    pm.expect(pm.response.code).to.not.be.oneOf([200, 201]);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"clienteId\": {{cliente_id}},\r\n  \"barbeiroId\": 3,\r\n  \"servicoId\": 2,\r\n  \"data\": \"2026-12-15\",\r\n  \"horaInicio\": \"10:30\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Status Agendamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Resposta confirma sucesso\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    console.log(JSON.stringify(jsonData));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"EM_ANDAMENTO\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos/{{agendamento_id}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos",
+                "{{agendamento_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar Status Agendamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Agendamento reflete o novo status EM_ANDAMENTO\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    const idAgendamento = parseInt(pm.environment.get(\"agendamento_id\"));\r",
+                  "    const agendamento = jsonData.find(a => a.id === idAgendamento);\r",
+                  "\r",
+                  "    pm.expect(agendamento, \"Agendamento deveria existir\").to.not.be.undefined;\r",
+                  "    pm.expect(agendamento.status).to.eql(\"EM_ANDAMENTO\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/agendamentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "agendamentos"
+              ]
+            }
           },
           "response": []
         }

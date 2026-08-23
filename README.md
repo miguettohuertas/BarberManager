@@ -255,7 +255,7 @@ A metodologia de desenvolvimento adotada separa estritamente o **Front-end** do 
 - [ ] **Fase 9:** Testes Automatizados da API (Postman/Newman) 🔄 Em andamento
   - [x] Módulo Auth (login válido, senha inválida, email não cadastrado)
   - [x] Módulo Servicos (CRUD completo + validação, com 3 bugs encontrados e documentados)
-  - [ ] Módulo Agendamentos 🔄 Em andamento (2 bugs críticos encontrados: sem validação de conflito de horário, valor não calculado)
+  - [x] Módulo Agendamentos (2 bugs críticos encontrados e confirmados em 2 bancos diferentes: sem validação de conflito de horário, valor não calculado)
   - [ ] Módulo Dashboard
   - [ ] Módulo Clientes
   - [ ] Módulo Barbeiros

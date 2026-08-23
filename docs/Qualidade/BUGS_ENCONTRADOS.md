@@ -152,6 +152,10 @@ antes do teste automatizado confirmar formalmente — agendamentos `id 5` e `id 
 que a barbearia aceite, na prática, compromissos impossíveis de cumprir (um barbeiro
 não pode atender dois clientes simultaneamente), gerando conflitos reais de agenda.
 
+**Reconfirmado em ambiente diferente:** este bug foi reproduzido com sucesso uma segunda
+vez, em uma máquina e banco de dados (`.fdb`) diferentes do teste original, eliminando
+qualquer dúvida de que fosse um problema pontual de dados — é um defeito de código.
+
 **Sugestão de correção:**
 ```pascal
 // Antes do INSERT em API.Agendamentos.pas (RotaCriar):
@@ -196,6 +200,9 @@ deveria buscar o `PRECO` atual do `servicoId` e gravá-lo em `VALOR_COBRADO`.
 somam `VALOR_COBRADO` ficam incorretos para todo agendamento criado via API sem esse
 cálculo — o que compromete diretamente as métricas mais importantes do painel do admin.
 
+**Reconfirmado em ambiente diferente:** assim como o Bug #4, este foi reproduzido com
+sucesso uma segunda vez, em uma máquina e banco de dados diferentes do teste original.
+
 **Sugestão de correção:**
 ```pascal
 // Ao montar o INSERT em API.Agendamentos.pas (RotaCriar), buscar o preço antes:
@@ -209,6 +216,25 @@ ValorCobrado := QueryServico.FieldByName('PRECO').AsFloat;
 ---
 
 ## Observações de Ambiente (não são bugs de código)
+
+### ⚠️ Reconstrução de ambiente em máquina nova (agosto/2026)
+Ao reconfigurar o projeto do zero numa máquina nova, os seguintes pontos causaram
+retrabalho e vale documentar como checklist para a próxima vez (também registrado no
+`CLAUDE.md`, seção "Reconstrução de ambiente em nova máquina"):
+
+1. Delphi Community Edition 12.1 foi descontinuada pela Embarcadero — só CE 13.1 Florence
+   está disponível para novo download. O projeto compila normalmente na 13, mas exige
+   gerar um novo serial (o antigo, de 12.1, não é aceito).
+2. Firebird precisa ser instalado como **32-bit**, não 64-bit — incompatibilidade de
+   arquitetura com o `fbclient.dll` gera erro `System error: 193` ao conectar.
+3. Caminhos absolutos do banco (`Model.Conexao.pas`, `API.Conexao.pas`) quebram se o
+   repositório for clonado em estrutura de pastas diferente da esperada.
+4. `BARBERMANAGER.FDB` está no `.gitignore` — não viaja com o repositório; precisa de
+   backup manual separado antes de trocar/formatar a máquina.
+5. Manter múltiplas cópias do projeto na mesma máquina (ex: pasta de backup extraída +
+   clone do Git) é uma fonte real de erro — é fácil abrir/compilar a cópia errada no
+   Delphi sem perceber, já que o IDE não distingue isso visualmente no "Recent Projects".
+
 
 ### ⚠️ IBExpert conectado bloqueia a API
 A conexão Firebird da API usa `Protocol=Local` (acesso direto ao arquivo `.fdb`). Se o
